@@ -1,2 +1,13 @@
 log/*
-etc/*.conf
+etc/*
+files/*
+
+www/blog/wp-content/plugins
+!www/blog/wp-content/plugins/civicrm
+www/blog/wp-content/uploads
+
+www/equipo/public/themes/reevo-redmine-theme/
+www/equipo/public/plugins/
+www/equipo/public/tmp
+www/equipo/.bundle
+
