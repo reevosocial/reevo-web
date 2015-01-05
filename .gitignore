@@ -1,13 +1,15 @@
+bin/sync/database_auth.sh
+
 log/*
-etc/*
+
+etc/global_config.php
+etc/equipo-db.conf
+
 files/*
 
-www/blog/wp-content/plugins
-!www/blog/wp-content/plugins/civicrm
-www/blog/wp-content/uploads
+run/*
 
-www/equipo/public/themes/reevo-redmine-theme/
-www/equipo/public/plugins/
-www/equipo/public/tmp
+tmp/*
+
 www/equipo/.bundle
 

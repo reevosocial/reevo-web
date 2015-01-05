@@ -1,0 +1,10 @@
+<?php
+// ES: Defina el usuario y contraseña para acceder a las DBs
+// EN: Define user and password to access DBs
+
+$REEVO_URL = "reevo.org";
+
+$REEVO_DB_USER = "usuario";
+$REEVO_DB_PASS = "password";
+
+?>

@@ -1,0 +1,1 @@
+../../etc/wiki.conf

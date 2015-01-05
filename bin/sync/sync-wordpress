@@ -1,0 +1,34 @@
+#!/bin/bash
+
+source database_auth.sh
+
+BD='reevo_blog'
+BDIMPORT='dev_blog'
+SITIO='blog.reevo.org'
+
+echo "ETAPA 1: Vamos a sincronizar la BD y archivos de $SITIO remoto en el servidor local de pruebas..."
+sleep 2s
+
+echo ""
+echo "Volcamos la BD en el servidor"
+ssh beta.reevo.org "rm ~/dump/* && ~/dumpdb.sh $BD"
+
+echo ""
+echo "Copiamos la BD desde el servidor hasta aqui"
+scp beta.reevo.org:~/dump/$BD.sql.bz2 ~/tmp
+
+
+echo ""
+echo "Descomprimimos e importamos"
+bunzip2 ~/tmp/$BD.sql.bz2
+mysql --user=$USER --password=$PASS -e "CREATE database if not exists $BDIMPORT;"
+mysql --user=$USER --password=$PASS $BDIMPORT <  ~/tmp/$BD.sql
+
+echo ""
+echo "Borramos los temporales"
+rm ~/tmp/*
+
+echo ""
+echo "ETAPA 2: Vamos a sincronizar algunos directorios con archivos..."
+sleep 2s
+rsync -P -r -a -v -e "ssh -l reevo" --delete beta.reevo.org:/srv/reevo/blog.reevo.org/wp-content/uploads/ /srv/dev/files/blog/

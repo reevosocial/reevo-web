@@ -1,0 +1,42 @@
+#!/bin/bash
+
+source database_auth.sh
+
+BD='reevo_wiki'
+BDIMPORT='dev_wiki'
+SITIO='wiki.reevo.org'
+
+echo "ETAPA 1: Vamos a sincronizar la BD y archivos de $SITIO remoto en el servidor local de pruebas..."
+sleep 2s
+
+echo ""
+echo "Volcamos la BD en el servidor"
+ssh beta.reevo.org "rm ~/dump/* && ~/dumpdb.sh $BD"
+
+echo ""
+echo "Copiamos la BD desde el servidor hasta aqui"
+scp beta.reevo.org:~/dump/$BD.sql.bz2 ~/tmp
+
+
+echo ""
+echo "Descomprimimos e importamos"
+bunzip2 ~/tmp/$BD.sql.bz2
+mysql --user=$USER --password=$PASS -e "CREATE database if not exists $BDIMPORT;"
+mysql --user=$USER --password=$PASS $BDIMPORT <  ~/tmp/$BD.sql
+
+# echo ""
+# echo "Cambiamos valores de algunas tablas de las BD"
+# mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE elgg_sites_entity SET name = "Reevo (DEV)";'
+# mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE elgg_sites_entity SET url = "http://red.devreevo.org/";'
+# mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE elgg_datalists SET value = "/srv/dev/files/red/" WHERE name = "dataroot";'
+# mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE elgg_metastrings SET string = "/srv/dev/files/red/" WHERE id = (SELECT value_id    FROM elgg_metadata    WHERE name_id = (       SELECT *       FROM (          SELECT id          FROM elgg_metastrings          WHERE string = "filestore::dir_root"       ) as ms2    )    LIMIT 1 );'
+
+
+echo ""
+echo "Borramos los temporales"
+rm ~/tmp/*
+
+# echo ""
+# echo "ETAPA 2: Vamos a sincronizar algunos directorios con archivos..."
+# sleep 2s
+# rsync -P -r -a -v -e "ssh -l reevo" --delete beta.reevo.org:/srv/reevo.org/var/elgg/ /srv/dev/files/red/

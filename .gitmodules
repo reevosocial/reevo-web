@@ -1,0 +1,9 @@
+[submodule "lib/theme"]
+	path = lib/theme
+	url = ssh://git@git.reevo.org/~/reevo/reevo/reevo-theme
+[submodule "lib/equipo-plugins"]
+	path = lib/equipo-plugins
+	url = ssh://git@git.reevo.org/~/reevo/redmine/reevo-redmine-plugins
+[submodule "lib/blog-plugins"]
+	path = lib/blog-plugins
+	url = ssh://git@git.reevo.org/~/reevo/wordpress/reevo-wp-plugins

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# ES: Reemplaza con las credenciales de acceso a Mysql y renombra este archivo como "database_auth.sh"
+# EN: Replace with Mysql DB access information and rename this file as "database_auth.sh"
+
+USER="mysql_user"
+PASS="mysql_password"
+
+

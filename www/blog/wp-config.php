@@ -1,0 +1,1 @@
+../../etc/blog.conf
