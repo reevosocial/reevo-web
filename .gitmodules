@@ -7,3 +7,9 @@
 [submodule "lib/blog-plugins"]
 	path = lib/blog-plugins
 	url = ssh://git@git.reevo.org/~/reevo/wordpress/reevo-wp-plugins
+[submodule "lib/red-plugins"]
+	path = lib/red-plugins
+	url = ssh://git@git.reevo.org/~/reevo/elgg/reevo-elgg-plugins
+[submodule "lib/wiki-plugins"]
+	path = lib/wiki-plugins
+	url = ssh://git@git.reevo.org/~/reevo/mediawiki/reevo-mediawiki-plugins
