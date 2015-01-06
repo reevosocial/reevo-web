@@ -5,11 +5,15 @@ log/*
 etc/global_config.php
 etc/equipo-db.conf
 
-files/*
+files/blog/*
+files/crm/*
+files/equipo/*
+files/red/*
+files/wiki/*
 
 run/*
 
 tmp/*
 
 www/equipo/.bundle
-
+www/equipo/db/schema.rb
