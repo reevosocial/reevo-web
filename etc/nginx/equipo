@@ -7,6 +7,8 @@ server {
 
 	client_max_body_size 100M;
 
+  root  /srv/dev/www/equipo/public/;
+
 	location / {
 	    proxy_set_header X-Reak-IP $remote_addr;
 	    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -21,10 +23,27 @@ server {
 	      rewrite (.*) $1.html break;
 	    }
 
+        if ($maintenance) {
+            return 503;
+        }
+
 	    if (!-f $request_filename) {
 	      proxy_pass http://unix:/srv/dev/www/equipo/tmp/sockets/redmine.socket;
 	      break;
 	    }
+
+
+
+
 	}
+
+# Sitio offline
+
+    error_page 503 @maintenance;
+    location @maintenance {
+        rewrite ^(.*)$ /errors/503/index.html break;
+    }
+
+
 }
 

@@ -235,4 +235,17 @@ server {
                 client_body_buffer_size         256k;
         }
 
+# Sitio offline
+
+    location / {
+        if ($maintenance) {
+            return 503;
+        }
+    }
+    error_page 503 @maintenance;
+    location @maintenance {
+        rewrite ^(.*)$ /errors/503/index.html break;
+    }
+
+
 }

@@ -58,11 +58,17 @@ server {
 	location ~* /images/.*\.[^\\/:*?\x22<>|%]+(#|\?|$) {
 		types		{ }
 		default_type	text/plain;
-	}
+   	}
 
 	location / {
 		try_files	$uri $uri/ =404;
 		error_page	404 = @mediawiki;
+
+        if ($maintenance) {
+            return 503;
+        }
+
+
 	}
 
 	location @mediawiki {
@@ -75,5 +81,13 @@ server {
 		fastcgi_index	index.php;
 		fastcgi_param	SCRIPT_FILENAME $document_root$fastcgi_script_name;
 	}
+
+# Sitio offline
+
+    error_page 503 @maintenance;
+    location @maintenance {
+        rewrite ^(.*)$ /errors/503/index.html break;
+    }
+
 
 }
