@@ -46,7 +46,17 @@ server {
         root            /srv/dev/www/red;
         index           index.php;
 
-        try_files       /maintenance.html $uri @rewrite;
+		# Sitio offline
+
+        if ($maintenance) {
+            return 503;
+        }
+	    error_page 503 @maintenance;
+    		location @maintenance {
+        	rewrite ^(.*)$ /errors/503/index.html break;
+    	}
+
+		try_files       /maintenance.html $uri @rewrite;
         error_page      404 502 504 = @elgg;
         # I'm a teapot: used in redirections to avoid duplication of backend configuration
         error_page              418                     = @elgg;
@@ -197,6 +207,7 @@ server {
         location ~ \.php(/|$) {
                 access_log      /var/log/nginx/lorea-direct-php-access.log;
                 return 403;
+
         }
 
         ## Pass everything else to the backend (I'm a Teapot!)
@@ -234,18 +245,6 @@ server {
                 client_max_body_size            12M;
                 client_body_buffer_size         256k;
         }
-
-# Sitio offline
-
-    location / {
-        if ($maintenance) {
-            return 503;
-        }
-    }
-    error_page 503 @maintenance;
-    location @maintenance {
-        rewrite ^(.*)$ /errors/503/index.html break;
-    }
 
 
 }
