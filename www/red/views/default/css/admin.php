@@ -342,7 +342,7 @@ a.elgg-maintenance-mode-warning {
 }
 .elgg-module-popup {
 	background-color: white;
-	border: 1px solid #ccc;	
+	border: 1px solid #ccc;
 	z-index: 9999;
 	margin-bottom: 0;
 	padding: 5px;
@@ -1331,17 +1331,17 @@ a.elgg-widget-collapsed:before {
 .elgg-avatar-tiny > a > img {
 	width: 25px;
 	height: 25px;
-	
+
 	/* remove the border-radius if you don't want rounded avatars in supported browsers */
 	border-radius: 3px;
-	
+
 	background-clip:  border;
 	background-size: 25px;
 }
 .elgg-avatar-small > a > img {
 	width: 40px;
 	height: 40px;
-	
+
 	/* remove the border-radius if you don't want rounded avatars in supported browsers */
 	border-radius: 5px;
 	background-clip:  border;
@@ -1494,6 +1494,10 @@ ul.elgg-plugin-resources, ul.elgg-plugin-resources > li {
 	border-width: 2px;
 	border-color: #0054A7;
 }
+.elgg-plugin .elgg-menu-hz > li:after {
+	content: ",";
+	padding-right: 10px;
+}
 
 /****************************************
 	MARKDOWN
@@ -1520,6 +1524,9 @@ ul.elgg-plugin-resources, ul.elgg-plugin-resources > li {
 }
 .elgg-markdown p {
 	margin: 15px 0;
+}
+.elgg-markdown pre > code {
+	border: none;
 }
 
 /* ***************************************
@@ -1558,26 +1565,6 @@ table.mceLayout {
 }
 .elgg-output dd {
 	margin: 0 0 1em 2em;
-}
-
-/* ***************************************
-    SITE SECRET
-*************************************** */
-.elgg-form-admin-site-regenerate-secret table {
-	width: 60%;
-	margin: 1em auto;
-}
-td.elgg-strength-strong,
-td.elgg-strength-strong h4 {
-	background: #DFF0D8; color: #468847;
-}
-td.elgg-strength-moderate,
-td.elgg-strength-moderate h4 {
-	background: #FCF8E3; color: #C09853;
-}
-td.elgg-strength-weak,
-td.elgg-strength-weak h4 {
-	background: #F2DEDE; color: #B94A48;
 }
 
 /* ***************************************

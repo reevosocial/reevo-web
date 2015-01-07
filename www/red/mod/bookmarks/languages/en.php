@@ -1,8 +1,4 @@
 <?php
-/**
- * Bookmarks English language file
- */
-
 return array(
 
 	/**
@@ -55,7 +51,7 @@ View and comment on the bookmark:
 	'bookmarks:group' => 'Group bookmarks',
 	'bookmarks:enablebookmarks' => 'Enable group bookmarks',
 	'bookmarks:nogroup' => 'This group does not have any bookmarks yet',
-	
+
 	/**
 	 * Widget and bookmarklet
 	 */

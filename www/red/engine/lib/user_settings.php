@@ -8,27 +8,8 @@
  */
 
 /**
- * Saves user settings.
- *
- * @todo all the functions called by this function assume settings are coming
- * in on a GET/POST request
- *
- * @note This is a handler for the 'usersettings:save', 'user' plugin hook
- *
- * @return void
- * @access private
- */
-function _elgg_user_settings_save() {
-	_elgg_set_user_language();
-	_elgg_set_user_password();
-	_elgg_set_user_default_access();
-	_elgg_set_user_name();
-	_elgg_set_user_email();
-}
-
-/**
  * Set a user's password
- * 
+ *
  * @return bool
  * @since 1.8.0
  * @access private
@@ -70,8 +51,9 @@ function _elgg_set_user_password() {
 
 		if ($result) {
 			if ($password == $password2) {
-				$user->salt = generate_random_cleartext_password(); // Reset the salt
+				$user->salt = _elgg_generate_password_salt();
 				$user->password = generate_user_password($user, $password);
+				_elgg_services()->persistentLogin->handlePasswordChange($user, elgg_get_logged_in_user_entity());
 				if ($user->save()) {
 					system_message(elgg_echo('user:password:success'));
 					return true;
@@ -94,7 +76,7 @@ function _elgg_set_user_password() {
 
 /**
  * Set a user's display name
- * 
+ *
  * @return bool
  * @since 1.8.0
  * @access private
@@ -135,7 +117,7 @@ function _elgg_set_user_name() {
 
 /**
  * Set a user's language
- * 
+ *
  * @return bool
  * @since 1.8.0
  * @access private
@@ -355,7 +337,11 @@ function _elgg_user_settings_init() {
 
 	elgg_register_event_handler('pagesetup', 'system', '_elgg_user_settings_menu_setup');
 
-	elgg_register_plugin_hook_handler('usersettings:save', 'user', '_elgg_user_settings_save');
+	elgg_register_plugin_hook_handler('usersettings:save', 'user', '_elgg_set_user_language');
+	elgg_register_plugin_hook_handler('usersettings:save', 'user', '_elgg_set_user_password');
+	elgg_register_plugin_hook_handler('usersettings:save', 'user', '_elgg_set_user_default_access');
+	elgg_register_plugin_hook_handler('usersettings:save', 'user', '_elgg_set_user_name');
+	elgg_register_plugin_hook_handler('usersettings:save', 'user', '_elgg_set_user_email');
 
 	elgg_register_action("usersettings/save");
 

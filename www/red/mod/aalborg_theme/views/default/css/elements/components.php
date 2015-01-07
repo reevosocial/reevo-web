@@ -42,7 +42,7 @@
 	margin-bottom: 4px;
 }
 .elgg-item .elgg-content {
-	margin: 10px 5px 10px 0;
+	margin: 10px 0;
 }
 .elgg-content {
 	clear: both;
@@ -204,10 +204,10 @@
 .elgg-river-comments li:last-child {
 	border-radius-bottomleft: 0 0 5px 5px;
 }
-.elgg-river-comments li {
+.elgg-river-comments > li {
 	background-color: #EEE;
 	border-bottom: none;
-	padding: 4px 4px 4px 10px;
+	padding: 4px 10px;
 	margin-bottom: 2px;
 }
 .elgg-river-comments li .elgg-output {
@@ -260,7 +260,7 @@
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
-	
+
 	max-width: 100%;
 	height: auto;
 }

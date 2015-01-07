@@ -12,6 +12,13 @@ var elgg = elgg || {};
 elgg.global = this;
 
 /**
+ * Duplicate of the server side ACCESS_PRIVATE access level.
+ *
+ * This is a temporary hack to prevent having to mix up js and PHP in js views.
+ */
+elgg.ACCESS_PRIVATE = 0;
+
+/**
  * Convenience reference to an empty function.
  *
  * Save memory by not generating multiple empty functions.
@@ -250,7 +257,7 @@ elgg.normalize_url = function(url) {
 	url = url || '';
 	elgg.assertTypeOf('string', url);
 
-	var validated = (function(url) {
+	function validate(url) {
 		url = elgg.parse_url(url);
 		if (url.scheme){
 			url.scheme = url.scheme.toLowerCase();
@@ -269,10 +276,18 @@ elgg.normalize_url = function(url) {
 			return false;
 		}
 		return true;
-	})(url);
+	};
+
+	// ignore anything with a recognized scheme
+	if (url.indexOf('http:') === 0 ||
+		url.indexOf('https:') === 0 ||
+		url.indexOf('javascript:') === 0 ||
+		url.indexOf('mailto:') === 0 ) {
+		return url;
+	}
 
 	// all normal URLs including mailto:
-	if (validated) {		
+	else if (validate(url)) {
 		return url;
 	}
 
@@ -282,10 +297,6 @@ elgg.normalize_url = function(url) {
 		return url;
 	}
 
-	// 'javascript:'
-	else if (url.indexOf('javascript:') === 0 || url.indexOf('mailto:') === 0 ) {
-		return url;
-	}
 
 	// watch those double escapes in JS.
 
@@ -424,7 +435,7 @@ elgg.parse_url = function(url, component, expand) {
 	// It was modified to fix mailto: and javascript: support.
 	expand = expand || false;
 	component = component || false;
-	
+
 	var re_str =
 			// scheme (and user@ testing)
 			'^(?:(?![^:@]+:[^:@/]*@)([^:/?#.]+):)?(?://)?'
@@ -513,7 +524,7 @@ elgg.parse_str = function(string) {
 			params[key] = value;
 		}
 	}
-	
+
 	return params;
 };
 
@@ -558,7 +569,7 @@ elgg.push_to_object_array = function(object, parent, value) {
 	elgg.assertTypeOf('string', parent);
 
 	if (!(object[parent] instanceof Array)) {
-		object[parent] = []
+		object[parent] = [];
 	}
 
 	if ($.inArray(value, object[parent]) < 0) {
@@ -581,4 +592,3 @@ elgg.is_in_object_array = function(object, parent, value) {
 
 	return typeof(object[parent]) != 'undefined' && $.inArray(value, object[parent]) >= 0;
 };
-

@@ -32,18 +32,7 @@ function aalborg_theme_init() {
 function aalborg_theme_pagesetup() {
 
 	elgg_unextend_view('page/elements/header', 'search/header');
-	if (elgg_is_logged_in()) {
-		elgg_extend_view('page/elements/sidebar', 'search/header', 0);
-	}
-
-	elgg_unregister_menu_item('topbar', 'dashboard');
-	if (elgg_is_active_plugin('dashboard')) {
-		elgg_register_menu_item('site', array(
-			'name' => 'dashboard',
-			'href' => 'dashboard',
-			'text' => elgg_echo('dashboard'),
-		));
-	}
+	elgg_extend_view('page/elements/sidebar', 'search/header', 0);
 
 	if (elgg_is_logged_in()) {
 
@@ -55,6 +44,15 @@ function aalborg_theme_pagesetup() {
 			'section' => 'alt',
 			'link_class' => 'elgg-topbar-dropdown',
 		));
+
+		if (elgg_is_active_plugin('dashboard')) {
+			$item = elgg_unregister_menu_item('topbar', 'dashboard');
+			if ($item) {
+				$item->setText(elgg_echo('dashboard'));
+				$item->setSection('default');
+				elgg_register_menu_item('site', $item);
+			}
+		}
 
 		$item = elgg_get_menu_item('topbar', 'usersettings');
 		if ($item) {
@@ -111,6 +109,17 @@ function aalborg_theme_setup_head($hook, $type, $data) {
 		'name' => 'viewport',
 		'content' => 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0',
 	);
+
+    // https://developer.chrome.com/multidevice/android/installtohomescreen
+    $data['metas'][] = array(
+        'name' => 'mobile-web-app-capable',
+        'content' => 'yes',
+    );
+
+    $data['metas'][] = array(
+        'name' => 'apple-mobile-web-app-capable',
+        'content' => 'yes',
+    );
 
 	$data['links'][] = array(
 		'rel' => 'apple-touch-icon',

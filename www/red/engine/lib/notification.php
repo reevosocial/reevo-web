@@ -3,37 +3,37 @@
  * Adding a New Notification Event
  * ===============================
  * 1. Register the event with elgg_register_notification_event()
- * 
+ *
  * 2. Register for the notification message plugin hook:
- *    'prepare', 'notification:[event name]'. The event name is of the form 
- *    [action]:[type]:[subtype]. For example, the publish event for a blog 
+ *    'prepare', 'notification:[event name]'. The event name is of the form
+ *    [action]:[type]:[subtype]. For example, the publish event for a blog
  *    would be named 'publish:object:blog'.
- * 
+ *
  *    The parameter array for the plugin hook has the keys 'event', 'method',
- *    'recipient', and 'language'. The event is an Elgg_Notifications_Event 
- *    object and can provide access to the original object of the event through 
+ *    'recipient', and 'language'. The event is an Elgg_Notifications_Event
+ *    object and can provide access to the original object of the event through
  *    the method getObject() and the original actor through getActor().
- * 
- *    The plugin hook callback modifies and returns a 
+ *
+ *    The plugin hook callback modifies and returns a
  *    Elgg_Notifications_Notification object that holds the message content.
  *
  *
  * Adding a Delivery Method
  * =========================
  * 1. Register the delivery method name with elgg_register_notification_method()
- * 
+ *
  * 2. Register for the plugin hook for sending notifications:
- *    'send', 'notification:[method name]'. It receives the notification object 
- *    of the class Elgg_Notifications_Notification in the params array with the 
- *    key 'notification'. The callback should return a boolean to indicate whether 
+ *    'send', 'notification:[method name]'. It receives the notification object
+ *    of the class Elgg_Notifications_Notification in the params array with the
+ *    key 'notification'. The callback should return a boolean to indicate whether
  *    the message was sent.
- * 
- * 
+ *
+ *
  * Subscribing a User for Notifications
  * ====================================
  * Users subscribe to receive notifications based on container and delivery method.
- * 
- * 
+ *
+ *
  * @package Elgg.Core
  * @subpackage Notifications
  */
@@ -47,12 +47,8 @@
  *
  * 	   elgg_register_notification_event('object', 'bookmarks', array('create', 'update'));
  *
- * If you want notifications sent when a user friends another user:
- *
- * 	   elgg_register_notification_event('relationship', 'friend');
- *
- * @param string $object_type    'object', 'user', 'group', 'site', 'annotation', 'relationship'
- * @param string $object_subtype The subtype or name of the entity, annotation or relationship
+ * @param string $object_type    'object', 'user', 'group', 'site'
+ * @param string $object_subtype The subtype or name of the entity
  * @param array  $actions        Array of actions or empty array for the action event.
  *                                An event is usually described by the first string passed
  *                                to elgg_trigger_event(). Examples include
@@ -67,8 +63,8 @@ function elgg_register_notification_event($object_type, $object_subtype, array $
 /**
  * Unregister a notification event
  *
- * @param string $object_type    'object', 'user', 'group', 'site', 'annotation', 'relationship'
- * @param string $object_subtype The type of the entity or the subtype of the annotation or relationship
+ * @param string $object_type    'object', 'user', 'group', 'site'
+ * @param string $object_subtype The type of the entity
  * @return bool
  * @since 1.9
  */
@@ -78,7 +74,7 @@ function elgg_unregister_notification_event($object_type, $object_subtype) {
 
 /**
  * Register a delivery method for notifications
- * 
+ *
  * Register for the 'send', 'notification:[method name]' plugin hook to handle
  * sending a notification. A notification object is in the params array for the
  * hook with the key 'notification'. See Elgg_Notifications_Notification.
@@ -188,7 +184,7 @@ function _elgg_notifications_cron() {
 
 /**
  * Send an email notification
- * 
+ *
  * @param string $hook   Hook name
  * @param string $type   Hook type
  * @param bool   $result Has anyone sent a message yet?
@@ -224,7 +220,59 @@ function _elgg_send_email_notification($hook, $type, $result, $params) {
 		$from = 'noreply@' . $site->getDomain();
 	}
 
-	return elgg_send_email($from, $to, $message->subject, $message->body);
+	return elgg_send_email($from, $to, $message->subject, $message->body, $params);
+}
+
+/**
+ * Adds default thread SMTP headers to group messages correctly.
+ * Note that it won't be sufficient for some email clients. Ie. Gmail is looking at message subject anyway.
+ *
+ * @param string $hook        Equals to 'email'
+ * @param string $type        Equals to 'system'
+ * @param array  $returnvalue Array containing fields: 'to', 'from', 'subject', 'body', 'headers', 'params'
+ * @param array  $params      The same value as $returnvalue
+ * @return array
+ * @access private
+ */
+function _elgg_notifications_smtp_thread_headers($hook, $type, $returnvalue, $params) {
+
+	$notificationParams = elgg_extract('params', $returnvalue, array());
+	/** @var Elgg_Notifications_Notification */
+	$notification = elgg_extract('notification', $notificationParams);
+
+	if (!($notification instanceof Elgg_Notifications_Notification)) {
+		return $returnvalue;
+	}
+
+	$hostname = parse_url(elgg_get_site_url(), PHP_URL_HOST);
+	$urlPath = parse_url(elgg_get_site_url(), PHP_URL_PATH);
+
+	$object = elgg_extract('object', $notification->params);
+	/** @var Elgg_Notifications_Event $event */
+	$event = elgg_extract('event', $notification->params);
+
+	if (($object instanceof ElggEntity) && ($event instanceof Elgg_Notifications_Event)) {
+		if ($event->getAction() === 'create') {
+			// create event happens once per entity and we need to guarantee message id uniqueness
+			// and at the same time have thread message id that we don't need to store
+			$messageId = "<{$urlPath}.entity.{$object->guid}@{$hostname}>";
+		} else {
+			$mt = microtime(true);
+			$messageId = "<{$urlPath}.entity.{$object->guid}.$mt@{$hostname}>";
+		}
+		$returnvalue['headers']["Message-ID"] = $messageId;
+		$container = $object->getContainerEntity();
+
+		// let's just thread comments by default
+		if (($container instanceof ElggEntity) && ($object instanceof ElggComment)) {
+
+			$threadMessageId = "<{$urlPath}.entity.{$container->guid}@{$hostname}>";
+			$returnvalue['headers']['In-Reply-To'] = $threadMessageId;
+			$returnvalue['headers']['References'] = $threadMessageId;
+		}
+	}
+
+	return $returnvalue;
 }
 
 /**
@@ -237,6 +285,7 @@ function _elgg_notifications_init() {
 	// add email notifications
 	elgg_register_notification_method('email');
 	elgg_register_plugin_hook_handler('send', 'notification:email', '_elgg_send_email_notification');
+	elgg_register_plugin_hook_handler('email', 'system', '_elgg_notifications_smtp_thread_headers');
 
 	// add ability to set personal notification method
 	elgg_extend_view('forms/account/settings', 'core/settings/account/notifications');
@@ -291,7 +340,7 @@ function _elgg_notify_user($to, $from, $subject, $message, array $params = null,
 				$tmp = get_user_notification_settings($guid);
 				$methods = array();
 				// $tmp may be false. don't cast
-				if (is_array($tmp)) {
+				if (is_object($tmp)) {
 					foreach ($tmp as $k => $v) {
 						// Add method if method is turned on for user!
 						if ($v) {
@@ -304,7 +353,7 @@ function _elgg_notify_user($to, $from, $subject, $message, array $params = null,
 			if ($methods) {
 				// Deliver
 				foreach ($methods as $method) {
-					
+
 					$handler = $notify_service->getDeprecatedHandler($method);
 					/* @var callable $handler */
 					if (!$handler || !is_callable($handler)) {
@@ -363,6 +412,20 @@ function _elgg_notify_user($to, $from, $subject, $message, array $params = null,
  * @param string $subject          Message subject.
  * @param string $message          Message body.
  * @param array  $params           Misc additional parameters specific to various methods.
+ *
+ *                                 By default Elgg core supports three parameters, which give
+ *                                 notification plugins more control over the notifications:
+ *
+ *                                 object => null|ElggEntity|ElggAnnotation The object that
+ *                                           is triggering the notification.
+ *
+ *                                 action => null|string Word that describes the action that
+ *                                           is triggering the notification (e.g. "create"
+ *                                           or "update").
+ *
+ *                                 summary => null|string Summary that notification plugins
+ *                                            can use alongside the notification title and body.
+ *
  * @param mixed  $methods_override A string, or an array of strings specifying the delivery
  *                                 methods to use - or leave blank for delivery using the
  *                                 user's chosen delivery methods.
@@ -378,10 +441,19 @@ function notify_user($to, $from, $subject, $message, array $params = array(), $m
 	$from = (int)$from;
 	$from = get_entity($from) ? $from : elgg_get_site_entity()->guid;
 	$sender = get_entity($from);
+	$summary = elgg_extract('summary', $params, '');
 
 	// Get notification methods
 	if (($methods_override) && (!is_array($methods_override))) {
 		$methods_override = array($methods_override);
+	}
+
+	$result = array();
+
+	$available_methods = _elgg_services()->notifications->getMethods();
+	if (!$available_methods) {
+		// There are no notifications methods to use
+		return $result;
 	}
 
 	// temporary backward compatibility for 1.8 and earlier notifications
@@ -390,8 +462,6 @@ function notify_user($to, $from, $subject, $message, array $params = array(), $m
 		$event = new Elgg_Notifications_Event($params['object'], $params['action'], $sender);
 	}
 	$params['event'] = $event;
-
-	$result = array();
 
 	foreach ($to as $guid) {
 		// Results for a user are...
@@ -414,6 +484,11 @@ function notify_user($to, $from, $subject, $message, array $params = array(), $m
 			if ($methods) {
 				// Deliver
 				foreach ($methods as $method) {
+					if (!in_array($method, $available_methods)) {
+						// This method was available the last time the user saved their
+						// notification settings. It's however currently disabled.
+						continue;
+					}
 
 					if (_elgg_services()->hooks->hasHandler('send', "notification:$method")) {
 						// 1.9 style notification handler
@@ -422,7 +497,7 @@ function notify_user($to, $from, $subject, $message, array $params = array(), $m
 							continue;
 						}
 						$language = $recipient->language;
-						$notification = new Elgg_Notifications_Notification($sender, $recipient, $language, $subject, $message, '', $params);
+						$notification = new Elgg_Notifications_Notification($sender, $recipient, $language, $subject, $message, $summary, $params);
 						$params['notification'] = $notification;
 						$result[$guid][$method] = _elgg_services()->hooks->trigger('send', "notification:$method", $params, false);
 					} else {
@@ -441,7 +516,7 @@ function notify_user($to, $from, $subject, $message, array $params = array(), $m
  *
  * @param int $user_guid The user id
  *
- * @return stdClass
+ * @return stdClass|false
  */
 function get_user_notification_settings($user_guid = 0) {
 	$user_guid = (int)$user_guid;
@@ -593,13 +668,13 @@ function elgg_send_email($from, $to, $subject, $body, array $params = null) {
 	// Sanitise subject by stripping line endings
 	$subject = preg_replace("/(\r\n|\r|\n)/", " ", $subject);
 	// this is because Elgg encodes everything and matches what is done with body
-	$subject = html_entity_decode($subject, ENT_COMPAT, 'UTF-8'); // Decode any html entities
+	$subject = html_entity_decode($subject, ENT_QUOTES, 'UTF-8'); // Decode any html entities
 	if (is_callable('mb_encode_mimeheader')) {
 		$subject = mb_encode_mimeheader($subject, "UTF-8", "B");
 	}
 
 	// Format message
-	$body = html_entity_decode($body, ENT_COMPAT, 'UTF-8'); // Decode any html entities
+	$body = html_entity_decode($body, ENT_QUOTES, 'UTF-8'); // Decode any html entities
 	$body = elgg_strip_tags($body); // Strip tags from message
 	$body = preg_replace("/(\r\n|\r)/", "\n", $body); // Convert to unix line endings in body
 	$body = preg_replace("/^From/", ">From", $body); // Change lines starting with From to >From

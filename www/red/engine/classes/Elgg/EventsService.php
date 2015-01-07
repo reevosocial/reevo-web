@@ -4,7 +4,7 @@
  * Service for Events
  *
  * @access private
- * 
+ *
  * @package    Elgg.Core
  * @subpackage Hooks
  * @since      1.9.0
@@ -17,7 +17,7 @@ class Elgg_EventsService extends Elgg_HooksRegistrationService {
 
 	/**
 	 * Triggers an Elgg event.
-	 * 
+	 *
 	 * @see elgg_trigger_event
 	 * @see elgg_trigger_after_event
 	 * @access private
@@ -29,7 +29,7 @@ class Elgg_EventsService extends Elgg_HooksRegistrationService {
 			self::OPTION_DEPRECATION_VERSION => '',
 		), $options);
 
-		$events = $this->getOrderedHandlers($event, $type);
+		$events = $this->hasHandler($event, $type);
 		if ($events && $options[self::OPTION_DEPRECATION_MESSAGE]) {
 			elgg_deprecated_notice(
 				$options[self::OPTION_DEPRECATION_MESSAGE],
@@ -38,11 +38,15 @@ class Elgg_EventsService extends Elgg_HooksRegistrationService {
 			);
 		}
 
+		$events = $this->getOrderedHandlers($event, $type);
 		$args = array($event, $type, $object);
 
 		foreach ($events as $callback) {
 			if (!is_callable($callback)) {
-				// @todo should this produce a warning?
+				if ($this->logger) {
+					$this->logger->warn("handler for event [$event, $type] is not callable: "
+										. $this->describeCallable($callback));
+				}
 				continue;
 			}
 

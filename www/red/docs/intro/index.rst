@@ -1,7 +1,13 @@
 Getting Started
 ###############
 
+Discover if Elgg is right for your community.
+
 .. toctree::
-   :maxdepth: 2
-   
+   :maxdepth: 1
+  
+   features
+   /plugins/index
+   license
    install
+   development

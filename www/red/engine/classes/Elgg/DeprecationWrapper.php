@@ -17,7 +17,7 @@
  *  session object in session lib
  *
  * @access private
- * 
+ *
  * @package Elgg.Core
  */
 class Elgg_DeprecationWrapper implements ArrayAccess {
@@ -38,7 +38,7 @@ class Elgg_DeprecationWrapper implements ArrayAccess {
 
 	/**
 	 * Create the wrapper
-	 * 
+	 *
 	 * @param mixed    $object   The object or string to wrap
 	 * @param string   $message  The deprecation message to display when used
 	 * @param float    $version  The Elgg version this was deprecated
@@ -57,7 +57,7 @@ class Elgg_DeprecationWrapper implements ArrayAccess {
 
 	/**
 	 * Get a property on the object
-	 * 
+	 *
 	 * @param string $name Property name
 	 * @return mixed
 	 */
@@ -68,7 +68,7 @@ class Elgg_DeprecationWrapper implements ArrayAccess {
 
 	/**
 	 * Set a property on the object
-	 * 
+	 *
 	 * @param string $name  Property name
 	 * @param mixed  $value Property value
 	 * @return void
@@ -80,7 +80,7 @@ class Elgg_DeprecationWrapper implements ArrayAccess {
 
 	/**
 	 * Call a method on the object
-	 * 
+	 *
 	 * @param string $name      Method name
 	 * @param array  $arguments Method arguments
 	 * @return mixed
@@ -92,7 +92,7 @@ class Elgg_DeprecationWrapper implements ArrayAccess {
 
 	/**
 	 * Get the object as string
-	 * 
+	 *
 	 * @return string
 	 */
 	public function __toString() {
@@ -106,7 +106,7 @@ class Elgg_DeprecationWrapper implements ArrayAccess {
 
 	/**
 	 * Display a warning
-	 * 
+	 *
 	 * @return void
 	 */
 	protected function displayWarning() {
@@ -128,10 +128,16 @@ class Elgg_DeprecationWrapper implements ArrayAccess {
 	 * @return void
 	 */
 	public function offsetSet($key, $value) {
-		if (is_object($this->object)) {
+		$this->displayWarning();
+		if (is_object($this->object) && !$this->object instanceof ArrayAccess) {
 			$this->object->$key = $value;
 		} else {
-			$this->object[$key] = $value;
+			if ($key === null) {
+				// Yes this is necessary. Otherwise $key will be interpreted as empty string
+				$this->object[] = $value;
+			} else {
+				$this->object[$key] = $value;
+			}
 		}
 	}
 
@@ -145,7 +151,8 @@ class Elgg_DeprecationWrapper implements ArrayAccess {
 	 * @return mixed
 	 */
 	public function offsetGet($key) {
-		if (is_object($this->object)) {
+		$this->displayWarning();
+		if (is_object($this->object) && !$this->object instanceof ArrayAccess) {
 			return $this->object->$key;
 		} else {
 			return $this->object[$key];
@@ -162,7 +169,8 @@ class Elgg_DeprecationWrapper implements ArrayAccess {
 	 * @return void
 	 */
 	public function offsetUnset($key) {
-		if (is_object($this->object)) {
+		$this->displayWarning();
+		if (is_object($this->object) && !$this->object instanceof ArrayAccess) {
 			unset($this->object->$key);
 		} else {
 			unset($this->object[$key]);
@@ -179,7 +187,8 @@ class Elgg_DeprecationWrapper implements ArrayAccess {
 	 * @return bool
 	 */
 	public function offsetExists($offset) {
-		if (is_object($this->object)) {
+		$this->displayWarning();
+		if (is_object($this->object) && !$this->object instanceof ArrayAccess) {
 			return isset($this->object->$offset);
 		} else {
 			return array_key_exists($offset, $this->object);

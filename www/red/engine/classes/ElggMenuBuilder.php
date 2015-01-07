@@ -82,7 +82,7 @@ class ElggMenuBuilder {
 
 	/**
 	 * Group the menu items into sections
-	 * 
+	 *
 	 * @return void
 	 */
 	protected function setupSections() {
@@ -123,7 +123,7 @@ class ElggMenuBuilder {
 			$iteration = 0;
 			$current_gen = $parents;
 			$next_gen = null;
-			while (count($children) && $iteration < 5) {
+			while (count($children) && $iteration < 20) {
 				foreach ($children as $index => $menu_item) {
 					$parent_name = $menu_item->getParentName();
 					if (array_key_exists($parent_name, $current_gen)) {
@@ -263,7 +263,7 @@ class ElggMenuBuilder {
 		$an = $a->getName();
 		$bn = $b->getName();
 
-		$result = strcmp($an, $bn);
+		$result = strnatcmp($an, $bn);
 		if ($result === 0) {
 			return $a->getData('original_order') - $b->getData('original_order');
 		}

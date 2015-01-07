@@ -380,6 +380,9 @@ function elgg_view_deprecated($view, array $vars, $suggestion, $version) {
  * The default action is to append a view.  If the priority is less than 500,
  * the output of the extended view will be appended to the original view.
  *
+ * Views can be extended multiple times, and extensions are not checked for
+ * uniqueness. Use {@link elgg_unextend_view()} to help manage duplicates.
+ *
  * Priority can be specified and affects the order in which extensions
  * are appended or prepended.
  *
@@ -461,7 +464,7 @@ function elgg_view_page($title, $body, $page_shell = 'default', $vars = array())
 	$vars['head'] = elgg_trigger_plugin_hook('head', 'page', $vars, $head_params);
 
 	$vars = elgg_trigger_plugin_hook('output:before', 'page', null, $vars);
-	
+
 	// check for deprecated view
 	if ($page_shell == 'default' && elgg_view_exists('pageshells/pageshell')) {
 		elgg_deprecated_notice("pageshells/pageshell is deprecated by page/$page_shell", 1.8);
@@ -500,10 +503,63 @@ function _elgg_views_prepare_head($title) {
 		'content' => 'text/html; charset=utf-8',
 	);
 
-	// favicon
+	$params['metas'][] = array(
+		'name' => 'description',
+		'content' => elgg_get_config('sitedescription')
+	);
+
+	// https://developer.chrome.com/multidevice/android/installtohomescreen
+	$data['metas'][] = array(
+		'name' => 'viewport',
+		'content' => 'width=device-width',
+	);
+	$data['metas'][] = array(
+		'name' => 'mobile-web-app-capable',
+		'content' => 'yes',
+	);
+	$data['metas'][] = array(
+		'name' => 'apple-mobile-web-app-capable',
+		'content' => 'yes',
+	);
+	$data['links'][] = array(
+		'rel' => 'apple-touch-icon',
+		'href' => elgg_normalize_url('_graphics/favicon-128.png'),
+	);
+
+	// favicons
 	$params['links'][] = array(
 		'rel' => 'icon',
 		'href' => elgg_normalize_url('_graphics/favicon.ico'),
+	);
+	$params['links'][] = array(
+		'rel' => 'icon',
+		'sizes' => '16x16 32x32 48x48 64x64 128x128',
+		'type' => 'image/svg+xml',
+		'href' => elgg_normalize_url('_graphics/favicon.svg'),
+	);
+	$params['links'][] = array(
+		'rel' => 'icon',
+		'sizes' => '16x16',
+		'type' => 'image/png',
+		'href' => elgg_normalize_url('_graphics/favicon-16.png'),
+	);
+	$params['links'][] = array(
+		'rel' => 'icon',
+		'sizes' => '32x32',
+		'type' => 'image/png',
+		'href' => elgg_normalize_url('_graphics/favicon-32.png'),
+	);
+	$params['links'][] = array(
+		'rel' => 'icon',
+		'sizes' => '64x64',
+		'type' => 'image/png',
+		'href' => elgg_normalize_url('_graphics/favicon-64.png'),
+	);
+	$params['links'][] = array(
+		'rel' => 'icon',
+		'sizes' => '128x128',
+		'type' => 'image/png',
+		'href' => elgg_normalize_url('_graphics/favicon-128.png'),
 	);
 
 	// RSS feed link
@@ -725,7 +781,7 @@ function elgg_view_menu_item(ElggMenuItem $item, array $vars = array()) {
  * @param array      $vars   Array of variables to pass to the entity view.
  *                           In Elgg 1.7 and earlier it was the boolean $full_view
  * @param boolean    $bypass If true, will not pass to a custom template handler.
- *                           {@see set_template_handler()}
+ *                           {@link set_template_handler()}
  * @param boolean    $debug  Complain if views are missing
  *
  * @return string HTML to display or false
@@ -849,7 +905,7 @@ function elgg_view_entity_icon(ElggEntity $entity, $size = 'medium', $vars = arr
  * @param ElggAnnotation $annotation The annotation to display
  * @param array          $vars       Variable array for view.
  * @param bool           $bypass     If true, will not pass to a custom
- *                                   template handler. {@see set_template_handler()}
+ *                                   template handler. {@link set_template_handler()}
  * @param bool           $debug      Complain if views are missing
  *
  * @return string/false Rendered annotation
@@ -913,11 +969,6 @@ function elgg_view_annotation(ElggAnnotation $annotation, array $vars = array(),
 function elgg_view_entity_list($entities, $vars = array(), $offset = 0, $limit = 10, $full_view = true,
 $list_type_toggle = true, $pagination = true) {
 
-	if (!$vars["limit"] && !$vars["offset"]) {
-		// no need for pagination if listing is unlimited
-		$vars["pagination"] = false;
-	}
-		
 	if (!is_int($offset)) {
 		$offset = (int)get_input('offset', 0);
 	}
@@ -939,6 +990,7 @@ $list_type_toggle = true, $pagination = true) {
 			'list_type' => $list_type,
 			'list_type_toggle' => false,
 			'offset' => $offset,
+			'limit' => null,
 		);
 
 		$vars = array_merge($defaults, $vars);
@@ -958,6 +1010,11 @@ $list_type_toggle = true, $pagination = true) {
 			'list_type_toggle' => $list_type_toggle,
 			'list_class' => 'elgg-list-entity',
 		);
+	}
+
+	if (!$vars["limit"] && !$vars["offset"]) {
+		// no need for pagination if listing is unlimited
+		$vars["pagination"] = false;
 	}
 
 	if ($vars['list_type'] != 'list') {
@@ -987,13 +1044,15 @@ $list_type_toggle = true, $pagination = true) {
 function elgg_view_annotation_list($annotations, array $vars = array()) {
 	$defaults = array(
 		'items' => $annotations,
+		'offset' => null,
+		'limit' => null,
 		'list_class' => 'elgg-list-annotation elgg-annotation-list', // @todo remove elgg-annotation-list in Elgg 1.9
 		'full_view' => true,
 		'offset_key' => 'annoff',
 	);
-	
+
 	$vars = array_merge($defaults, $vars);
-	
+
 	if (!$vars["limit"] && !$vars["offset"]) {
 		// no need for pagination if listing is unlimited
 		$vars["pagination"] = false;
@@ -1235,7 +1294,10 @@ function elgg_view_form($action, $form_vars = array(), $body_vars = array()) {
 		$form_vars['class'] = $form_class;
 	}
 
-	return elgg_view('input/form', array_merge($defaults, $form_vars));
+	$form_vars = array_merge($defaults, $form_vars);
+	$form_vars['action_name'] = $action;
+
+	return elgg_view('input/form', $form_vars);
 }
 
 /**
@@ -1310,9 +1372,9 @@ function elgg_view_icon($name, $class = '') {
 		elgg_deprecated_notice("Using a boolean to float the icon is deprecated. Use the class float.", 1.9);
 		$class = 'float';
 	}
-	
+
 	$icon_class = array("elgg-icon-$name" , $class);
-	
+
 	return elgg_view("output/icon", array("class" => $icon_class));
 }
 
@@ -1413,6 +1475,11 @@ function _elgg_views_minify($hook, $type, $content, $params) {
 		$autoload_registered = true;
 	}
 
+	if (preg_match('~[\.-]min\.~', $params['view'])) {
+		// bypass minification
+		return;
+	}
+
 	if ($type == 'js') {
 		if (elgg_get_config('simplecache_minify_js')) {
 			return JSMin::minify($content);
@@ -1469,6 +1536,15 @@ function elgg_views_add_rss_link() {
 }
 
 /**
+ * Sends X-Frame-Options header on page requests
+ *
+ * @access private
+ */
+function _elgg_views_send_header_x_frame_options() {
+	header('X-Frame-Options: SAMEORIGIN');
+}
+
+/**
  * Registers deprecated views to avoid making some pages from older plugins
  * completely empty.
  *
@@ -1496,22 +1572,21 @@ function elgg_views_boot() {
 	elgg_register_simplecache_view('css/ie7');
 	elgg_register_simplecache_view('css/ie8');
 
-	elgg_register_simplecache_view('js/elgg/require_config');
 	elgg_register_simplecache_view('js/text.js');
 
 	elgg_register_js('elgg.require_config', elgg_get_simplecache_url('js', 'elgg/require_config'), 'head');
-	elgg_register_js('require', '/vendors/requirejs/require-2.1.4.min.js', 'head');
-	elgg_register_js('jquery', '/vendors/jquery/jquery-1.9.1.min.js', 'head');
+	elgg_register_js('require', '/vendors/requirejs/require-2.1.10.min.js', 'head');
+	elgg_register_js('jquery', '/vendors/jquery/jquery-1.11.0.min.js', 'head');
 	elgg_register_js('jquery-migrate', '/vendors/jquery/jquery-migrate-1.2.1.min.js', 'head');
-	elgg_register_js('jquery-ui', '/vendors/jquery/jquery-ui-1.10.3.min.js', 'head');
-	elgg_register_js('jquery.form', array(
-		'src' => '/vendors/jquery/jquery.form.js',
-		'location' => 'head',
+	elgg_register_js('jquery-ui', '/vendors/jquery/jquery-ui-1.10.4.min.js', 'head');
+
+	// this is the only lib that isn't required to be loaded sync in head
+	elgg_define_js('jquery.form', array(
+		'src' => '/vendors/jquery/jquery.form.min.js',
 		'deps' => array('jquery'),
 		'exports' => 'jQuery.fn.ajaxForm',
 	));
 
-	elgg_register_simplecache_view('js/elgg');
 	$elgg_js_url = elgg_get_simplecache_url('js', 'elgg');
 	elgg_register_js('elgg', $elgg_js_url, 'head');
 
@@ -1522,13 +1597,11 @@ function elgg_views_boot() {
 	elgg_load_js('jquery-ui');
 	elgg_load_js('elgg');
 
-	elgg_register_simplecache_view('js/lightbox');
 	$lightbox_js_url = elgg_get_simplecache_url('js', 'lightbox');
 	elgg_register_js('lightbox', $lightbox_js_url);
 
 	elgg_register_css('lightbox', 'vendors/jquery/colorbox/theme/colorbox.css');
 
-	elgg_register_simplecache_view('css/elgg');
 	$elgg_css_url = elgg_get_simplecache_url('css', 'elgg');
 	elgg_register_css('elgg', $elgg_css_url);
 
@@ -1541,6 +1614,7 @@ function elgg_views_boot() {
 	elgg_register_plugin_hook_handler('simplecache:generate', 'js', '_elgg_views_minify');
 
 	elgg_register_plugin_hook_handler('output:before', 'layout', 'elgg_views_add_rss_link');
+	elgg_register_plugin_hook_handler('output:before', 'page', '_elgg_views_send_header_x_frame_options');
 
 	// discover the core viewtypes
 	// @todo the cache is loaded in load_plugins() but we need to know viewtypes earlier

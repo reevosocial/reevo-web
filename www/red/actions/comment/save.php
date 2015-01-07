@@ -6,9 +6,10 @@
  * @subpackage Comments
  */
 
-$entity_guid = (int) get_input('entity_guid');
-$comment_guid = (int) get_input('comment_guid');
+$entity_guid = (int) get_input('entity_guid', 0, false);
+$comment_guid = (int) get_input('comment_guid', 0, false);
 $comment_text = get_input('generic_comment');
+$is_edit_page = (bool) get_input('is_edit_page', false, false);
 
 if (empty($comment_text)) {
 	register_error(elgg_echo("generic_comment:blank"));
@@ -58,9 +59,11 @@ if ($comment_guid) {
 
 	// Notify if poster wasn't owner
 	if ($entity->owner_guid != $user->guid) {
-		notify_user($entity->owner_guid,
+		$owner = $entity->getOwnerEntity();
+
+		notify_user($owner->guid,
 			$user->guid,
-			elgg_echo('generic_comment:email:subject'),
+			elgg_echo('generic_comment:email:subject', array(), $owner->language),
 			elgg_echo('generic_comment:email:body', array(
 				$entity->title,
 				$user->name,
@@ -68,7 +71,7 @@ if ($comment_guid) {
 				$entity->getURL(),
 				$user->name,
 				$user->getURL()
-			)),
+			), $owner->language),
 			array(
 				'object' => $comment,
 				'action' => 'create',
@@ -88,5 +91,8 @@ if ($comment_guid) {
 	system_message(elgg_echo('generic_comment:posted'));
 }
 
-// Forward back to the page where the action occurred
+if ($is_edit_page) {
+	forward($comment->getURL());
+}
+
 forward(REFERER);

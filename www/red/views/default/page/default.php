@@ -49,7 +49,7 @@ if (elgg_is_logged_in()) {
 		</div>
 	</div>
 __BODY;
-}	
+}
 $body .= <<<__BODY
 	<div class="elgg-page-header">
 		<div class="elgg-inner">
@@ -73,5 +73,13 @@ $body .= elgg_view('page/elements/foot');
 
 $head = elgg_view('page/elements/head', $vars['head']);
 
-echo elgg_view("page/elements/html",
-	array("head" => $head, "body_attrs" => $vars['body_attrs'], "body" => $body));
+$params = array(
+	'head' => $head,
+	'body' => $body,
+);
+
+if (isset($vars['body_attrs'])) {
+	$params['body_attrs'] = $vars['body_attrs'];
+}
+
+echo elgg_view("page/elements/html", $params);

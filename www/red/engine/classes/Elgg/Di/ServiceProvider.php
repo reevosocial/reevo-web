@@ -6,24 +6,26 @@
  * We extend the container because it allows us to document properties in the PhpDoc, which assists
  * IDEs to auto-complete properties and understand the types returned. Extension allows us to keep
  * the container generic.
- * 
+ *
  * @property-read Elgg_ActionsService                     $actions
  * @property-read Elgg_Amd_Config                         $amdConfig
  * @property-read ElggAutoP                               $autoP
  * @property-read Elgg_AutoloadManager                    $autoloadManager
+ * @property-read ElggCrypto                              $crypto
  * @property-read Elgg_Database                           $db
  * @property-read Elgg_EventsService                      $events
  * @property-read Elgg_PluginHooksService                 $hooks
  * @property-read Elgg_Logger                             $logger
  * @property-read ElggVolatileMetadataCache               $metadataCache
  * @property-read Elgg_Notifications_NotificationsService $notifications
+ * @property-read Elgg_PersistentLoginService             $persistentLogin
  * @property-read Elgg_Database_QueryCounter              $queryCounter
  * @property-read Elgg_Http_Request                       $request
  * @property-read Elgg_Router                             $router
  * @property-read ElggSession                             $session
  * @property-read Elgg_ViewsService                       $views
  * @property-read Elgg_WidgetsService                     $widgets
- * 
+ *
  * @package Elgg.Core
  * @access private
  */
@@ -31,7 +33,7 @@ class Elgg_Di_ServiceProvider extends Elgg_Di_DiContainer {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param Elgg_AutoloadManager $autoload_manager Class autoloader
 	 */
 	public function __construct(Elgg_AutoloadManager $autoload_manager) {
@@ -40,11 +42,13 @@ class Elgg_Di_ServiceProvider extends Elgg_Di_DiContainer {
 		$this->setClassName('actions', 'Elgg_ActionsService');
 		$this->setFactory('amdConfig', array($this, 'getAmdConfig'));
 		$this->setClassName('autoP', 'ElggAutoP');
+		$this->setClassName('crypto', 'ElggCrypto');
 		$this->setFactory('db', array($this, 'getDatabase'));
-		$this->setClassName('events', 'Elgg_EventsService');
-		$this->setClassName('hooks', 'Elgg_PluginHooksService');
+		$this->setFactory('events', array($this, 'getEvents'));
+		$this->setFactory('hooks', array($this, 'getHooks'));
 		$this->setFactory('logger', array($this, 'getLogger'));
 		$this->setClassName('metadataCache', 'ElggVolatileMetadataCache');
+		$this->setFactory('persistentLogin', array($this, 'getPersistentLogin'));
 		$this->setFactory('queryCounter', array($this, 'getQueryCounter'), false);
 		$this->setFactory('request', array($this, 'getRequest'));
 		$this->setFactory('router', array($this, 'getRouter'));
@@ -66,18 +70,58 @@ class Elgg_Di_ServiceProvider extends Elgg_Di_DiContainer {
 	}
 
 	/**
+	 * Events service factory
+	 *
+	 * @param Elgg_Di_ServiceProvider $c Dependency injection container
+	 * @return Elgg_EventsService
+	 */
+	protected function getEvents(Elgg_Di_ServiceProvider $c) {
+		return $this->resolveLoggerDependencies('events');
+	}
+
+	/**
 	 * Logger factory
-	 * 
+	 *
 	 * @param Elgg_Di_ServiceProvider $c Dependency injection container
 	 * @return Elgg_Logger
 	 */
 	protected function getLogger(Elgg_Di_ServiceProvider $c) {
-		return new Elgg_Logger($c->hooks);
+		return $this->resolveLoggerDependencies('logger');
+	}
+
+	/**
+	 * Plugin hooks service factory
+	 *
+	 * @param Elgg_Di_ServiceProvider $c Dependency injection container
+	 * @return Elgg_PluginHooksService
+	 */
+	protected function getHooks(Elgg_Di_ServiceProvider $c) {
+		return $this->resolveLoggerDependencies('hooks');
+	}
+
+	/**
+	 * Returns the first requested service of the logger, events, and hooks. It sets the
+	 * hooks and events up in the right order to prevent circular dependency.
+	 *
+	 * @param string $service_needed The service requested first
+	 * @return mixed
+	 */
+	protected function resolveLoggerDependencies($service_needed) {
+		$svcs['hooks'] = new Elgg_PluginHooksService();
+		$svcs['logger'] = new Elgg_Logger($svcs['hooks']);
+		$svcs['hooks']->setLogger($svcs['logger']);
+		$svcs['events'] = new Elgg_EventsService();
+		$svcs['events']->setLogger($svcs['logger']);
+
+		foreach ($svcs as $key => $service) {
+			$this->setValue($key, $service);
+		}
+		return $svcs[$service_needed];
 	}
 
 	/**
 	 * Views service factory
-	 * 
+	 *
 	 * @param Elgg_Di_ServiceProvider $c Dependency injection container
 	 * @return Elgg_ViewsService
 	 */
@@ -87,7 +131,7 @@ class Elgg_Di_ServiceProvider extends Elgg_Di_DiContainer {
 
 	/**
 	 * AMD Config factory
-	 * 
+	 *
 	 * @param Elgg_Di_ServiceProvider $c Dependency injection container
 	 * @return Elgg_Amd_Config
 	 */
@@ -99,7 +143,7 @@ class Elgg_Di_ServiceProvider extends Elgg_Di_DiContainer {
 
 	/**
 	 * Session factory
-	 * 
+	 *
 	 * @param Elgg_Di_ServiceProvider $c Dependency injection container
 	 * @return ElggSession
 	 */
@@ -124,7 +168,7 @@ class Elgg_Di_ServiceProvider extends Elgg_Di_DiContainer {
 
 	/**
 	 * Request factory
-	 * 
+	 *
 	 * @param Elgg_Di_ServiceProvider $c Dependency injection container
 	 * @return Elgg_Http_Request
 	 */
@@ -134,7 +178,7 @@ class Elgg_Di_ServiceProvider extends Elgg_Di_DiContainer {
 
 	/**
 	 * Router factory
-	 * 
+	 *
 	 * @param Elgg_Di_ServiceProvider $c Dependency injection container
 	 * @return Elgg_Router
 	 */
@@ -145,7 +189,7 @@ class Elgg_Di_ServiceProvider extends Elgg_Di_DiContainer {
 
 	/**
 	 * Notification service factory
-	 * 
+	 *
 	 * @param Elgg_Di_ServiceProvider $c Dependency injection container
 	 * @return Elgg_Notifications_NotificationsService
 	 */
@@ -155,6 +199,20 @@ class Elgg_Di_ServiceProvider extends Elgg_Di_DiContainer {
 		$sub = new Elgg_Notifications_SubscriptionsService($c->db);
 		$access = elgg_get_access_object();
 		return new Elgg_Notifications_NotificationsService($sub, $queue, $c->hooks, $access);
+	}
+
+	/**
+	 * Persistent login service factory
+	 *
+	 * @param Elgg_Di_ServiceProvider $c Dependency injection container
+	 * @return Elgg_PersistentLoginService
+	 */
+	protected function getPersistentLogin(Elgg_Di_ServiceProvider $c) {
+		$cookies_config = elgg_get_config('cookies');
+		$remember_me_cookies_config = $cookies_config['remember_me'];
+		$cookie_name = $remember_me_cookies_config['name'];
+		$cookie_token = $c->request->cookies->get($cookie_name, '');
+		return new Elgg_PersistentLoginService($c->db, $c->session, $c->crypto, $remember_me_cookies_config, $cookie_token);
 	}
 
 	/**

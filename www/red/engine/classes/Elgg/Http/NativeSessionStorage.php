@@ -28,7 +28,7 @@
  * PHP Session Storage
  *
  * @access private
- * 
+ *
  * @package    Elgg.Core
  * @subpackage Http
  */
@@ -42,7 +42,7 @@ class Elgg_Http_NativeSessionStorage implements Elgg_Http_SessionStorage {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * List of options for $options array with their defaults.
 	 * @see http://php.net/session.configuration for options
 	 * but we omit 'session.' from the beginning of the keys for convenience.
@@ -74,7 +74,7 @@ class Elgg_Http_NativeSessionStorage implements Elgg_Http_SessionStorage {
 	 * upload_progress.name, "PHP_SESSION_UPLOAD_PROGRESS"
 	 * upload_progress.freq, "1%"
 	 * upload_progress.min-freq, "1"
-	 * 
+	 *
 	 * @param array                    $options Session config options
 	 * @param Elgg_Http_SessionHandler $handler Session handler
 	 */
@@ -171,6 +171,7 @@ class Elgg_Http_NativeSessionStorage implements Elgg_Http_SessionStorage {
 		if (!$this->started) {
 			$this->start();
 		}
+
 		return array_key_exists($name, $_SESSION);
 	}
 
@@ -275,12 +276,11 @@ class Elgg_Http_NativeSessionStorage implements Elgg_Http_SessionStorage {
 
 	/**
 	 * Set the session handler class with PHP
-	 * 
+	 *
 	 * @param Elgg_Http_SessionHandler $handler Handler object
 	 * @return void
 	 */
 	protected function setHandler($handler) {
-		register_shutdown_function('session_write_close');
 		session_set_save_handler(
 			array($handler, 'open'),
 			array($handler, 'close'),

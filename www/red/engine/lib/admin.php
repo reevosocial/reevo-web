@@ -27,7 +27,7 @@
  */
 
 /**
- * Get the admin users 
+ * Get the admin users
  *
  * @param array $options Options array, @see elgg_get_entities() for parameters
  *
@@ -220,6 +220,28 @@ function elgg_register_admin_menu_item($section, $menu_id, $parent_id = null, $p
 }
 
 /**
+ * Add an admin notice when a new ElggUpgrade object is created.
+ *
+ * @param string     $event
+ * @param string     $type
+ * @param ElggObject $object
+ * @access private
+ */
+function _elgg_create_notice_of_pending_upgrade($event, $type, $object) {
+	if ($object instanceof ElggUpgrade) {
+		// Link to the Upgrades section
+		$link = elgg_view('output/url', array(
+			'href' => 'admin/upgrades',
+			'text' => elgg_echo('admin:view_upgrades'),
+		));
+
+		$message = elgg_echo('admin:pending_upgrades');
+
+		elgg_add_admin_notice('pending_upgrades', "$message $link");
+	}
+}
+
+/**
  * Initialize the admin backend.
  * @return void
  * @access private
@@ -257,6 +279,8 @@ function _elgg_admin_init() {
 	elgg_register_action('admin/site/set_maintenance_mode', '', 'admin');
 
 	elgg_register_action('admin/upgrades/upgrade_comments', '', 'admin');
+	elgg_register_action('admin/upgrades/upgrade_datadirs', '', 'admin');
+	elgg_register_action('admin/upgrades/upgrade_discussion_replies', '', 'admin');
 	elgg_register_action('admin/site/regenerate_secret', '', 'admin');
 
 	elgg_register_action('admin/menu/save', '', 'admin');
@@ -270,7 +294,6 @@ function _elgg_admin_init() {
 	elgg_register_action('profile/fields/reorder', '', 'admin');
 
 	elgg_register_simplecache_view('css/admin');
-	elgg_register_simplecache_view('js/admin');
 	$url = elgg_get_simplecache_url('js', 'admin');
 	elgg_register_js('elgg.admin', $url);
 	elgg_register_js('elgg.upgrades', 'js/lib/upgrades.js');
@@ -301,6 +324,16 @@ function _elgg_admin_init() {
 	elgg_register_admin_menu_item('administer', 'add', 'users', 40);
 
 	// configure
+	// upgrades
+	elgg_register_menu_item('page', array(
+		'name' => 'upgrades',
+		'href' => 'admin/upgrades',
+		'text' => elgg_echo('admin:upgrades'),
+		'context' => 'admin',
+		'priority' => 10,
+		'section' => 'configure'
+	));
+
 	// plugins
 	elgg_register_menu_item('page', array(
 		'name' => 'plugins',
@@ -320,7 +353,6 @@ function _elgg_admin_init() {
 	// for performance reasons.
 
 	// appearance
-	elgg_register_admin_menu_item('configure', 'advanced/site_secret', 'settings', 25);
 	elgg_register_admin_menu_item('configure', 'menu_items', 'appearance', 30);
 	elgg_register_admin_menu_item('configure', 'profile_fields', 'appearance', 40);
 	// default widgets is added via an event handler elgg_default_widgets_init() in widgets.php
@@ -343,7 +375,7 @@ function _elgg_admin_init() {
 			'section' => 'alt',
 		));
 	}
-			
+
 	// widgets
 	$widgets = array('online_users', 'new_users', 'content_stats', 'banned_users', 'admin_welcome', 'control_panel');
 	foreach ($widgets as $widget) {
@@ -357,6 +389,9 @@ function _elgg_admin_init() {
 
 	// automatic adding of widgets for admin
 	elgg_register_event_handler('make_admin', 'user', '_elgg_add_admin_widgets');
+
+	// Add notice about pending upgrades
+	elgg_register_event_handler('create', 'object', '_elgg_create_notice_of_pending_upgrade');
 
 	elgg_register_page_handler('admin', '_elgg_admin_page_handler');
 	elgg_register_page_handler('admin_plugin_screenshot', '_elgg_admin_plugin_screenshot_page_handler');
@@ -381,13 +416,13 @@ function _elgg_admin_pagesetup() {
 		elgg_register_menu_item('admin_footer', array(
 			'name' => 'faq',
 			'text' => elgg_echo('admin:footer:faq'),
-			'href' => 'http://docs.elgg.org/wiki/Category:Administration_FAQ',
+			'href' => 'http://learn.elgg.org/en/stable/appendix/faqs.html',
 		));
 
 		elgg_register_menu_item('admin_footer', array(
 			'name' => 'manual',
 			'text' => elgg_echo('admin:footer:manual'),
-			'href' => 'http://docs.elgg.org/wiki/Administration_Manual',
+			'href' => 'http://learn.elgg.org/en/stable/admin/index.html',
 		));
 
 		elgg_register_menu_item('admin_footer', array(
@@ -453,20 +488,24 @@ function _elgg_admin_add_plugin_settings_menu() {
  */
 function _elgg_admin_sort_page_menu($hook, $type, $return, $params) {
 	$configure_items = $return['configure'];
-	/* @var ElggMenuItem[] $configure_items */
-	foreach ($configure_items as $menu_item) {
-		if ($menu_item->getName() == 'settings') {
-			$settings = $menu_item;
+	if (is_array($configure_items)) {
+		/* @var ElggMenuItem[] $configure_items */
+		foreach ($configure_items as $menu_item) {
+			if ($menu_item->getName() == 'settings') {
+				$settings = $menu_item;
+			}
+		}
+
+		if (!empty($settings) && $settings instanceof ElggMenuItem) {
+			// keep the basic and advanced settings at the top
+			/* @var ElggMenuItem $settings */
+			$children = $settings->getChildren();
+			$site_settings = array_splice($children, 0, 2);
+			usort($children, array('ElggMenuBuilder', 'compareByText'));
+			array_splice($children, 0, 0, $site_settings);
+			$settings->setChildren($children);
 		}
 	}
-
-	// keep the basic and advanced settings at the top
-	/* @var ElggMenuItem $settings */
-	$children = $settings->getChildren();
-	$site_settings = array_splice($children, 0, 2);
-	usort($children, array('ElggMenuBuilder', 'compareByText'));
-	array_splice($children, 0, 0, $site_settings);
-	$settings->setChildren($children);
 }
 
 /**
@@ -502,7 +541,7 @@ function _elgg_admin_page_handler($page) {
 
 	// special page for plugin settings since we create the form for them
 	if ($page[0] == 'plugin_settings') {
-		if (isset($page[1]) && (elgg_view_exists("settings/{$page[1]}/edit") || 
+		if (isset($page[1]) && (elgg_view_exists("settings/{$page[1]}/edit") ||
 			elgg_view_exists("plugins/{$page[1]}/settings"))) {
 
 			$view = 'admin/plugin_settings';
@@ -597,7 +636,7 @@ function _elgg_admin_plugin_screenshot_page_handler($pages) {
  */
 function _elgg_admin_markdown_page_handler($pages) {
 	elgg_admin_gatekeeper();
-
+	_elgg_admin_add_plugin_settings_menu();
 	elgg_set_context('admin');
 
 	elgg_unregister_css('elgg');
@@ -646,7 +685,7 @@ function _elgg_admin_markdown_page_handler($pages) {
 		'content' => '<div class="elgg-markdown">' . $text . '</div>',
 		'title' => $title
 	));
-	
+
 	echo elgg_view_page($title, $body, 'admin');
 	return true;
 }
@@ -696,7 +735,7 @@ function _elgg_admin_maintenance_allow_url($current_url) {
 
 /**
  * Handle requests when in maintenance mode
- * 
+ *
  * @access private
  */
 function _elgg_admin_maintenance_handler($hook, $type, $info) {
@@ -748,7 +787,17 @@ function _elgg_admin_maintenance_action_check($hook, $type) {
 	}
 
 	if ($type == 'login') {
-		$user = get_user_by_username(get_input('username'));
+		$username = get_input('username');
+
+		$user = get_user_by_username($username);
+
+		if (!$user) {
+			$users = get_user_by_email($username);
+			if ($users) {
+				$user = $users[0];
+			}
+		}
+
 		if ($user && $user->isAdmin()) {
 			return true;
 		}
@@ -786,7 +835,7 @@ function _elgg_add_admin_widgets($event, $type, $user) {
 		1 => array('control_panel', 'admin_welcome'),
 		2 => array('online_users', 'new_users', 'content_stats'),
 	);
-	
+
 	foreach ($adminWidgets as $column => $handlers) {
 		foreach ($handlers as $position => $handler) {
 			$guid = elgg_create_widget($user->getGUID(), $handler, 'admin');

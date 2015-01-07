@@ -5,8 +5,8 @@
  *
  * Reserved keys: last_forward_from, msg, sticky_forms, user, guid, id, code, name, username
  * Deprecated keys: user, id, name, username
- * 
- * ArrayAccess was deprecated in Elgg 1.9. This means you should use 
+ *
+ * ArrayAccess was deprecated in Elgg 1.9. This means you should use
  * $session->get('foo') rather than $session['foo'].
  * Warning: You can not access multidimensional arrays through ArrayAccess like
  * this $session['foo']['bar']
@@ -184,7 +184,7 @@ class ElggSession implements ArrayAccess {
 
 	/**
 	 * Sets the logged in user
-	 * 
+	 *
 	 * @param ElggUser $user The user who is logged in
 	 * @return void
 	 * @since 1.9
@@ -196,7 +196,7 @@ class ElggSession implements ArrayAccess {
 
 	/**
 	 * Gets the logged in user
-	 * 
+	 *
 	 * @return ElggUser
 	 * @since 1.9
 	 */
@@ -206,7 +206,7 @@ class ElggSession implements ArrayAccess {
 
 	/**
 	 * Remove the logged in user
-	 * 
+	 *
 	 * @return void
 	 * @since 1.9
 	 */
@@ -217,9 +217,9 @@ class ElggSession implements ArrayAccess {
 
 	/**
 	 * Adds a token to the session
-	 * 
+	 *
 	 * This is used in creation of CSRF token
-	 * 
+	 *
 	 * @return void
 	 */
 	protected function generateSessionToken() {
@@ -239,6 +239,7 @@ class ElggSession implements ArrayAccess {
 	 */
 	public function __isset($key) {
 		elgg_deprecated_notice(__METHOD__ . " has been deprecated.", 1.9);
+		// Note: We use offsetExists() for BC
 		return $this->offsetExists($key);
 	}
 
@@ -253,7 +254,7 @@ class ElggSession implements ArrayAccess {
 	 */
 	public function offsetSet($key, $value) {
 		elgg_deprecated_notice(__METHOD__ . " has been deprecated.", 1.9);
-		$_SESSION[$key] = $value;
+		$this->set($key, $value);
 	}
 
 	/**
@@ -290,8 +291,8 @@ class ElggSession implements ArrayAccess {
 			}
 		}
 
-		if (isset($_SESSION[$key])) {
-			return $_SESSION[$key];
+		if ($this->has($key)) {
+			return $this->get($key);
 		}
 
 		$orig_value = null;
@@ -300,7 +301,7 @@ class ElggSession implements ArrayAccess {
 			elgg_deprecated_notice("Plugin hook session:get has been deprecated.", 1.9);
 		}
 
-		$_SESSION[$key] = $value;
+		$this->set($key, $value);
 		return $value;
 	}
 
@@ -316,7 +317,7 @@ class ElggSession implements ArrayAccess {
 	 */
 	public function offsetUnset($key) {
 		elgg_deprecated_notice(__METHOD__ . " has been deprecated.", 1.9);
-		unset($_SESSION[$key]);
+		$this->remove($key);
 	}
 
 	/**
@@ -337,10 +338,11 @@ class ElggSession implements ArrayAccess {
 			return (bool)$this->loggedInUser;
 		}
 
-		if (isset($_SESSION[$offset])) {
+		if ($this->has($offset)) {
 			return true;
 		}
 
+		// Note: We use offsetGet() for BC
 		if ($this->offsetGet($offset)) {
 			return true;
 		}

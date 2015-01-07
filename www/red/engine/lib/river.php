@@ -9,10 +9,10 @@
 
 /**
  * Adds an item to the river.
- * 
+ *
  * @tip Read the item like "Lisa (subject) posted (action)
  * a comment (object) on John's blog (target)".
- * 
+ *
  * @param array $options Array in format:
  *
  * 	view => STR The view that will handle the river item (must exist)
@@ -122,13 +122,14 @@ function elgg_create_river_item(array $options = array()) {
 		" object_guid = $object_guid, " .
 		" target_guid = $target_guid, " .
 		" annotation_id = $annotation_id, " .
-		" posted = $posted");
+		" posted = $posted, " .
+		" enabled = 'yes'");
 
 	// update the entities which had the action carried out on it
 	// @todo shouldn't this be done elsewhere? Like when an annotation is saved?
 	if ($id) {
 		update_entity_last_action($object_guid, $posted);
-		
+
 		$river_items = elgg_get_river(array('id' => $id));
 		if ($river_items) {
 			elgg_trigger_event('created', 'river', $river_items[0]);
@@ -232,7 +233,7 @@ function elgg_delete_river(array $options = array()) {
 
 	// remove identical join clauses
 	$joins = array_unique($options['joins']);
-	
+
 	// add joins
 	foreach ($joins as $j) {
 		$query .= " $j ";
@@ -340,7 +341,16 @@ function elgg_get_river(array $options = array()) {
 		$wheres[] = "rv.posted <= {$options['posted_time_upper']}";
 	}
 
+	if (!access_get_show_hidden_status()) {
+		$wheres[] = "rv.enabled = 'yes'";
+	}
+
 	$joins = $options['joins'];
+
+	$dbprefix = elgg_get_config('dbprefix');
+	$joins[] = "JOIN {$dbprefix}entities oe ON rv.object_guid = oe.guid";
+	// LEFT JOIN is used because all river items do not necessarily have target
+	$joins[] = "LEFT JOIN {$dbprefix}entities te ON rv.target_guid = te.guid";
 
 	if ($options['relationship_guid']) {
 		$clauses = elgg_get_entity_relationship_where_sql(
@@ -385,7 +395,14 @@ function elgg_get_river(array $options = array()) {
 		$query .= " $w AND ";
 	}
 
-	$query .= elgg_river_get_access_sql();
+	// Make sure that user has access to all the entities referenced by each river item
+	$object_access_where = _elgg_get_access_where_sql(array('table_alias' => 'oe'));
+	$target_access_where = _elgg_get_access_where_sql(array('table_alias' => 'te'));
+
+	// We use LEFT JOIN with entities table but the WHERE clauses are used
+	// regardless if a JOIN is successfully made. The "te.guid IS NULL" is
+	// needed because of this.
+	$query .= "$object_access_where AND ($target_access_where OR te.guid IS NULL) ";
 
 	if (!$options['count']) {
 		$options['group_by'] = sanitise_string($options['group_by']);
@@ -481,9 +498,9 @@ function elgg_list_river(array $options = array()) {
 		'list_class' => 'elgg-list-river',
 		'no_results' => '',
 	);
-	
+
 	$options = array_merge($defaults, $options);
-	
+
 	if (!$options["limit"] && !$options["offset"]) {
 		// no need for pagination if listing is unlimited
 		$options["pagination"] = false;
@@ -520,24 +537,6 @@ function _elgg_row_to_elgg_river_item($row) {
 	}
 
 	return new ElggRiverItem($row);
-}
-
-/**
- * Get the river's access where clause
- *
- * @return string
- * @since 1.8.0
- * @access private
- */
-function elgg_river_get_access_sql() {
-	// @todo deprecate? this is only used once in elgg_get_river
-	return _elgg_get_access_where_sql(array(
-		'table_alias' => '',
-		'owner_guid_column' => 'rv.subject_guid',
-		'guid_column' => 'object_guid',
-		'access_column' => 'rv.access_id', 
-		'use_enabled_clause' => false,
-	));
 }
 
 /**
@@ -746,6 +745,67 @@ function _elgg_river_test($hook, $type, $value) {
 }
 
 /**
+ * Disable river entries that reference a disabled entity as subject/object/target
+ *
+ * @param string $event The event 'disable'
+ * @param string $type Type of entity being disabled 'all'
+ * @param mixed $entity The entity being disabled
+ * @return boolean
+ * @access private
+ */
+function _elgg_river_disable($event, $type, $entity) {
+
+	if (!elgg_instanceof($entity)) {
+		return true;
+	}
+
+	$dbprefix = elgg_get_config('dbprefix');
+	$query = <<<QUERY
+	UPDATE {$dbprefix}river AS rv
+	SET rv.enabled = 'no'
+	WHERE (rv.subject_guid = {$entity->guid} OR rv.object_guid = {$entity->guid} OR rv.target_guid = {$entity->guid});
+QUERY;
+
+	update_data($query);
+	return true;
+}
+
+
+/**
+ * Enable river entries that reference a re-enabled entity as subject/object/target
+ *
+ * @param string $event The event 'enable'
+ * @param string $type Type of entity being enabled 'all'
+ * @param mixed $entity The entity being enabled
+ * @return boolean
+ * @access private
+ */
+function _elgg_river_enable($event, $type, $entity) {
+
+	if (!elgg_instanceof($entity)) {
+		return true;
+	}
+
+	$dbprefix = elgg_get_config('dbprefix');
+	$query = <<<QUERY
+	UPDATE {$dbprefix}river AS rv
+	LEFT JOIN {$dbprefix}entities AS se ON se.guid = rv.subject_guid
+	LEFT JOIN {$dbprefix}entities AS oe ON oe.guid = rv.object_guid
+	LEFT JOIN {$dbprefix}entities AS te ON te.guid = rv.target_guid
+	SET rv.enabled = 'yes'
+	WHERE (
+			(se.enabled = 'yes' OR se.guid IS NULL) AND
+			(oe.enabled = 'yes' OR oe.guid IS NULL) AND
+			(te.enabled = 'yes' OR te.guid IS NULL)
+		)
+		AND (se.guid = {$entity->guid} OR oe.guid = {$entity->guid} OR te.guid = {$entity->guid});
+QUERY;
+
+	update_data($query);
+	return true;
+}
+
+/**
  * Initialize river library
  * @access private
  */
@@ -753,7 +813,7 @@ function _elgg_river_init() {
 	elgg_register_page_handler('activity', '_elgg_river_page_handler');
 	$item = new ElggMenuItem('activity', elgg_echo('activity'), 'activity');
 	elgg_register_menu_item('site', $item);
-	
+
 	elgg_register_widget_type('river_widget', elgg_echo('river:widget:title'), elgg_echo('river:widget:description'));
 
 	elgg_register_action('river/delete', '', 'admin');
@@ -762,3 +822,5 @@ function _elgg_river_init() {
 }
 
 elgg_register_event_handler('init', 'system', '_elgg_river_init');
+elgg_register_event_handler('disable:after', 'all', '_elgg_river_disable');
+elgg_register_event_handler('enable:after', 'all', '_elgg_river_enable');

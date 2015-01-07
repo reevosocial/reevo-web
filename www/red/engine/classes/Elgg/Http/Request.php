@@ -28,7 +28,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
- * 
+ *
  * @package    Elgg.Core
  * @subpackage Http
  * @since      1.9.0
@@ -115,9 +115,9 @@ class Elgg_Http_Request {
 		$this->request = new Elgg_Http_ParameterBag($this->stripSlashesIfMagicQuotes($request));
 		$this->cookies = new Elgg_Http_ParameterBag($this->stripSlashesIfMagicQuotes($cookies));
 		// Symfony uses FileBag so this will change in next Elgg version
-		$this->files = new Elgg_Http_ParameterBag($this->stripSlashesIfMagicQuotes($files));
-		$this->server = new Elgg_Http_ParameterBag($this->stripSlashesIfMagicQuotes($server));
-	
+		$this->files = new Elgg_Http_ParameterBag($files);
+		$this->server = new Elgg_Http_ParameterBag($server);
+
 		$headers = $this->prepareHeaders();
 		// Symfony uses HeaderBag so this will change in next Elgg version
 		$this->headers = new Elgg_Http_ParameterBag($headers);
@@ -210,7 +210,8 @@ class Elgg_Http_Request {
 
 		if (isset($components['query'])) {
 			parse_str(html_entity_decode($components['query']), $qs);
-			$query = array_replace($qs, $query);
+			// original uses array_replace. using array_merge for 5.2 BC
+			$query = array_merge($qs, $query);
 		}
 		$queryString = http_build_query($query, '', '&');
 
@@ -461,7 +462,7 @@ class Elgg_Http_Request {
 	 * @return array
 	 */
 	public function getUrlSegments() {
-		$path = trim($this->getPathInfo(), '/');
+		$path = trim($this->query->get('__elgg_uri'), '/');
 		if (!$path) {
 			return array();
 		}

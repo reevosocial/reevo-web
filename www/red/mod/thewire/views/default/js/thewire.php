@@ -7,17 +7,17 @@
 elgg.provide('elgg.thewire');
 
 elgg.thewire.init = function() {
-	if ($("#thewire-characters-remaining span").length) {
-		elgg.thewire.charLimit = parseInt($("#thewire-characters-remaining span").text());
-		if (elgg.thewire.charLimit > 0) {
-			$("#thewire-textarea").live('keydown', function() {
-				elgg.thewire.textCounter(this, $("#thewire-characters-remaining span"), elgg.thewire.charLimit);
-			});
-			$("#thewire-textarea").live('keyup', function() {
-				elgg.thewire.textCounter(this, $("#thewire-characters-remaining span"), elgg.thewire.charLimit);
-			});
+	var callback = function() {
+		var maxLength = $(this).data('max-length');
+		if (maxLength) {
+			elgg.thewire.textCounter(this, $("#thewire-characters-remaining span"), maxLength);
 		}
-	}
+	};
+
+	$("#thewire-textarea").live({
+		input: callback,
+		onpropertychange: callback
+	});
 
 	$(".thewire-previous").live('click', elgg.thewire.viewPrevious);
 };
@@ -66,8 +66,8 @@ elgg.thewire.viewPrevious = function(event) {
 	} else {
 		$link.html(elgg.echo('hide'));
 		$link.attr("title", elgg.echo('thewire:hide:help'));
-		
-		$.ajax({type: "GET",
+
+		elgg.get({
 			url: elgg.config.wwwroot + "ajax/view/thewire/previous",
 			dataType: "html",
 			cache: false,

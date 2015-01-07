@@ -31,9 +31,20 @@ if ($reply && $reply->canEdit()) {
 		'value' => $reply->guid
 	));
 
+	$reply_label = elgg_echo("discussion:reply:edit");
 	$submit_text = elgg_echo('save');
 } else {
+	$reply_label = elgg_echo("reply:this");
 	$submit_text = elgg_echo('reply');
+}
+
+$cancel_button = '';
+if ($reply) {
+	$cancel_button = elgg_view('input/button', array(
+		'value' => elgg_echo('cancel'),
+		'class' => 'elgg-button-cancel mlm',
+		'href' => $entity ? $entity->getURL() : '#',
+	));
 }
 
 $submit_input = elgg_view('input/submit', array('value' => $submit_text));
@@ -58,12 +69,13 @@ FORM;
 
 echo <<<FORM
 	<div>
+		<label>$reply_label</label>
 		$description_input
 	</div>
 	<div class="foot">
 		$reply_guid_input
 		$topic_guid_input
-		$submit_input
+		$submit_input $cancel_button
 	</div>
 FORM;
 }

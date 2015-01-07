@@ -349,4 +349,44 @@ class ElggCoreRegressionBugsTest extends ElggCoreUnitTest {
 
 		libxml_disable_entity_loader($elLast);
 	}
+
+	public function test_update_handlers_can_change_attributes() {
+		$object = new ElggObject();
+		$object->subtype = 'issue6225';
+		$object->access_id = ACCESS_PUBLIC;
+		$object->save();
+		$guid = $object->guid;
+
+		elgg_register_event_handler('update', 'object', array('ElggCoreRegressionBugsTest', 'handleUpdateForIssue6225test'));
+
+		$object->save();
+
+		elgg_unregister_event_handler('update', 'object', array('ElggCoreRegressionBugsTest', 'handleUpdateForIssue6225test'));
+
+		_elgg_invalidate_cache_for_entity($guid);
+		$object = get_entity($guid);
+		$this->assertEqual($object->access_id, ACCESS_PRIVATE);
+
+		$object->delete();
+	}
+
+	public static function handleUpdateForIssue6225test($event, $type, ElggObject $object) {
+		$object->access_id = ACCESS_PRIVATE;
+	}
+
+	/**
+	 * elgg_admin_sort_page_menu() should not expect that the supplied menu has a certain hierarchy
+	 *
+	 * https://github.com/Elgg/Elgg/issues/6379
+	 */
+	function test_admin_sort_page_menu() {
+
+		elgg_push_context('admin');
+
+		elgg_register_plugin_hook_handler('prepare', 'menu:page', 'elgg_admin_sort_page_menu');
+		$result = elgg_trigger_plugin_hook('prepare', 'menu:page', array(), array());
+		$this->assertTrue(is_array($result), "Admin page menu fails to prepare for viewing");
+
+		elgg_pop_context();
+	}
 }

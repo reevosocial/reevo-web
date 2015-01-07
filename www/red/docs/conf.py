@@ -94,7 +94,7 @@ pygments_style = 'sphinx'
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'sphinxdoc'
+html_theme = 'default'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
@@ -246,3 +246,10 @@ texinfo_documents = [
 
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #texinfo_no_detailmenu = False
+
+
+# -- Options for internationalization and localization -------------------------
+
+# See http://sphinx-doc.org/latest/intl.html for more information.
+locale_dirs = ['locale/']
+gettext_compact = True      # Less translation templates, easier to handle.

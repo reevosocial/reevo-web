@@ -4,6 +4,10 @@
  *
  * To create a menu item that is not a link, pass false for $href.
  *
+ * Any undocumented properties set will be passed to the output/url view during rendering. E.g.
+ * to give a menu item a "target" attribute, set $item->target, or include a "target" key in
+ * the options array for factory().
+ *
  * @package    Elgg.Core
  * @subpackage Navigation
  * @since      1.8.0
@@ -85,12 +89,28 @@ class ElggMenuItem {
 	}
 
 	/**
-	 * ElggMenuItem factory method
-	 *
-	 * This static method creates an ElggMenuItem from an associative array.
-	 * Required keys are name, text, and href.
+	 * Create an ElggMenuItem from an associative array. Required keys are name, text, and href.
 	 *
 	 * @param array $options Option array of key value pairs
+	 *
+	 *    name        => STR  Menu item identifier (required)
+	 *    text        => STR  Menu item display text as HTML (required)
+	 *    href        => STR  Menu item URL (required) (false for non-links.
+	 *                        @warning If you disable the href the <a> tag will
+	 *                        not appear, so the link_class will not apply. If you
+	 *                        put <a> tags in manually through the 'text' option
+	 *                        the default CSS selector .elgg-menu-$menu > li > a
+	 *                        may affect formatting. Wrap in a <span> if it does.)
+	 *
+	 *    section     => STR  Menu section identifier
+	 *    link_class  => STR  A class or classes for the <a> tag
+	 *    item_class  => STR  A class or classes for the <li> tag
+	 *    parent_name => STR  Identifier of the parent menu item
+	 *    contexts    => ARR  Page context strings
+	 *    title       => STR  Menu item tooltip
+	 *    selected    => BOOL Is this menu item currently selected?
+	 *    confirm     => STR  If set, the link will be drawn with the output/confirmlink view instead of output/url.
+	 *    data        => ARR  Custom attributes stored in the menu item.
 	 *
 	 * @return ElggMenuItem or null on error
 	 */
@@ -112,7 +132,7 @@ class ElggMenuItem {
 			$options['contexts'] = $options['context'];
 			unset($options['context']);
 		}
-		
+
 		// make sure contexts is set correctly
 		if (isset($options['contexts'])) {
 			$item->setContext($options['contexts']);
@@ -137,7 +157,7 @@ class ElggMenuItem {
 			$item->setData($options['data']);
 			unset($options['data']);
 		}
-		
+
 		foreach ($options as $key => $value) {
 			if (isset($item->data[$key])) {
 				$item->data[$key] = $value;
@@ -202,7 +222,7 @@ class ElggMenuItem {
 
 	/**
 	 * Set the display text of the menu item
-	 * 
+	 *
 	 * @param string $text The display text as HTML
 	 * @return void
 	 */
@@ -423,7 +443,7 @@ class ElggMenuItem {
 	// @codingStandardsIgnoreStart
 	/**
 	 * Add additional classes
-	 * 
+	 *
 	 * @param array $current    The current array of classes
 	 * @param mixed $additional Additional classes (either array of string)
 	 * @return void
@@ -520,7 +540,7 @@ class ElggMenuItem {
 
 	/**
 	 * Set the parent menu item
-	 * 
+	 *
 	 * This is reserved for the ElggMenuBuilder.
 	 *
 	 * @param ElggMenuItem $parent The parent of this menu item
@@ -533,7 +553,7 @@ class ElggMenuItem {
 
 	/**
 	 * Get the parent menu item
-	 * 
+	 *
 	 * This is reserved for the ElggMenuBuilder.
 	 *
 	 * @return ElggMenuItem or null
@@ -545,7 +565,7 @@ class ElggMenuItem {
 
 	/**
 	 * Add a child menu item
-	 * 
+	 *
 	 * This is reserved for the ElggMenuBuilder.
 	 *
 	 * @param ElggMenuItem $item A child menu item
@@ -558,7 +578,7 @@ class ElggMenuItem {
 
 	/**
 	 * Set the menu item's children
-	 * 
+	 *
 	 * This is reserved for the ElggMenuBuilder.
 	 *
 	 * @param array $children Array of ElggMenuItems
@@ -571,7 +591,7 @@ class ElggMenuItem {
 
 	/**
 	 * Get the children menu items
-	 * 
+	 *
 	 * This is reserved for the ElggMenuBuilder.
 	 *
 	 * @return array
@@ -583,7 +603,7 @@ class ElggMenuItem {
 
 	/**
 	 * Sort the children
-	 * 
+	 *
 	 * This is reserved for the ElggMenuBuilder.
 	 *
 	 * @param string $sortFunction A function that is passed to usort()
@@ -599,7 +619,7 @@ class ElggMenuItem {
 
 	/**
 	 * Get all the values for this menu item. Useful for rendering.
-	 * 
+	 *
 	 * @return array
 	 * @since 1.9.0
 	 */

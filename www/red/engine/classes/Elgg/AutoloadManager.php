@@ -3,7 +3,7 @@
  * Manages core autoloading and caching of class maps
  *
  * @access private
- * 
+ *
  * @package    Elgg.Core
  * @subpackage Autoloader
  */
@@ -35,7 +35,7 @@ class Elgg_AutoloadManager {
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param Elgg_ClassLoader $loader Class loader object
 	 */
 	public function __construct(Elgg_ClassLoader $loader) {
@@ -43,7 +43,8 @@ class Elgg_AutoloadManager {
 	}
 
 	/**
-	 * Add classes found in this directory to the class map
+	 * Add classes found in this directory to the class map and allow classes in
+	 * subdirectories to be found by PSR-0 rules.
 	 *
 	 * We keep track of which dirs were scanned on previous requests so we don't need to
 	 * rescan unless the cache is emptied.
@@ -63,7 +64,7 @@ class Elgg_AutoloadManager {
 	}
 
 	/**
-	 * Scan a /classes directory for PHP files to map directly to classes.
+	 * Scan (non-recursively) a /classes directory for PHP files to map directly to classes.
 	 *
 	 * For BC with Elgg 1.8's autoloader we map these files directly, but besides this
 	 * the autoloader is PSR-0 compatible.
@@ -144,7 +145,7 @@ class Elgg_AutoloadManager {
 
 	/**
 	 * Some method that does something
-	 * 
+	 *
 	 * @todo what is a spec?
 	 * @return bool|array
 	 */
@@ -175,7 +176,7 @@ class Elgg_AutoloadManager {
 
 	/**
 	 * Get the class loader
-	 * 
+	 *
 	 * @return Elgg_ClassLoader
 	 */
 	public function getLoader() {
@@ -184,7 +185,7 @@ class Elgg_AutoloadManager {
 
 	/**
 	 * Set the cache storage object
-	 * 
+	 *
 	 * @param ElggCache $storage Cache object
 	 * @return void
 	 */

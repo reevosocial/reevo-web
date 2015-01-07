@@ -240,9 +240,9 @@ function _elgg_retrieve_cached_subtype($type, $subtype) {
  */
 function _elgg_populate_subtype_cache() {
 	global $CONFIG, $SUBTYPE_CACHE;
-	
+
 	$results = get_data("SELECT * FROM {$CONFIG->dbprefix}entity_subtypes");
-	
+
 	$SUBTYPE_CACHE = array();
 	foreach ($results as $row) {
 		$SUBTYPE_CACHE[$row->id] = $row;
@@ -270,7 +270,7 @@ function get_subtype_class($type, $subtype) {
 	if ($SUBTYPE_CACHE === null) {
 		_elgg_populate_subtype_cache();
 	}
-	
+
 	// use the cache before going to the database
 	$obj = _elgg_retrieve_cached_subtype($type, $subtype);
 	if ($obj) {
@@ -300,7 +300,7 @@ function get_subtype_class_from_id($subtype_id) {
 	if ($SUBTYPE_CACHE === null) {
 		_elgg_populate_subtype_cache();
 	}
-	
+
 	if (isset($SUBTYPE_CACHE[$subtype_id])) {
 		return $SUBTYPE_CACHE[$subtype_id]->class;
 	}
@@ -351,7 +351,7 @@ function add_subtype($type, $subtype, $class = "") {
 
 		$id = insert_data("INSERT INTO {$CONFIG->dbprefix}entity_subtypes"
 			. " (type, subtype, class) VALUES ('$type', '$subtype', '$class')");
-		
+
 		// add entry to cache
 		$cache_obj->id = $id;
 		$SUBTYPE_CACHE[$id] = $cache_obj;
@@ -375,13 +375,20 @@ function add_subtype($type, $subtype, $class = "") {
  * @see update_subtype()
  */
 function remove_subtype($type, $subtype) {
-	global $CONFIG;
+	global $CONFIG, $SUBTYPE_CACHE;
 
 	$type = sanitise_string($type);
 	$subtype = sanitise_string($subtype);
 
-	return delete_data("DELETE FROM {$CONFIG->dbprefix}entity_subtypes"
+	$success = delete_data("DELETE FROM {$CONFIG->dbprefix}entity_subtypes"
 		. " WHERE type = '$type' AND subtype = '$subtype'");
+
+	if ($success) {
+		// invalidate the cache
+		$SUBTYPE_CACHE = null;
+	}
+
+	return (bool) $success;
 }
 
 /**
@@ -410,7 +417,7 @@ function update_subtype($type, $subtype, $class = '') {
 	$type = sanitise_string($type);
 	$subtype = sanitise_string($subtype);
 	$class = sanitise_string($class);
-	
+
 	$success = update_data("UPDATE {$CONFIG->dbprefix}entity_subtypes
 		SET type = '$type', subtype = '$subtype', class = '$class'
 		WHERE id = $id
@@ -606,7 +613,7 @@ function get_entity($guid) {
 	if (!is_numeric($guid) || $guid === 0 || $guid === '0') {
 		return false;
 	}
-	
+
 	// Check local cache first
 	$new_entity = _elgg_retrieve_cached_entity($guid);
 	if ($new_entity) {
@@ -1126,7 +1133,7 @@ function _elgg_get_entity_type_subtype_where_sql($table, $types, $subtypes, $pai
 						continue;
 					} else {
 						$subtype_id = get_subtype_id($type, $subtype);
-						
+
 						if ($subtype_id) {
 							$subtype_ids[] = $subtype_id;
 						} else {
@@ -1759,7 +1766,7 @@ function get_registered_entity_types($type = null) {
 }
 
 /**
- * Returns if the entity type and subtype have been registered with {@see elgg_register_entity_type()}.
+ * Returns if the entity type and subtype have been registered with {@link elgg_register_entity_type()}.
  *
  * @param string $type    The type of entity (object, site, user, group)
  * @param string $subtype The subtype (may be blank)

@@ -15,6 +15,11 @@ class ElggCrypto {
 	const CHARS_PASSWORD = 'bcdfghjklmnpqrstvwxyz2346789';
 
 	/**
+	 * Character set for hexadecimal
+	 */
+	const CHARS_HEX = '0123456789abcdef';
+
+	/**
 	 * Generate a string of highly randomized bytes (over the full 8-bit range).
 	 *
 	 * @param int $length Number of bytes needed
@@ -175,18 +180,24 @@ class ElggCrypto {
 	 *
 	 * @see https://github.com/zendframework/zf2/blob/master/library/Zend/Math/Rand.php#L179
 	 */
-	public static function getRandomString($length, $chars = null) {
+	public function getRandomString($length, $chars = null) {
 		if ($length < 1) {
 			throw new InvalidArgumentException('Length should be >= 1');
 		}
 
 		if (empty($chars)) {
 			$numBytes = ceil($length * 0.75);
-			$bytes    = self::getRandomBytes($numBytes);
+			$bytes    = $this->getRandomBytes($numBytes);
 			$string = substr(rtrim(base64_encode($bytes), '='), 0, $length);
 
 			// Base64 URL
 			return strtr($string, '+/', '-_');
+		}
+
+		if ($chars == self::CHARS_HEX) {
+			// hex is easy
+			$bytes = $this->getRandomBytes(ceil($length / 2));
+			return substr(bin2hex($bytes), 0, $length);
 		}
 
 		$listLen = strlen($chars);
@@ -195,7 +206,7 @@ class ElggCrypto {
 			return str_repeat($chars, $length);
 		}
 
-		$bytes  = self::getRandomBytes($length);
+		$bytes  = $this->getRandomBytes($length);
 		$pos    = 0;
 		$result = '';
 		for ($i = 0; $i < $length; $i++) {

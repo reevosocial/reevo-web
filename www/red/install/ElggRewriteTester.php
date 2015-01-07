@@ -66,7 +66,7 @@ class ElggRewriteTester {
 	 *
 	 * @param string $url Rewrite test URL
 	 *
-	 * @return string|bool Subdirectory string with beginning and trailing slash or false if were unable to determine subdirectory 
+	 * @return string|bool Subdirectory string with beginning and trailing slash or false if were unable to determine subdirectory
 	 * or pointing at root of domain already
 	 */
 	public function guessSubdirectory($url) {
@@ -89,28 +89,60 @@ class ElggRewriteTester {
 	 *
 	 * @return bool
 	 */
-	protected function runRewriteTest($url) {
+	public function runRewriteTest($url) {
 
-		$this->serverSupportsRemoteRead = TRUE;
+		$this->serverSupportsRemoteRead = true;
 
-		if (function_exists('curl_init')) {
+		if (ini_get('allow_url_fopen')) {
+			$ctx = stream_context_create(array(
+				'http' => array(
+					'follow_location' => 0,
+					'timeout' => 5,
+				),
+			));
+			$response = file_get_contents($url, null, $ctx);
+		} elseif (function_exists('curl_init')) {
 			// try curl if installed
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 5);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 			$response = curl_exec($ch);
 			curl_close($ch);
-			return $response === 'success';
-		} else if (ini_get('allow_url_fopen')) {
-			// use file_get_contents as fallback
-			$response = file_get_contents($url);
-			return $response === 'success';
 		} else {
-			$this->serverSupportsRemoteRead = FALSE;
-			return FALSE;
+			$response = '';
 		}
+
+		if ($response !== 'success') {
+			$this->serverSupportsRemoteRead = false;
+			return false;
+		}
+
+		return true;
+	}
+
+	public function runLocalhostAccessTest() {
+		$url = elgg_get_site_url();
+		if (ini_get('allow_url_fopen')) {
+			$ctx = stream_context_create(array(
+				'http' => array(
+					'follow_location' => 0,
+					'timeout' => 5,
+				),
+			));
+			$response = file_get_contents($url, null, $ctx);
+		} elseif (function_exists('curl_init')) {
+			// try curl if installed
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			$response = curl_exec($ch);
+			curl_close($ch);
+		}
+
+		return $response !== false;
 	}
 
 	/**
@@ -155,7 +187,7 @@ class ElggRewriteTester {
 			$this->htaccessIssue = 'cannot_copy';
 			return FALSE;
 		}
-		
+
 		// does default RewriteBase work already?
 		if (!$this->runRewriteTest($url)) {
 			//try to rewrite to guessed subdirectory
@@ -189,7 +221,7 @@ class ElggRewriteTester {
 		if ($this->serverSupportsRemoteRead == FALSE) {
 			$msg = elgg_echo('install:warning:rewrite:unknown', array($url));
 			$msg .= elgg_view('install/js_rewrite_check', array('url' => $url));
-			
+
 			return array(
 				'severity' => 'warning',
 				'message' => $msg,
@@ -202,7 +234,7 @@ class ElggRewriteTester {
 			if (!isset($this->htaccessIssue)) {
 				$msg .= elgg_echo('install:error:rewrite:allowoverride');
 				$msg .= elgg_view('install/js_rewrite_check', array('url' => $url));
-			
+
 				return array(
 					'severity' => 'failure',
 					'message' => $msg,

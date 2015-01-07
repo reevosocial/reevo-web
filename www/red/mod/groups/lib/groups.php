@@ -149,7 +149,7 @@ function groups_handle_mine_page() {
 	if (elgg_get_plugin_setting('limited_groups', 'groups') != 'yes' || elgg_is_admin_logged_in()) {
 		elgg_register_title_button();
 	}
-	
+
 	$dbprefix = elgg_get_config('dbprefix');
 
 	$content = elgg_list_entities_from_relationship(array(
@@ -181,6 +181,8 @@ function groups_handle_mine_page() {
  */
 function groups_handle_edit_page($page, $guid = 0) {
 	elgg_gatekeeper();
+
+	elgg_require_js('elgg/groups/edit');
 
 	if ($page == 'add') {
 		elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
@@ -529,7 +531,9 @@ function groups_prepare_form_vars($group = null) {
 		'membership' => ACCESS_PUBLIC,
 		'vis' => ACCESS_PUBLIC,
 		'guid' => null,
-		'entity' => null
+		'entity' => null,
+		'owner_guid' => elgg_get_logged_in_user_guid(),
+		'content_access_mode' => ElggGroup::CONTENT_ACCESS_MODE_UNRESTRICTED
 	);
 
 	// handle customizable profile fields
@@ -564,6 +568,10 @@ function groups_prepare_form_vars($group = null) {
 		} else {
 			$values['vis'] = $group->access_id;
 		}
+
+		// The content_access_mode was introduced in 1.9. This method must be
+		// used for backwards compatibility with groups created before 1.9.
+		$values['content_access_mode'] = $group->getContentAccessMode();
 
 		$values['entity'] = $group;
 	}

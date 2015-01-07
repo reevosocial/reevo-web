@@ -1,7 +1,7 @@
 <?php
 /**
  * Convert comment annotations to entities
- * 
+ *
  * Run for 2 seconds per request as set by $batch_run_time_in_secs. This includes
  * the engine loading time.
  */
@@ -9,6 +9,18 @@
 // from engine/start.php
 global $START_MICROTIME;
 $batch_run_time_in_secs = 2;
+
+// if upgrade has run correctly, mark it done
+if (get_input('upgrade_completed')) {
+	// set the upgrade as completed
+	$factory = new ElggUpgrade();
+	$upgrade = $factory->getUpgradeFromPath('admin/upgrades/comments');
+	if ($upgrade instanceof ElggUpgrade) {
+		$upgrade->setCompleted();
+	}
+
+	return true;
+}
 
 // Offset is the total amount of errors so far. We skip these
 // comments to prevent them from possibly repeating the same error.
@@ -31,6 +43,7 @@ $error_count = 0;
 
 do {
 	$annotations_to_delete = array();
+	$container_guids = array();
 	$annotations = elgg_get_annotations(array(
 		'annotation_names' => 'generic_comment',
 		'limit' => $limit,
@@ -55,7 +68,7 @@ do {
 		// make sure disabled comments stay disabled
 		$object->enabled = $annotation->enabled;
 		$object->time_created = $annotation->time_created;
-		$object->save();
+		$object->save(false);
 
 		$guid = $object->getGUID();
 
@@ -79,12 +92,28 @@ do {
 				  AND annotation_id = $annotation->id
 			";
 
-			if (update_data($query)) {
+			if (!update_data($query)) {
+				register_error(elgg_echo('upgrade:comments:river_update_failed', array($annotation->id)));
+				$error_count++;
+				continue;
+			}
+
+			// set the time_updated and last_action for this comment
+			// to the original time_created
+			$fix_ts_query = "
+				UPDATE {$db_prefix}entities
+				SET time_updated = time_created,
+					last_action = time_created
+				WHERE guid = $guid
+			";
+
+			if (update_data($fix_ts_query)) {
 				// It's now safe to delete the annotation
 				$annotations_to_delete[] = $annotation->id;
+				$container_guids[] = $object->container_guid;
 				$success_count++;
 			} else {
-				register_error(elgg_echo('upgrade:comments:river_update_failed', array($annotation->id)));
+				register_error(elgg_echo('upgrade:comments:timestamp_update_fail', array($annotation->id)));
 				$error_count++;
 			}
 		} else {
@@ -99,6 +128,27 @@ do {
 		delete_data($delete_query);
 	}
 
+	// update the last action on containers to be the max of all its comments
+	// or its own last action
+	$comment_subtype_id = get_subtype_id('object', 'comment');
+
+	foreach (array_unique($container_guids) as $guid) {
+		// can't use a subquery in an update clause without hard to read tricks.
+		$max = get_data_row("SELECT MAX(time_updated) as max_time_updated
+					FROM {$db_prefix}entities e
+					WHERE e.container_guid = $guid
+					AND e.subtype = $comment_subtype_id");
+
+		$query = "
+		UPDATE {$db_prefix}entities
+			SET last_action = '$max->max_time_updated'
+			WHERE guid = $guid
+			AND last_action < '$max->max_time_updated'
+		";
+
+		update_data($query);
+	}
+
 } while ((microtime(true) - $START_MICROTIME) < $batch_run_time_in_secs);
 
 access_show_hidden_entities($access_status);
@@ -106,6 +156,9 @@ access_show_hidden_entities($access_status);
 // replace events and hooks
 _elgg_services()->events = $original_events;
 _elgg_services()->hooks = $original_hooks;
+
+// remove the admin notice
+elgg_delete_admin_notice('comment_upgrade_needed');
 
 // Give some feedback for the UI
 echo json_encode(array(

@@ -273,13 +273,13 @@ class ElggFile extends ElggObject {
 	 */
 	public function delete() {
 		$fs = $this->getFilestore();
-		
+
 		$result = $fs->delete($this);
-		
+
 		if ($this->getGUID() && $result) {
 			$result = parent::delete();
 		}
-		
+
 		return $result;
 	}
 
@@ -391,7 +391,7 @@ class ElggFile extends ElggObject {
 
 			$parameters = array();
 			foreach ($mds as $md) {
-				list($foo, $name) = explode("::", $md->name);
+				list( , $name) = explode("::", $md->name);
 				if ($name == 'filestore') {
 					$filestore = $md->value;
 				}

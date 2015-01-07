@@ -19,6 +19,7 @@
  *
  * @package    Elgg.Core
  * @subpackage DataMode.Site
+ * @link       http://learn.elgg.org/en/stable/design/database.html
  *
  * @property string $name        The name or title of the website
  * @property string $description A motto, mission statement, or description of the website
@@ -206,6 +207,15 @@ class ElggSite extends ElggEntity {
 		}
 
 		return parent::disable($reason, $recursive);
+	}
+
+	/**
+	 * Returns the URL for this site
+	 *
+	 * @return string The URL
+	 */
+	public function getURL() {
+		return $this->url;
 	}
 
 	/**
@@ -483,8 +493,9 @@ class ElggSite extends ElggEntity {
 			}
 			elgg_register_plugin_hook_handler(
 					'access:collections:write',
-					'user',
-					'_elgg_walled_garden_remove_public_access');
+					'all',
+					'_elgg_walled_garden_remove_public_access',
+					9999);
 
 			if (!elgg_is_logged_in()) {
 				// override the front page
@@ -535,7 +546,7 @@ class ElggSite extends ElggEntity {
 			'login',
 			'register',
 			'forgotpassword',
-			'resetpassword',
+			'changepassword',
 			'refresh_token',
 			'ajax/view/js/languages',
 			'upgrade\.php',

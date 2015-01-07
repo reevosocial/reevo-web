@@ -2,19 +2,35 @@
 
 /**
  * WARNING: API IN FLUX. DO NOT USE DIRECTLY.
- * 
+ *
  * Use the elgg_* versions instead.
- * 
+ *
  * @access private
- * 
+ *
  * @package    Elgg.Core
  * @subpackage Hooks
  * @since      1.9.0
  */
 abstract class Elgg_HooksRegistrationService {
-	
+
 	private $handlers = array();
-	
+
+	/**
+	 * @var Elgg_Logger
+	 */
+	protected $logger;
+
+	/**
+	 * Set a logger instance, e.g. for reporting uncallable handlers
+	 *
+	 * @param Elgg_Logger $logger The logger
+	 * @return self
+	 */
+	public function setLogger(Elgg_Logger $logger = null) {
+		$this->logger = $logger;
+		return $this;
+	}
+
 	/**
 	 * Registers a handler.
 	 *
@@ -27,28 +43,28 @@ abstract class Elgg_HooksRegistrationService {
 		if (empty($name) || empty($type) || !is_callable($callback, true)) {
 			return false;
 		}
-	
+
 		if (!isset($this->handlers[$name])) {
 			$this->handlers[$name] = array();
 		}
-		
+
 		if (!isset($this->handlers[$name][$type])) {
 			$this->handlers[$name][$type] = array();
 		}
-		
+
 		// Priority cannot be lower than 0
 		$priority = max((int) $priority, 0);
-	
+
 		while (isset($this->handlers[$name][$type][$priority])) {
 			$priority++;
 		}
-		
+
 		$this->handlers[$name][$type][$priority] = $callback;
 		ksort($this->handlers[$name][$type]);
 
 		return true;
 	}
-	
+
 	/**
 	 * Unregister a handler
 	 *
@@ -79,7 +95,7 @@ abstract class Elgg_HooksRegistrationService {
 	 *         $priority => callback, ...
 	 *     )
 	 * )
-	 * 
+	 *
 	 * @access private
 	 * @return array
 	 */
@@ -89,7 +105,7 @@ abstract class Elgg_HooksRegistrationService {
 
 	/**
 	 * Does the hook have a handler?
-	 * 
+	 *
 	 * @param string $name The name of the hook
 	 * @param string $type The type of the hook
 	 * @return boolean
@@ -108,7 +124,7 @@ abstract class Elgg_HooksRegistrationService {
 	 */
 	protected function getOrderedHandlers($name, $type) {
 		$handlers = array();
-		
+
 		if (isset($this->handlers[$name][$type])) {
 			if ($name != 'all' && $type != 'all') {
 				$handlers = array_merge($handlers, array_values($this->handlers[$name][$type]));
@@ -129,5 +145,35 @@ abstract class Elgg_HooksRegistrationService {
 		}
 
 		return $handlers;
+	}
+
+	/**
+	 * Get a string description of a callback
+	 *
+	 * E.g. "function_name", "Static::method", "(ClassName)->method", "(Closure path/to/file.php:23)"
+	 *
+	 * @param mixed $callable The callable value to describe
+	 * @return string
+	 */
+	protected function describeCallable($callable) {
+		if (is_string($callable)) {
+			return $callable;
+		}
+		if (is_array($callable) && array_keys($callable) === array(0, 1) && is_string($callable[1])) {
+			if (is_string($callable[0])) {
+				return "{$callable[0]}::{$callable[1]}";
+			}
+			return "(" . get_class($callable[0]) . ")->{$callable[1]}";
+		}
+		if ($callable instanceof Closure) {
+			$ref = new ReflectionFunction($callable);
+			$file = $ref->getFileName();
+			$line = $ref->getStartLine();
+			return "(Closure {$file}:{$line})";
+		}
+		if (is_object($callable)) {
+			return "(" . get_class($callable) . ")->__invoke()";
+		}
+		return "(unknown)";
 	}
 }

@@ -36,6 +36,8 @@ if ($full_view) {
 
 	$comment_text = elgg_view("output/longtext", array(
 		'value' => $comment->description,
+		'class' => 'elgg-inner',
+		'data-role' => 'comment-text',
 	));
 
 	$body = <<<HTML

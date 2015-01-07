@@ -168,7 +168,9 @@ function _elgg_generate_plugin_entities() {
 		// remove the priority.
 		$name = _elgg_namespace_plugin_private_setting('internal', 'priority');
 		remove_private_setting($plugin->guid, $name);
-		$plugin->disable();
+		if ($plugin->isEnabled()) {
+			$plugin->disable();
+		}
 	}
 
 	access_show_hidden_entities($old_access);
@@ -181,9 +183,9 @@ function _elgg_generate_plugin_entities() {
 
 /**
  * Cache a reference to this plugin by its ID
- * 
+ *
  * @param ElggPlugin $plugin
- * 
+ *
  * @access private
  */
 function _elgg_cache_plugin_by_id(ElggPlugin $plugin) {
@@ -531,50 +533,6 @@ function _elgg_namespace_plugin_private_setting($type, $name, $id = null) {
 }
 
 /**
- * Get the name of the most recent plugin to be called in the
- * call stack (or the plugin that owns the current page, if any).
- *
- * i.e., if the last plugin was in /mod/foobar/, this would return foo_bar.
- *
- * @param boolean $mainfilename If set to true, this will instead determine the
- *                              context from the main script filename called by
- *                              the browser. Default = false.
- *
- * @return string|false Plugin name, or false if no plugin name was called
- * @since 1.8.0
- * @access private
- * @deprecated 1.9
- */
-function elgg_get_calling_plugin_id($mainfilename = false) {
-	elgg_deprecated_notice('elgg_get_calling_plugin_id() is deprecated', 1.9);
-	if (!$mainfilename) {
-		if ($backtrace = debug_backtrace()) {
-			foreach ($backtrace as $step) {
-				$file = $step['file'];
-				$file = str_replace("\\", "/", $file);
-				$file = str_replace("//", "/", $file);
-				if (preg_match("/mod\/([a-zA-Z0-9\-\_]*)\/start\.php$/", $file, $matches)) {
-					return $matches[1];
-				}
-			}
-		}
-	} else {
-		//@todo this is a hack -- plugins do not have to match their page handler names!
-		if ($handler = get_input('handler', false)) {
-			return $handler;
-		} else {
-			$file = $_SERVER["SCRIPT_NAME"];
-			$file = str_replace("\\", "/", $file);
-			$file = str_replace("//", "/", $file);
-			if (preg_match("/mod\/([a-zA-Z0-9\-\_]*)\//", $file, $matches)) {
-				return $matches[1];
-			}
-		}
-	}
-	return false;
-}
-
-/**
  * @var array cache used by elgg_get_plugins_provides function
  * @todo move it with all other functions to Elgg_PluginsService
  */
@@ -603,7 +561,7 @@ function _elgg_get_plugins_provides($type = null, $name = null) {
 	global $ELGG_PLUGINS_PROVIDES_CACHE;
 	if (!isset($ELGG_PLUGINS_PROVIDES_CACHE)) {
 		$active_plugins = elgg_get_plugins('active');
-	
+
 		$provides = array();
 
 		foreach ($active_plugins as $plugin) {
@@ -621,10 +579,10 @@ function _elgg_get_plugins_provides($type = null, $name = null) {
 				}
 			}
 		}
-		
+
 		$ELGG_PLUGINS_PROVIDES_CACHE = $provides;
 	}
-	
+
 	if ($type && $name) {
 		if (isset($ELGG_PLUGINS_PROVIDES_CACHE[$type][$name])) {
 			return $ELGG_PLUGINS_PROVIDES_CACHE[$type][$name];
@@ -644,7 +602,7 @@ function _elgg_get_plugins_provides($type = null, $name = null) {
 
 /**
  * Deletes all cached data on plugins being provided.
- * 
+ *
  * @return boolean
  * @since 1.9.0
  * @access private
@@ -764,7 +722,7 @@ function _elgg_get_plugin_dependency_strings($dep) {
 			$strings['local_value'] = $dep['value'];
 			$strings['comment'] = '';
 			break;
-		
+
 		case 'php_extension':
 			// PHP Extension %s [version]
 			$strings['name'] = elgg_echo('ElggPlugin:Dependencies:PhpExtension', array($info['name']));
@@ -1059,7 +1017,7 @@ function elgg_unset_all_plugin_settings($plugin_id = null) {
 
 /**
  * Returns entities based upon plugin user settings.
- * Takes all the options for {@see elgg_get_entities_from_private_settings()}
+ * Takes all the options for {@link elgg_get_entities_from_private_settings()}
  * in addition to the ones below.
  *
  * @param array $options Array in the format:

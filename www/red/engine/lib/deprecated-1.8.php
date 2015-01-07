@@ -267,7 +267,7 @@ function list_entities_from_annotation_count($entity_type = "", $entity_subtype 
  * Adds an entry in $CONFIG[$register_name][$subregister_name].
  *
  * @deprecated 1.8 Use the new menu system.
- * 
+ *
  * This is only used for the site-wide menu.  See {@link add_menu()}.
  *
  * @param string $register_name     The name of the top-level register
@@ -410,7 +410,7 @@ function events($event = "", $object_type = "", $function = "", $priority = 500,
  * Alias function for events, that registers a function to a particular kind of event
  *
  * @deprecated 1.8 Use elgg_register_event_handler() instead
- * 
+ *
  * @param string $event The event type
  * @param string $object_type The object type
  * @param string $function The function name
@@ -423,7 +423,7 @@ function register_elgg_event_handler($event, $object_type, $callback, $priority 
 
 /**
  * Unregisters a function to a particular kind of event
- * 
+ *
  * @deprecated 1.8 Use elgg_unregister_event_handler instead
  *
  * @param string $event The event type
@@ -440,7 +440,7 @@ function unregister_elgg_event_handler($event, $object_type, $callback) {
  * Alias function for events, that triggers a particular kind of event
  *
  * @deprecated 1.8 Use elgg_trigger_event() instead
- * 
+ *
  * @param string $event The event type
  * @param string $object_type The object type
  * @param string $function The function name
@@ -455,7 +455,7 @@ function trigger_elgg_event($event, $object_type, $object = null) {
  * Register a function to a plugin hook for a particular entity type, with a given priority.
  *
  * @deprecated 1.8 Use elgg_register_plugin_hook_handler() instead
- * 
+ *
  * eg if you want the function "export_user" to be called when the hook "export" for "user" entities
  * is run, use:
  *
@@ -485,7 +485,7 @@ function register_plugin_hook($hook, $type, $callback, $priority = 500) {
  * Unregister a function to a plugin hook for a particular entity type
  *
  * @deprecated 1.8 Use elgg_unregister_plugin_hook_handler() instead
- * 
+ *
  * @param string $hook The name of the hook
  * @param string $entity_type The name of the type of entity (eg "user", "object" etc)
  * @param string $function The name of a valid function to be run
@@ -1029,8 +1029,8 @@ function get_entities_from_metadata_groups_multi($group_guid, $meta_array, $enti
 		$where[] = "e.owner_guid = {$owner_guid}";
 	}
 
-	if ($container_guid > 0) {
-		$where[] = "e.container_guid = {$container_guid}";
+	if ($group_guid > 0) {
+		$where[] = "e.container_guid = {$group_guid}";
 	}
 
 	if ($count) {
@@ -1102,7 +1102,7 @@ function list_entities_in_area($lat, $long, $radius, $type = "", $subtype = "", 
 
 	$options['full_view'] = $fullview;
 	$options['list_type_toggle'] = $listtypetoggle;
-	$options['pagination'] = $pagination;
+	$options['pagination'] = true;
 
 	return elgg_list_entities_from_location($options);
 }
@@ -1284,8 +1284,8 @@ function list_entities_from_metadata_multi($meta_array, $entity_type = "", $enti
 
 	$offset = (int)get_input('offset');
 	$limit = (int)$limit;
-	$count = get_entities_from_metadata_multi($meta_array, $entity_type, $entity_subtype, $owner_guid, $limit, $offset, "", $site_guid, true);
-	$entities = get_entities_from_metadata_multi($meta_array, $entity_type, $entity_subtype, $owner_guid, $limit, $offset, "", $site_guid, false);
+	$count = get_entities_from_metadata_multi($meta_array, $entity_type, $entity_subtype, $owner_guid, $limit, $offset, "", 0, true);
+	$entities = get_entities_from_metadata_multi($meta_array, $entity_type, $entity_subtype, $owner_guid, $limit, $offset, "", 0, false);
 
 	return elgg_view_entity_list($entities, $count, $offset, $limit, $fullview, $listtypetoggle, $pagination);
 }
@@ -1360,6 +1360,7 @@ function remove_submenu_item($label, $group = 'a') {
  */
 function get_submenu() {
 	elgg_deprecated_notice("get_submenu() has been deprecated by elgg_view_menu()", 1.8);
+	$owner = elgg_get_page_owner_entity();
 	return elgg_view_menu('owner_block', array('entity' => $owner,
 		'class' => 'elgg-menu-owner-block',));
 }
@@ -2201,10 +2202,6 @@ $subtype = "", $owner_guid = 0, $limit = 10, $offset = 0, $count = false, $site_
 		$options['values'] = $meta_value;
 	}
 
-	if ($entity_type) {
-		$options['types'] = $entity_type;
-	}
-
 	if ($type) {
 		$options['types'] = $type;
 	}
@@ -2225,12 +2222,8 @@ $subtype = "", $owner_guid = 0, $limit = 10, $offset = 0, $count = false, $site_
 		$options['offset'] = $offset;
 	}
 
-	if ($order_by) {
-		$options['order_by'];
-	}
-
 	if ($site_guid) {
-		$options['site_guid'];
+		$options['site_guid'] = $site_guid;
 	}
 
 	if ($count) {
@@ -2439,11 +2432,6 @@ $owner_guid = "", $owner_relationship = "") {
 						$add = false;
 					}
 				}
-				if (($add) && ($event)) {
-					if (!in_array($f['event'], $event)) {
-						$add = false;
-					}
-				}
 
 				if ($add) {
 					$activity_events[] = $f;
@@ -2573,7 +2561,7 @@ function list_site_members($site_guid, $limit = 10, $fullview = true) {
 
 	$options = array(
 		'limit' => $limit,
-		'full_view' => $full_view,
+		'full_view' => $fullview,
 	);
 
 	$site = get_entity($site_guid);
@@ -3369,10 +3357,6 @@ $timeupper = 0, $calculation = '') {
 		$options['annotation_owner_guid'] = $owner_guid;
 	}
 
-	if ($order_by == 'desc') {
-		$options['order_by'] = 'n_table.time_created desc';
-	}
-
 	if ($timelower) {
 		$options['annotation_time_lower'] = $timelower;
 	}
@@ -3427,7 +3411,7 @@ $value = "", $value_type = "", $owner_guid = 0) {
 	elgg_deprecated_notice('get_annotations_sum() is deprecated by elgg_get_annotations() and passing "annotation_calculation" => "sum"', 1.8);
 
 	return elgg_deprecated_annotation_calculation($entity_guid, $entity_type, $entity_subtype,
-			$name, $value, $value_type, $owner_guid, $timelower, $timeupper, 'sum');
+			$name, $value, $value_type, $owner_guid, 0, 0, 'sum');
 }
 
 /**
@@ -3449,7 +3433,7 @@ $value = "", $value_type = "", $owner_guid = 0) {
 	elgg_deprecated_notice('get_annotations_max() is deprecated by elgg_get_annotations() and passing "annotation_calculation" => "max"', 1.8);
 
 	return elgg_deprecated_annotation_calculation($entity_guid, $entity_type, $entity_subtype,
-			$name, $value, $value_type, $owner_guid, $timelower, $timeupper, 'max');
+			$name, $value, $value_type, $owner_guid, 0, 0, 'max');
 }
 
 
@@ -3472,7 +3456,7 @@ $value = "", $value_type = "", $owner_guid = 0) {
 	elgg_deprecated_notice('get_annotations_min() is deprecated by elgg_get_annotations() and passing "annotation_calculation" => "min"', 1.8);
 
 	return elgg_deprecated_annotation_calculation($entity_guid, $entity_type, $entity_subtype,
-			$name, $value, $value_type, $owner_guid, $timelower, $timeupper, 'min');
+			$name, $value, $value_type, $owner_guid, 0, 0, 'min');
 }
 
 
@@ -3496,7 +3480,7 @@ $value = "", $value_type = "", $owner_guid = 0) {
 	elgg_deprecated_notice('get_annotations_avg() is deprecated by elgg_get_annotations() and passing "annotation_calculation" => "avg"', 1.8);
 
 	return elgg_deprecated_annotation_calculation($entity_guid, $entity_type, $entity_subtype,
-			$name, $value, $value_type, $owner_guid, $timelower, $timeupper, 'avg');
+			$name, $value, $value_type, $owner_guid, 0, 0, 'avg');
 }
 
 
@@ -3853,7 +3837,7 @@ function delete_annotation($id) {
 	if (!$id) {
 		return false;
 	}
-	return elgg_delete_annotations(array('annotation_id' => $annotation_id));
+	return elgg_delete_annotations(array('annotation_id' => $id));
 }
 
 /**
@@ -3900,7 +3884,7 @@ function clear_annotations_by_owner($owner_guid) {
 	}
 
 	$options = array(
-		'annotation_owner_guid' => $guid,
+		'annotation_owner_guid' => $owner_guid,
 		'limit' => 0
 	);
 
@@ -3943,7 +3927,7 @@ function register_page_handler($handler, $function){
  *
  * @param string $handler The page type identifier
  * @since 1.7.2
- * 
+ *
  * @deprecated 1.8 Use {@link elgg_unregister_page_handler()}
  */
 function unregister_page_handler($handler) {
@@ -3989,7 +3973,7 @@ function register_extender_url_handler($function, $type = "all", $name = "all") 
  * @param string $type The type of entity (object, site, user, group)
  * @param string $subtype The subtype to register (may be blank)
  * @return true|false Depending on success
- * 
+ *
  * @deprecated 1.8 Use {@link elgg_register_entity_type()}
  */
 function register_entity_type($type, $subtype = null) {
@@ -4002,7 +3986,7 @@ function register_entity_type($type, $subtype = null) {
  *
  * @param string $function_name The function.
  * @param string $extender_name The name, default 'all'.
- * 
+ *
  * @deprecated 1.8 Use {@link elgg_register_metadata_url_handler()}
  */
 function register_metadata_url_handler($function, $extender_name = "all") {
@@ -4015,7 +3999,7 @@ function register_metadata_url_handler($function, $extender_name = "all") {
  * @param string $function_name The function to register
  * @param string $relationship_type The relationship type.
  * @return true|false Depending on success
- * 
+ *
  * @deprecated 1.8 Use {@link elgg_register_relationship_url_handler()}
  */
 function register_relationship_url_handler($function_name, $relationship_type = "all") {
@@ -4057,7 +4041,7 @@ function elgg_view_regenerate_simplecache($viewtype = NULL) {
  * Enables the simple cache.
  *
  * @see elgg_view_register_simplecache()
- * 
+ *
  * @deprecated 1.8 Use {@link elgg_enable_simplecache()}
  */
 function elgg_view_enable_simplecache() {
@@ -4069,7 +4053,7 @@ function elgg_view_enable_simplecache() {
  * Disables the simple cache.
  *
  * @see elgg_view_register_simplecache()
- * 
+ *
  * @deprecated 1.8 Use {@link elgg_disable_simplecache()}
  */
 function elgg_view_disable_simplecache() {
@@ -4168,7 +4152,7 @@ function pam_authenticate($credentials = NULL, $policy = "user") {
 function save_widget_location(ElggObject $widget, $order, $column) {
 	elgg_deprecated_notice('save_widget_location() is deprecated', 1.8);
 	if ($widget instanceof ElggObject) {
-		if ($widget->subtype == "widget") {
+		if ($widget->getSubtype() == "widget") {
 			// If you can't move the widget, don't save a new location
 			if (!$widget->draggable) {
 				return false;
@@ -4210,7 +4194,7 @@ function save_widget_location(ElggObject $widget, $order, $column) {
 
 			return true;
 		} else {
-			register_error($widget->subtype);
+			register_error($widget->getSubtype());
 		}
 
 	}
@@ -4580,7 +4564,7 @@ function using_widgets() {
  *
  * @param ElggObject $widget The widget to display
  * @return string The HTML for the widget, including JavaScript wrapper
- * 
+ *
  * @deprecated 1.8 Use elgg_view_entity()
  */
 function display_widget(ElggObject $widget) {

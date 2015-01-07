@@ -36,7 +36,7 @@ function pages_init() {
 	// Extend the main css view
 	elgg_extend_view('css/elgg', 'pages/css');
 
-	elgg_register_js('jquery.treeview', array(
+	elgg_define_js('jquery.treeview', array(
 		'src' => '/mod/pages/vendors/jquery-treeview/jquery.treeview.min.js',
 		'exports' => 'jQuery.fn.treeview',
 		'deps' => array('jquery'),
@@ -84,13 +84,8 @@ function pages_init() {
 	// entity menu
 	elgg_register_plugin_hook_handler('register', 'menu:entity', 'pages_entity_menu_setup');
 
-	// hook into annotation menu
-	elgg_register_plugin_hook_handler('register', 'menu:annotation', 'pages_annotation_menu_setup');
-
 	// register ecml views to parse
 	elgg_register_plugin_hook_handler('get_views', 'ecml', 'pages_ecml_views_hook');
-	
-	elgg_register_event_handler('upgrade', 'system', 'pages_run_upgrades');
 }
 
 /**
@@ -114,7 +109,7 @@ function pages_init() {
 function pages_page_handler($page) {
 
 	elgg_load_library('elgg:pages');
-	
+
 	if (!isset($page[0])) {
 		$page[0] = 'all';
 	}
@@ -165,7 +160,7 @@ function pages_page_handler($page) {
 
 /**
  * Override the page url
- * 
+ *
  * @param string $hook
  * @param string $type
  * @param string $url
@@ -272,7 +267,7 @@ function pages_entity_menu_setup($hook, $type, $return, $params) {
 
 /**
  * Prepare a notification message about a new page
- * 
+ *
  * @param string                          $hook         Hook name
  * @param string                          $type         Hook type
  * @param Elgg_Notifications_Notification $notification The notification to prepare
@@ -289,7 +284,7 @@ function pages_prepare_notification($hook, $type, $notification, $params) {
 	$descr = $entity->description;
 	$title = $entity->title;
 
-	$notification->subject = elgg_echo('pages:notify:subject', array($title), $language); 
+	$notification->subject = elgg_echo('pages:notify:subject', array($title), $language);
 	$notification->body = elgg_echo('pages:notify:body', array(
 		$owner->name,
 		$title,

@@ -299,7 +299,7 @@ function elgg_get_metadata(array $options = array()) {
  *          This requires at least one constraint: metadata_owner_guid(s),
  *          metadata_name(s), metadata_value(s), or guid(s) must be set.
  *
- * @param array $options An options array. {@see elgg_get_metadata()}
+ * @param array $options An options array. {@link elgg_get_metadata()}
  * @return bool|null true on success, false on failure, null if no metadata to delete.
  * @since 1.8.0
  */
@@ -322,7 +322,7 @@ function elgg_delete_metadata(array $options) {
  *
  * @warning Unlike elgg_get_metadata() this will not accept an empty options array!
  *
- * @param array $options An options array. {@See elgg_get_metadata()}
+ * @param array $options An options array. {@link elgg_get_metadata()}
  * @return bool|null true on success, false on failure, null if no metadata disabled.
  * @since 1.8.0
  */
@@ -349,7 +349,7 @@ function elgg_disable_metadata(array $options) {
  * @warning In order to enable metadata, you must first use
  * {@link access_show_hidden_entities()}.
  *
- * @param array $options An options array. {@See elgg_get_metadata()}
+ * @param array $options An options array. {@link elgg_get_metadata()}
  * @return bool|null true on success, false on failure, null if no metadata enabled.
  * @since 1.8.0
  */
@@ -408,7 +408,7 @@ function elgg_enable_metadata(array $options) {
  *                               Currently if multiple values are sent via
  *                               an array (value => array('value1', 'value2')
  *                               the pair's operand will be forced to "IN".
- *                               If passing "IN" as the operand and a string as the value, 
+ *                               If passing "IN" as the operand and a string as the value,
  *                               the value must be a properly quoted and escaped string.
  *
  * 	metadata_name_value_pairs_operator => null|STR The operator to use for combining
@@ -631,17 +631,23 @@ $owner_guids = null) {
 			$trimmed_operand = trim(strtolower($operand));
 
 			$access = _elgg_get_access_where_sql(array('table_alias' => "n_table{$i}"));
-			// if the value is an int, don't quote it because str '15' < str '5'
-			// if the operand is IN don't quote it because quoting should be done already.
-			if (is_numeric($pair['value'])) {
-				$value = sanitise_string($pair['value']);
+			
+			// certain operands can't work well with strings that can be interpreted as numbers
+			// for direct comparisons like IN, =, != we treat them as strings
+			// gt/lt comparisons need to stay unencapsulated because strings '5' > '15'
+			// see https://github.com/Elgg/Elgg/issues/7009
+			$num_safe_operands = array('>', '<', '>=', '<=');
+			$num_test_operand = trim(strtoupper($operand));
+
+			if (is_numeric($pair['value']) && in_array($num_test_operand, $num_safe_operands)) {
+				$value = sanitize_string($pair['value']);
 			} else if (is_bool($pair['value'])) {
 				$value = (int) $pair['value'];
 			} else if (is_array($pair['value'])) {
 				$values_array = array();
 
 				foreach ($pair['value'] as $pair_value) {
-					if (is_numeric($pair_value)) {
+					if (is_numeric($pair_value) && !in_array($num_test_operand, $num_safe_operands)) {
 						$values_array[] = sanitise_string($pair_value);
 					} else {
 						$values_array[] = "'" . sanitise_string($pair_value) . "'";

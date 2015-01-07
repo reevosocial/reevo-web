@@ -14,7 +14,7 @@ function invitefriends_init() {
 
 	elgg_register_plugin_hook_handler('register', 'user', 'invitefriends_add_friends');
 
-	if (elgg_is_logged_in()) {
+	if (elgg_is_logged_in() && elgg_get_config('allow_registration')) {
 		$params = array(
 			'name' => 'invite',
 			'text' => elgg_echo('friends:invite'),
@@ -27,12 +27,16 @@ function invitefriends_init() {
 
 /**
  * Page handler function
- * 
+ *
  * @param array $page Page URL segments
  * @return bool
  */
 function invitefriends_page_handler($page) {
 	elgg_gatekeeper();
+
+	if (!elgg_get_config('allow_registration')) {
+		return false;
+	}
 
 	elgg_set_context('friends');
 	elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());

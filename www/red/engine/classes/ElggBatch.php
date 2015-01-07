@@ -182,11 +182,11 @@ class ElggBatch
 	 *                           and hitting the db server too often.
 	 * @param bool   $inc_offset Increment the offset on each fetch. This must be false for
 	 *                           callbacks that delete rows. You can set this after the
-	 *                           object is created with {@see ElggBatch::setIncrementOffset()}.
+	 *                           object is created with {@link ElggBatch::setIncrementOffset()}.
 	 */
 	public function __construct($getter, $options, $callback = null, $chunk_size = 25,
 			$inc_offset = true) {
-		
+
 		$this->getter = $getter;
 		$this->options = $options;
 		$this->callback = $callback;
@@ -294,6 +294,9 @@ class ElggBatch
 		$this->incompleteEntities = array();
 		$this->results = call_user_func($this->getter, $options);
 
+		// batch result sets tend to be large; we don't want to cache these.
+		_elgg_services()->db->disableQueryCache();
+
 		$num_results = count($this->results);
 		$num_incomplete = count($this->incompleteEntities);
 
@@ -321,8 +324,10 @@ class ElggBatch
 				// offer at least one row to iterate over, or give up.
 				return $this->getNextResultsChunk();
 			}
+			_elgg_services()->db->enableQueryCache();
 			return true;
 		} else {
+			_elgg_services()->db->enableQueryCache();
 			return false;
 		}
 	}

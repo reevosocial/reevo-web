@@ -45,7 +45,7 @@ elgg.comments.Comment.prototype = {
 
 				var $form = that.getForm();
 
-				$form.find('.elgg-cancel').on('click', function () {
+				$form.find('.elgg-button-cancel').on('click', function () {
 					that.hideForm();
 					return false;
 				});
@@ -67,9 +67,9 @@ elgg.comments.Comment.prototype = {
 		elgg.action('comment/save', {
 			data: $form.serialize(),
 			success: function(json) {
-				if (json.status == 0) {
+				if (json.status === 0) {
 					// Update list item content
-					that.$item.find('.elgg-output').html(value);
+					that.$item.find('[data-role="comment-text"]').html(value);
 				}
 				that.hideForm(function () {
 					that.getForm().remove();
@@ -97,7 +97,7 @@ elgg.comments.Comment.prototype = {
 
 /**
  * Initialize comment inline editing
- * 
+ *
  * @return void
  */
 elgg.comments.init = function() {

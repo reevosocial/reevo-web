@@ -1,9 +1,4 @@
 <?php
-/**
- * Elgg developer tools English language file.
- *
- */
-
 return array(
 	// menu
 	'admin:develop_tools' => 'Tools',
@@ -38,7 +33,7 @@ return array(
 	'developers:debug:warning' => 'Warning',
 	'developers:debug:notice' => 'Notice',
 	'developers:debug:info' => 'Info',
-	
+
 	// inspection
 	'developers:inspect:help' => 'Inspect configuration of the Elgg framework.',
 
@@ -58,6 +53,8 @@ return array(
 	'theme_sandbox:modules' => 'Modules',
 	'theme_sandbox:navigation' => 'Navigation',
 	'theme_sandbox:typography' => 'Typography',
+
+	'theme_sandbox:icons:blurb' => 'Use <em>elgg_view_icon($name)</em> or the class elgg-icon-$name to display icons.',
 
 	// unit tests
 	'developers:unit_tests:description' => 'Elgg has unit and integration tests for detecting bugs in its core classes and functions.',

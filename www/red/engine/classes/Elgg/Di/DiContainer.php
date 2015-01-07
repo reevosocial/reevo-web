@@ -20,7 +20,7 @@
  * </code>
  *
  * @access private
- * 
+ *
  * @package Elgg.Core
  * @since   1.9
  */
@@ -54,7 +54,10 @@ class Elgg_Di_DiContainer {
 			throw new Elgg_Di_MissingValueException("Value or factory was not set for: $name");
 		}
 		$value = $this->build($this->factories[$name]['callable'], $name);
-		if ($this->factories[$name]['shared']) {
+
+		// Why check existence of factory here? A: the builder function may have set the value
+		// directly, in which case the factory will no longer exist.
+		if (!empty($this->factories[$name]) && $this->factories[$name]['shared']) {
 			$this->cache[$name] = $value;
 		}
 		return $value;
@@ -62,7 +65,7 @@ class Elgg_Di_DiContainer {
 
 	/**
 	 * Build a value
-	 * 
+	 *
 	 * @param mixed  $factory The factory for the value
 	 * @param string $name    The name of the value
 	 * @return mixed
@@ -140,7 +143,7 @@ class Elgg_Di_DiContainer {
 
 	/**
 	 * Remove a value from the container
-	 * 
+	 *
 	 * @param string $name The name of the value
 	 * @return Elgg_Di_DiContainer
 	 */
@@ -152,7 +155,7 @@ class Elgg_Di_DiContainer {
 
 	/**
 	 * Does the container have this value
-	 * 
+	 *
 	 * @param string $name The name of the value
 	 * @return bool
 	 */

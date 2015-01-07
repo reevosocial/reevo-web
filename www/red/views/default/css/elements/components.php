@@ -198,7 +198,7 @@
 .elgg-river-comments li:last-child {
 	border-radius-bottomleft: 0 0 5px 5px;
 }
-.elgg-river-comments li {
+.elgg-river-comments > li {
 	background-color: #EEE;
 	border-bottom: none;
 	padding: 4px;
@@ -209,7 +209,7 @@
 }
 .elgg-river-more {
 	background-color: #EEE;
-	border-radius: 5px;	
+	border-radius: 5px;
 	padding: 2px 4px;
 	font-size: 85%;
 	margin-bottom: 2px;
@@ -219,7 +219,7 @@
 .elgg-river-item form {
 	background-color: #EEE;
 	padding: 4px;
-	border-radius: 5px;	
+	border-radius: 5px;
 	height: 30px;
 }
 .elgg-river-item input[type=text] {

@@ -18,7 +18,7 @@ function htmlawed_init() {
 
 	$lib = elgg_get_plugins_path() . "htmlawed/vendors/htmLawed/htmLawed.php";
 	elgg_register_library('htmlawed', $lib);
-	
+
 	elgg_register_plugin_hook_handler('unit_test', 'system', 'htmlawed_test');
 }
 
@@ -37,7 +37,7 @@ function htmlawed_init() {
  * @param array  $params Not used
  * @return mixed
  */
-function htmlawed_filter_tags($hook, $type, $result, $params) {
+function htmlawed_filter_tags($hook, $type, $result, $params = null) {
 	$var = $result;
 
 	elgg_load_library('htmlawed');
@@ -45,6 +45,11 @@ function htmlawed_filter_tags($hook, $type, $result, $params) {
 	$htmlawed_config = array(
 		// seems to handle about everything we need.
 		'safe' => true,
+
+		// remove comments/CDATA instead of converting to text
+		'comment' => 1,
+		'cdata' => 1,
+
 		'deny_attribute' => 'class, on*',
 		'hook_tag' => 'htmlawed_tag_post_processor',
 
@@ -79,7 +84,7 @@ function htmLawedArray(&$v, $k, $htmlawed_config) {
 
 /**
  * Post processor for tags in htmlawed
- * 
+ *
  * This runs after htmlawed has filtered. It runs for each tag and filters out
  * style attributes we don't want.
  *

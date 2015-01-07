@@ -215,7 +215,7 @@ function elgg_get_annotations(array $options = array()) {
 			unset($options['count']);
 		}
 	}
-	
+
 	$options['metastring_type'] = 'annotations';
 	return _elgg_get_metastring_based_objects($options);
 }
@@ -224,7 +224,7 @@ function elgg_get_annotations(array $options = array()) {
  * Returns a rendered list of annotations with pagination.
  *
  * @param array $options Annotation getter and display options.
- * {@see elgg_get_annotations()} and {@see elgg_list_entities()}.
+ * {@link elgg_get_annotations()} and {@link elgg_list_entities()}.
  *
  * @return string The list of entities
  * @since 1.8.0
@@ -248,7 +248,7 @@ function elgg_list_annotations($options) {
  *          This requires at least one constraint: annotation_owner_guid(s),
  *          annotation_name(s), annotation_value(s), or guid(s) must be set.
  *
- * @param array $options An options array. {@See elgg_get_annotations()}
+ * @param array $options An options array. {@link elgg_get_annotations()}
  * @return bool|null true on success, false on failure, null if no annotations to delete.
  * @since 1.8.0
  */
@@ -266,7 +266,7 @@ function elgg_delete_annotations(array $options) {
  *
  * @warning Unlike elgg_get_annotations() this will not accept an empty options array!
  *
- * @param array $options An options array. {@See elgg_get_annotations()}
+ * @param array $options An options array. {@link elgg_get_annotations()}
  * @return bool|null true on success, false on failure, null if no annotations disabled.
  * @since 1.8.0
  */
@@ -274,7 +274,7 @@ function elgg_disable_annotations(array $options) {
 	if (!_elgg_is_valid_options_for_batch_operation($options, 'annotation')) {
 		return false;
 	}
-	
+
 	// if we can see hidden (disabled) we need to use the offset
 	// otherwise we risk an infinite loop if there are more than 50
 	$inc_offset = access_get_show_hidden_status();
@@ -291,7 +291,7 @@ function elgg_disable_annotations(array $options) {
  * @warning In order to enable annotations, you must first use
  * {@link access_show_hidden_entities()}.
  *
- * @param array $options An options array. {@See elgg_get_annotations()}
+ * @param array $options An options array. {@link elgg_get_annotations()}
  * @return bool|null true on success, false on failure, null if no metadata enabled.
  * @since 1.8.0
  */

@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * @todo cleanup
  */
@@ -119,6 +119,36 @@ $form_body .= elgg_view("input/checkbox", array(
 	'checked' => (bool)elgg_get_config('https_login'),
 )) . "</div>";
 $form_body .= "</fieldset>";
+
+
+$form_body .= '<fieldset class="elgg-fieldset">';
+$form_body .= '<legend>' . elgg_echo("admin:legend:security") . '</legend>';
+
+$strength = _elgg_get_site_secret_strength();
+$current_strength = elgg_echo('site_secret:current_strength');
+$strength_text = elgg_echo("site_secret:strength:$strength");
+$strength_msg = elgg_echo("site_secret:strength_msg:$strength");
+
+$form_body .= "<div>" . elgg_echo('admin:site:secret:intro') . "<br /><br />";;
+
+if ($strength != 'strong') {
+	$title = "$current_strength: $strength_text";
+
+	$form_body .= elgg_view_module('main', $title, $strength_msg, array(
+		'class' => 'elgg-message elgg-state-error'
+	));
+} else {
+	$form_body .= $strength_msg;
+}
+
+$form_body .= '<p class="elgg-text-help">' . elgg_echo('admin:site:secret:regenerate:help') . '</p>';
+
+$form_body .= elgg_view("input/checkboxes", array(
+	'options' => array(elgg_echo('admin:site:secret:regenerate') => 1),
+	'name' => 'regenerate_site_secret'
+)) . "</div>";
+
+$form_body .= '</fieldset>';
 
 $debug_options = array(
 	'0' => elgg_echo('installation:debug:none'),

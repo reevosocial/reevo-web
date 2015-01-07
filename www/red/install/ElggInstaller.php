@@ -81,6 +81,10 @@ class ElggInstaller {
 	 * @throws InstallationException
 	 */
 	public function run($step) {
+		global $CONFIG;
+
+		// language needs to be set before the first call to elgg_echo()
+		$CONFIG->language = 'en';
 
 		// check if this is a URL rewrite test coming in
 		$this->processRewriteTest();
@@ -398,12 +402,12 @@ class ElggInstaller {
 				'required' => TRUE,
 				),
 			'siteemail' => array(
-				'type' => 'text',
+				'type' => 'email',
 				'value' => '',
 				'required' => FALSE,
 				),
 			'wwwroot' => array(
-				'type' => 'text',
+				'type' => 'url',
 				'value' => elgg_get_site_url(),
 				'required' => TRUE,
 				),
@@ -474,7 +478,7 @@ class ElggInstaller {
 				'required' => TRUE,
 				),
 			'email' => array(
-				'type' => 'text',
+				'type' => 'email',
 				'value' => '',
 				'required' => TRUE,
 				),
@@ -487,6 +491,7 @@ class ElggInstaller {
 				'type' => 'password',
 				'value' => '',
 				'required' => TRUE,
+				'pattern' => '.{6,}',
 				),
 			'password2' => array(
 				'type' => 'password',
@@ -494,7 +499,7 @@ class ElggInstaller {
 				'required' => TRUE,
 				),
 		);
-		
+
 		if ($this->isAction) {
 			do {
 				if (!$this->validateAdminVars($submissionVars, $formVars)) {
@@ -832,7 +837,6 @@ class ElggInstaller {
 
 			_elgg_services()->db->setupConnections();
 			register_translations(dirname(dirname(__FILE__)) . "/languages/");
-			$CONFIG->language = 'en';
 
 			if ($stepIndex > $settingsIndex) {
 				$CONFIG->site_guid = (int) datalist_get('default_site');
@@ -857,8 +861,6 @@ class ElggInstaller {
 			$CONFIG = new stdClass;
 		}
 
-		$CONFIG->installer_running = true;
-
 		$CONFIG->wwwroot = $this->getBaseUrl();
 		$CONFIG->url = $CONFIG->wwwroot;
 		$CONFIG->path = dirname(dirname(__FILE__)) . '/';
@@ -868,6 +870,15 @@ class ElggInstaller {
 		$CONFIG->entity_types = array('group', 'object', 'site', 'user');
 		// required by elgg_view_page()
 		$CONFIG->sitename = '';
+		$CONFIG->sitedescription = '';
+	}
+
+	/**
+	 * @return bool Whether the install process is encrypted.
+	 */
+	private function isHttps() {
+	    return (!empty($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") ||
+	        $_SERVER['SERVER_PORT'] == 443;
 	}
 
 	/**
@@ -879,10 +890,8 @@ class ElggInstaller {
 	 * @return string
 	 */
 	protected function getBaseUrl() {
-		$protocol = 'http';
-		if (!empty($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] == "on") {
-			$protocol = 'https';
-		}
+		$protocol = $this->isHttps() ? 'https' : 'http';
+
 		if (isset($_SERVER["SERVER_PORT"])) {
 			$port = ':' . $_SERVER["SERVER_PORT"];
 		} else {
@@ -896,8 +905,7 @@ class ElggInstaller {
 		$uri = substr($uri, 0, $cutoff);
 		$serverName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
 
-		$url = "$protocol://{$serverName}$port{$uri}";
-		return $url;
+		return "$protocol://{$serverName}$port{$uri}";
 	}
 
 	/**
@@ -1504,6 +1512,7 @@ class ElggInstaller {
 		add_subtype("object", "file", "ElggFile");
 		add_subtype("object", "widget", "ElggWidget");
 		add_subtype("object", "comment", "ElggComment");
+		add_subtype("object", "elgg_upgrade", 'ElggUpgrade');
 	}
 
 	/**
@@ -1518,6 +1527,9 @@ class ElggInstaller {
 			if ($plugin->getManifest()) {
 				if ($plugin->getManifest()->getActivateOnInstall()) {
 					$plugin->activate();
+				}
+				if (in_array('theme', $plugin->getManifest()->getCategories())) {
+					$plugin->setPriority('last');
 				}
 			}
 		}

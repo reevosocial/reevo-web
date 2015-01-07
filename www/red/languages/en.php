@@ -1,11 +1,4 @@
 <?php
-/**
- * Core English Language
- *
- * @package Elgg.Core
- * @subpackage Languages.English
- */
-
 return array(
 /**
  * Sites
@@ -47,7 +40,7 @@ return array(
 	'actionloggedout' => "Sorry, you cannot perform this action while logged out.",
 	'actionunauthorized' => 'You are unauthorized to perform this action',
 
-	'PluginException:MisconfiguredPlugin' => "%s (guid: %s) is a misconfigured plugin. It has been disabled. Please search the Elgg wiki for possible causes (http://docs.elgg.org/wiki/).",
+	'PluginException:MisconfiguredPlugin' => "%s (guid: %s) is a misconfigured plugin. It has been disabled. Please search the Elgg wiki for possible causes (http://learn.elgg.org/).",
 	'PluginException:CannotStart' => '%s (guid: %s) cannot start and has been deactivated.  Reason: %s',
 	'PluginException:InvalidID' => "%s is an invalid plugin ID.",
 	'PluginException:InvalidPath' => "%s is an invalid plugin path.",
@@ -88,7 +81,7 @@ return array(
 	'ElggPlugin:Dependencies:Priority:Before' => 'Before %s',
 	'ElggPlugin:Dependencies:Priority:Uninstalled' => '%s is not installed',
 	'ElggPlugin:Dependencies:Suggests:Unsatisfied' => 'Missing',
-	
+
 	'ElggPlugin:Dependencies:ActiveDependent' => 'There are other plugins that list %s as a dependency.  You must disable the following plugins before disabling this one: %s',
 
 
@@ -105,6 +98,7 @@ return array(
 
 	'pageownerunavailable' => 'Warning: The page owner %d is not accessible!',
 	'viewfailure' => 'There was an internal failure in the view %s',
+	'view:missing_param' => "The required parameter '%s' is missing in the view %s",
 	'changebookmark' => 'Please change your bookmark for this page',
 	'noaccess' => 'The content you were trying to view has been removed or you do not have permission to view it.',
 	'error:missing_data' => 'There was some data missing in your request',
@@ -115,6 +109,16 @@ return array(
 	'error:default:content' => 'Oops... something went wrong.',
 	'error:404:title' => 'Page not found',
 	'error:404:content' => 'Sorry. We could not find the page that you requested.',
+
+	'upload:error:ini_size' => 'The file you tried to upload is too large.',
+	'upload:error:form_size' => 'The file you tried to upload is too large.',
+	'upload:error:partial' => 'The file upload did not complete.',
+	'upload:error:no_file' => 'No file was selected.',
+	'upload:error:no_tmp_dir' => 'Cannot save the uploaded file.',
+	'upload:error:cant_write' => 'Cannot save the uploaded file.',
+	'upload:error:extension' => 'Cannot save the uploaded file.',
+	'upload:error:unknown' => 'The file upload failed.',
+
 
 /**
  * User details
@@ -276,7 +280,7 @@ return array(
 	'profile:edit:default' => 'Edit profile fields',
 	'profile:label' => "Profile label",
 	'profile:type' => "Profile type",
-	'profile:editdefault:delete:fail' => 'Removed default profile item field failed',
+	'profile:editdefault:delete:fail' => 'Removing profile field failed',
 	'profile:editdefault:delete:success' => 'Profile field deleted',
 	'profile:defaultprofile:reset' => 'Profile fields reset to the system default',
 	'profile:resetdefault' => 'Reset profile fields to system defaults',
@@ -286,6 +290,7 @@ return array(
 	'profile:editdefault:fail' => 'Default profile could not be saved',
 	'profile:field_too_long' => 'Cannot save your profile information because the "%s" section is too long.',
 	'profile:noaccess' => "You do not have permission to edit this profile.",
+	'profile:invalid_email' => '%s must be a valid email address.',
 
 
 /**
@@ -408,8 +413,8 @@ return array(
 	'user:password:fail:notsame' => "The two passwords are not the same!",
 	'user:password:fail:tooshort' => "Password is too short!",
 	'user:password:fail:incorrect_current_password' => 'The current password entered is incorrect.',
-	'user:resetpassword:unknown_user' => 'Invalid user.',
-	'user:resetpassword:reset_password_confirm' => 'Resetting your password will email a new password to your registered email address.',
+	'user:changepassword:unknown_user' => 'Invalid user.',
+	'user:changepassword:change_password_confirm' => 'This will change your password.',
 
 	'user:set:language' => "Language settings",
 	'user:language:label' => "Language",
@@ -419,8 +424,8 @@ return array(
 	'user:username:notfound' => 'Username %s not found.',
 
 	'user:password:lost' => 'Lost password',
-	'user:password:resetreq:success' => 'Successfully requested a new password, email sent',
-	'user:password:resetreq:fail' => 'Could not request a new password.',
+	'user:password:changereq:success' => 'Successfully requested a new password, email sent',
+	'user:password:changereq:fail' => 'Could not request a new password.',
 
 	'user:password:text' => 'To request a new password, enter your username or email address below and click the Request button.',
 
@@ -476,27 +481,27 @@ return array(
 	'admin:users:find' => 'Find',
 
 	'admin:administer_utilities:maintenance' => 'Maintenance mode',
+	'admin:upgrades' => 'Upgrades',
 
 	'admin:settings' => 'Settings',
 	'admin:settings:basic' => 'Basic Settings',
 	'admin:settings:advanced' => 'Advanced Settings',
-	'admin:settings:advanced/site_secret' => 'Site Secret',
 	'admin:site:description' => "This admin panel allows you to control global settings for your site. Choose an option below to get started.",
-	'admin:settings:advanced:site_secret' => 'Site Secret',
 	'admin:site:opt:linktext' => "Configure site...",
 	'admin:settings:in_settings_file' => 'This setting is configured in settings.php',
 
+	'admin:legend:security' => 'Security',
 	'admin:site:secret:intro' => 'Elgg uses a key to create security tokens for various purposes.',
 	'admin:site:secret_regenerated' => "Your site secret has been regenerated.",
 	'admin:site:secret:regenerate' => "Regenerate site secret",
-	'admin:site:secret:regenerate:help' => "Note: This may inconvenience some users by invalidating tokens used in \"remember me\" cookies, e-mail validation requests, invitation codes, etc.",
+	'admin:site:secret:regenerate:help' => "Note: Regenerating your site secret may inconvenience some users by invalidating tokens used in \"remember me\" cookies, e-mail validation requests, invitation codes, etc.",
 	'site_secret:current_strength' => 'Key Strength',
 	'site_secret:strength:weak' => "Weak",
 	'site_secret:strength_msg:weak' => "We strongly recommend that you regenerate your site secret.",
 	'site_secret:strength:moderate' => "Moderate",
 	'site_secret:strength_msg:moderate' => "We recommend you regenerate your site secret for the best site security.",
 	'site_secret:strength:strong' => "Strong",
-	'site_secret:strength_msg:strong' => "&#x2713; Your site secret is sufficiently strong.",
+	'site_secret:strength_msg:strong' => "Your site secret is sufficiently strong. There is no need to regenerate it.",
 
 	'admin:dashboard' => 'Dashboard',
 	'admin:widget:online_users' => 'Online users',
@@ -606,7 +611,7 @@ three sections:
 	'admin:plugins:warning:elgg_version_unknown' => 'This plugin uses a legacy manifest file and does not specify a compatible Elgg version. It probably will not work!',
 	'admin:plugins:warning:unmet_dependencies' => 'This plugin has unmet dependencies and cannot be activated. Check dependencies under more info.',
 	'admin:plugins:warning:invalid' => 'This plugin is invalid: %s',
-	'admin:plugins:warning:invalid:check_docs' => 'Check <a href="http://docs.elgg.org/Invalid_Plugin">the Elgg documentation</a> for troubleshooting tips.',
+	'admin:plugins:warning:invalid:check_docs' => 'Check <a href="http://learn.elgg.org/en/stable/appendix/faqs.html">the Elgg documentation</a> for troubleshooting tips.',
 	'admin:plugins:cannot_activate' => 'cannot activate',
 
 	'admin:plugins:set_priority:yes' => "Reordered %s.",
@@ -709,7 +714,7 @@ These changes will only affect new users on the site.',
 /**
  * User settings
  */
-		
+
 	'usersettings:description' => "The user settings panel allows you to control all your personal settings, from user management to how plugins behave. Choose an option below to get started.",
 
 	'usersettings:statistics' => "Your statistics",
@@ -736,7 +741,7 @@ These changes will only affect new users on the site.',
 /**
  * Activity river
  */
-		
+
 	'river:all' => 'All Site Activity',
 	'river:mine' => 'My Activity',
 	'river:owner' => 'Activity of %s',
@@ -762,7 +767,7 @@ These changes will only affect new users on the site.',
 	'icon:size:medium' => "Medium",
 	'icon:size:large' => "Large",
 	'icon:size:master' => "Extra Large",
-		
+
 /**
  * Generic action words
  */
@@ -835,6 +840,7 @@ These changes will only affect new users on the site.',
 	'invite' => "Invite",
 
 	'resetpassword' => "Reset password",
+	'changepassword' => "Change password",
 	'makeadmin' => "Make admin",
 	'removeadmin' => "Remove admin",
 
@@ -846,11 +852,11 @@ These changes will only affect new users on the site.',
 
 	'active' => 'Active',
 	'total' => 'Total',
-	
+
 	'ok' => 'OK',
 	'any' => 'Any',
 	'error' => 'Error',
-	
+
 	'other' => 'Other',
 	'options' => 'Options',
 	'advanced' => 'Advanced',
@@ -863,7 +869,7 @@ These changes will only affect new users on the site.',
 	'content:latest:blurb' => 'Alternatively, click here to view the latest content from across the site.',
 
 	'link:text' => 'view link',
-	
+
 /**
  * Generic questions
  */
@@ -891,7 +897,7 @@ These changes will only affect new users on the site.',
 	'sort:popular' => 'Popular',
 	'sort:alpha' => 'Alphabetical',
 	'sort:priority' => 'Priority',
-		
+
 /**
  * Generic data words
  */
@@ -899,7 +905,6 @@ These changes will only affect new users on the site.',
 	'title' => "Title",
 	'description' => "Description",
 	'tags' => "Tags",
-	'spotlight' => "Spotlight",
 	'all' => "All",
 	'mine' => "Mine",
 
@@ -918,7 +923,7 @@ These changes will only affect new users on the site.',
 /**
  * Entity actions
  */
-		
+
 	'edit:this' => 'Edit this',
 	'delete:this' => 'Delete this',
 	'comment:this' => 'Comment on this',
@@ -961,7 +966,7 @@ Once you have logged in, we highly recommend that you change your password.
 /**
  * Import / export
  */
-		
+
 	'importsuccess' => "Import of data was successful",
 	'importfail' => "OpenDD import of data failed.",
 
@@ -977,7 +982,7 @@ Once you have logged in, we highly recommend that you change your password.
 	'friendlytime:days' => "%s days ago",
 	'friendlytime:days:singular' => "yesterday",
 	'friendlytime:date_format' => 'j F Y @ g:ia',
-	
+
 	'friendlytime:future:minutes' => "in %s minutes",
 	'friendlytime:future:minutes:singular' => "in a minute",
 	'friendlytime:future:hours' => "in %s hours",
@@ -1005,7 +1010,7 @@ Once you have logged in, we highly recommend that you change your password.
 	'date:weekday:4' => 'Thursday',
 	'date:weekday:5' => 'Friday',
 	'date:weekday:6' => 'Saturday',
-	
+
 	'interval:minute' => 'Every minute',
 	'interval:fiveminute' => 'Every five minutes',
 	'interval:fifteenmin' => 'Every fifteen minutes',
@@ -1060,6 +1065,9 @@ Once you have logged in, we highly recommend that you change your password.
 	'installation:minify_js:label' => "Compress JavaScript (recommended)",
 	'installation:minify_css:label' => "Compress CSS (recommended)",
 
+	'installation:htaccess:needs_upgrade' => "You must update your .htaccess file so that the path is injected into the GET parameter __elgg_uri (you can use htaccess_dist as a guide).",
+	'installation:htaccess:localhost:connectionfailed' => "Elgg cannot connect to itself to test rewrite rules properly. Check that curl is working and there are no IP restrictions preventing localhost connections.",
+
 	'installation:systemcache:description' => "The system cache decreases the loading time of Elgg by caching data to files.",
 	'installation:systemcache:label' => "Use system cache (recommended)",
 
@@ -1083,27 +1091,42 @@ Once you have logged in, we highly recommend that you change your password.
 		simply delete the views directory and replace it with the one from the latest
 		package of Elgg downloaded from <a href="http://elgg.org">elgg.org</a>.<br /><br />
 
-		If you need detailed instructions, please visit the <a href="http://docs.elgg.org/wiki/Upgrading_Elgg">
+		If you need detailed instructions, please visit the <a href="http://learn.elgg.org/en/stable/admin/upgrading.html">
 		Upgrading Elgg documentation</a>.  If you require assistance, please post to the
 		<a href="http://community.elgg.org/pg/groups/discussion/">Community Support Forums</a>.',
 
 	'update:twitter_api:deactivated' => 'Twitter API (previously Twitter Service) was deactivated during the upgrade. Please activate it manually if required.',
 	'update:oauth_api:deactivated' => 'OAuth API (previously OAuth Lib) was deactivated during the upgrade.  Please activate it manually if required.',
-	'upgrade:site_secret_warning:moderate' => "You are encouraged to regenerate your site key to improve system security. See Configure &gt; Settings &gt; Site Secret",
-	'upgrade:site_secret_warning:weak' => "You are strongly encouraged to regenerate your site key to improve system security. See Configure &gt; Settings &gt; Site Secret",
+	'upgrade:site_secret_warning:moderate' => "You are encouraged to regenerate your site key to improve system security. See Configure &gt; Settings &gt; Advanced",
+	'upgrade:site_secret_warning:weak' => "You are strongly encouraged to regenerate your site key to improve system security. See Configure &gt; Settings &gt; Advanced",
 
 	'deprecated:function' => '%s() was deprecated by %s()',
 
-	'admin:upgrades' => 'Upgrades',
+	'admin:pending_upgrades' => 'The site has pending upgrades that require your immediate attention.',
+	'admin:view_upgrades' => 'View pending upgrades.',
+ 	'admin:upgrades' => 'Upgrades',
+	'item:object:elgg_upgrade' => 'Site upgrades',
+	'admin:upgrades:none' => 'Your installation is up to date!',
 
-	'upgrade:comments:status' => 'There are <b>%s</b> comments that need to be upgraded.',
-	'upgrade:comments:warning' => '<b>Warning:</b> on a large site this upgrade may take a significantly long time!',
-	'upgrade:comments:success_count' => 'Comments upgraded:',
-	'upgrade:comments:error_count' => 'Errors:',
-	'admin:upgrades:comments' => 'Comment upgrade',
-	'upgrade:comments:river_update_failed' => 'Failed to update the river entry for comment id %s',
-	'upgrade:comments:create_failed' => 'Failed to convert comment id %s to an entity.',
-	'upgrade:comments:finished' => 'Upgrade finished',
+	'upgrade:item_count' => 'There are <b>%s</b> items that need to be upgraded.',
+	'upgrade:warning' => '<b>Warning:</b> On a large site this upgrade may take a significantly long time!',
+	'upgrade:success_count' => 'Upgraded:',
+	'upgrade:error_count' => 'Errors:',
+	'upgrade:river_update_failed' => 'Failed to update the river entry for item id %s',
+	'upgrade:timestamp_update_failed' => 'Failed to update the timestamps for item id %s',
+	'upgrade:finished' => 'Upgrade finished',
+	'upgrade:finished_with_errors' => '<p>Upgrade finished with errors. Refresh the page and try running the upgrade again.</p></p><br />If the error recurs, check the server error log for possible cause. You can seek help for fixing the error from the <a href="http://community.elgg.org/groups/profile/179063/elgg-technical-support">Technical support group</a> in the Elgg community.</p>',
+
+	// Strings specific for the comments upgrade
+	'admin:upgrades:comments' => 'Comments upgrade',
+	'upgrade:comment:create_failed' => 'Failed to convert comment id %s to an entity.',
+
+	// Strings specific for the datadir upgrade
+	'admin:upgrades:datadirs' => 'Data directory upgrade',
+
+	// Strings specific for the discussion reply upgrade
+	'admin:upgrades:discussion_replies' => 'Discussion reply upgrade',
+	'discussion:upgrade:replies:create_failed' => 'Failed to convert discussion reply id %s to an entity.',
 
 /**
  * Welcome
@@ -1115,12 +1138,12 @@ Once you have logged in, we highly recommend that you change your password.
 /**
  * Emails
  */
-		
+
 	'email:from' => 'From',
 	'email:to' => 'To',
 	'email:subject' => 'Subject',
 	'email:body' => 'Body',
-	
+
 	'email:settings' => "Email settings",
 	'email:address:label' => "Email address",
 
@@ -1136,15 +1159,20 @@ To view their profile, click here:
 
 Please do not reply to this email.",
 
+	'email:changepassword:subject' => "Password changed!",
+	'email:changepassword:body' => "Hi %s,
+
+Your password has been changed.",
+
 	'email:resetpassword:subject' => "Password reset!",
 	'email:resetpassword:body' => "Hi %s,
 
 Your password has been reset to: %s",
 
-	'email:resetreq:subject' => "Request for new password.",
-	'email:resetreq:body' => "Hi %s,
+	'email:changereq:subject' => "Request for password change.",
+	'email:changereq:body' => "Hi %s,
 
-Somebody (from the IP address %s) has requested a new password for their account.
+Somebody (from the IP address %s) has requested a password change for their account.
 
 If you requested this, click on the link below. Otherwise ignore this email.
 
@@ -1206,7 +1234,7 @@ Please do not reply to this email.",
 /**
  * Entities
  */
-	
+
 	'byline' => 'By %s',
 	'entity:default:strapline' => 'Created %s by %s',
 	'entity:default:missingsupport:popup' => 'This entity cannot be displayed correctly. This may be because it requires support provided by a plugin that is no longer installed.',
@@ -1252,7 +1280,7 @@ Please do not reply to this email.",
 	'elgg:powered' => "Powered by Elgg",
 
 /**
- * Languages according to ISO 639-1
+ * Languages according to ISO 639-1 (with a couple of exceptions)
  */
 
 	"aa" => "Afar",
@@ -1272,6 +1300,7 @@ Please do not reply to this email.",
 	"bo" => "Tibetan",
 	"br" => "Breton",
 	"ca" => "Catalan",
+	"cmn" => "Mandarin Chinese", // ISO 639-3
 	"co" => "Corsican",
 	"cs" => "Czech",
 	"cy" => "Welsh",
@@ -1348,6 +1377,7 @@ Please do not reply to this email.",
 	"pl" => "Polish",
 	"ps" => "Pashto / Pushto",
 	"pt" => "Portuguese",
+	"pt_br" => 'Brazilian Portuguese',
 	"qu" => "Quechua",
 	"rm" => "Rhaeto-Romance",
 	"rn" => "Kirundi",

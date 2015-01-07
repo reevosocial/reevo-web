@@ -275,39 +275,14 @@ function get_user_by_username($username) {
 }
 
 /**
- * Get user by remember me code
+ * Get user by persistent login password
  *
- * @param string $code The remember me code
+ * @param string $hash Hash of the persistent login password
  *
  * @return ElggUser
  */
-function get_user_by_code($code) {
-	if (!$code) {
-		return null;
-	}
-
-	$db = _elgg_services()->db;	
-	$prefix = $db->getTablePrefix();
-	$code = $db->sanitizeString($code);
-
-	$query = "SELECT guid FROM {$prefix}users_remember_me_cookies
-		WHERE code = '$code'";
-	try {
-		$result = $db->getDataRow($query);
-	} catch (DatabaseException $e) {
-		if (false !== strpos($e->getMessage(), "users_remember_me_cookies' doesn't exist")) {
-			// schema has not been updated so we swallow this exception
-			return null;
-		} else {
-			throw $e;
-		}
-	}
-
-	if ($result) {
-		return get_user($result->guid);
-	}
-
-	return null;
+function get_user_by_code($hash) {
+	_elgg_services()->persistentLogin->getUserFromHash($hash);
 }
 
 /**
@@ -416,16 +391,26 @@ function send_new_password_request($user_guid) {
 		// generate code
 		$code = generate_random_cleartext_password();
 		$user->setPrivateSetting('passwd_conf_code', $code);
+		$user->setPrivateSetting('passwd_conf_time', time());
 
-		// generate link
-		$link = elgg_get_site_url() . "resetpassword?u=$user_guid&c=$code";
+		// email subject
+		$subject = elgg_echo('email:changereq:subject', array(), $user->language);
 
-		// generate email
+		// link for changing the password
+		$link = elgg_get_site_url() . "changepassword?u=$user_guid&c=$code";
+
+		// IP address of the current user
 		$ip_address = _elgg_services()->request->getClientIp();
-		$email = elgg_echo('email:resetreq:body', array($user->name, $ip_address, $link));
+
+		// email message body
+		$email = elgg_echo('email:changereq:body', array(
+			$user->name,
+			$ip_address,
+			$link
+		), $user->language);
 
 		return notify_user($user->guid, elgg_get_site_entity()->guid,
-			elgg_echo('email:resetreq:subject'), $email, array(), 'email');
+			$subject, $email, array(), 'email');
 	}
 
 	return false;
@@ -446,7 +431,7 @@ function force_user_password_reset($user_guid, $password) {
 	if ($user instanceof ElggUser) {
 		$ia = elgg_set_ignore_access();
 
-		$user->salt = generate_random_cleartext_password();
+		$user->salt = _elgg_generate_password_salt();
 		$hash = generate_user_password($user, $password);
 		$user->password = $hash;
 		$result = (bool)$user->save();
@@ -460,55 +445,83 @@ function force_user_password_reset($user_guid, $password) {
 }
 
 /**
- * Validate and execute a password reset for a user.
+ * Validate and change password for a user.
  *
  * @param int    $user_guid The user id
  * @param string $conf_code Confirmation code as sent in the request email.
+ * @param string $password  Optional new password, if not randomly generated.
  *
- * @return mixed
+ * @return bool True on success
  */
-function execute_new_password_request($user_guid, $conf_code) {
-	global $CONFIG;
+function execute_new_password_request($user_guid, $conf_code, $password = null) {
 
 	$user_guid = (int)$user_guid;
 	$user = get_entity($user_guid);
 
-	if ($user instanceof ElggUser) {
-		$saved_code = $user->getPrivateSetting('passwd_conf_code');
+	if ($password === null) {
+		$password = generate_random_cleartext_password();
+		$reset = true;
+	}
 
-		if ($saved_code && $saved_code == $conf_code) {
-			$password = generate_random_cleartext_password();
+	if (!elgg_instanceof($user, 'user')) {
+		return false;
+	}
 
-			if (force_user_password_reset($user_guid, $password)) {
-				remove_private_setting($user_guid, 'passwd_conf_code');
-				// clean the logins failures
-				reset_login_failure_count($user_guid);
-				
-				$email = elgg_echo('email:resetpassword:body', array($user->name, $password));
+	$saved_code = $user->getPrivateSetting('passwd_conf_code');
+	$code_time = (int) $user->getPrivateSetting('passwd_conf_time');
 
-				return notify_user($user->guid, $CONFIG->site->guid,
-					elgg_echo('email:resetpassword:subject'), $email, array(), 'email');
-			}
-		}
+	if (!$saved_code || $saved_code != $conf_code) {
+		return false;
+	}
+
+	// Discard for security if it is 24h old
+	if (!$code_time || $code_time < time() - 24 * 60 * 60) {
+		return false;
+	}
+
+	if (force_user_password_reset($user_guid, $password)) {
+		remove_private_setting($user_guid, 'passwd_conf_code');
+		remove_private_setting($user_guid, 'passwd_conf_time');
+		// clean the logins failures
+		reset_login_failure_count($user_guid);
+
+		$ns = $reset ? 'resetpassword' : 'changepassword';
+
+		notify_user($user->guid,
+			elgg_get_site_entity()->guid,
+			elgg_echo("email:$ns:subject", array(), $user->language),
+			elgg_echo("email:$ns:body", array($user->username, $password), $user->language),
+			array(),
+			'email'
+		);
+
+		return true;
 	}
 
 	return false;
 }
 
 /**
- * Simple function that will generate a random clear text password
- * suitable for feeding into generate_user_password().
- *
- * @see generate_user_password
+ * Generate a random 12 character clear text password.
  *
  * @return string
  */
 function generate_random_cleartext_password() {
-	return substr(md5(microtime() . rand()), 0, 8);
+	return _elgg_services()->crypto->getRandomString(12, ElggCrypto::CHARS_PASSWORD);
 }
 
 /**
- * Generate a password for a user, currently uses MD5.
+ * Generate an 8 character Base64 URL salt for the password
+ *
+ * @return string
+ * @access private
+ */
+function _elgg_generate_password_salt() {
+	return _elgg_services()->crypto->getRandomString(8);
+}
+
+/**
+ * Hash a password for storage. Currently salted MD5.
  *
  * @param ElggUser $user     The user this is being generated for.
  * @param string   $password Password in clear text
@@ -541,7 +554,7 @@ function validate_username($username) {
 		$msg = elgg_echo('registration:usernametooshort', array($CONFIG->minusername));
 		throw new RegistrationException($msg);
 	}
-	
+
 	// username in the database has a limit of 128 characters
 	if (strlen($username) > 128) {
 		$msg = elgg_echo('registration:usernametoolong', array(128));
@@ -684,7 +697,7 @@ function register_user($username, $password, $name, $email, $allow_multiple_emai
 	$user->email = $email;
 	$user->name = $name;
 	$user->access_id = ACCESS_PUBLIC;
-	$user->salt = generate_random_cleartext_password(); // Note salt generated before password!
+	$user->salt = _elgg_generate_password_salt();
 	$user->password = generate_user_password($user, $password);
 	$user->owner_guid = 0; // Users aren't owned by anyone, even if they are admin created.
 	$user->container_guid = 0; // Users aren't contained by anyone, even if they are admin created.
@@ -772,8 +785,8 @@ function elgg_user_account_page_handler($page_elements, $handler) {
 		case 'forgotpassword':
 			require_once("$base_dir/forgotten_password.php");
 			break;
-		case 'resetpassword':
-			require_once("$base_dir/reset_password.php");
+		case 'changepassword':
+			require_once("$base_dir/change_password.php");
 			break;
 		case 'register':
 			require_once("$base_dir/register.php");
@@ -1090,7 +1103,7 @@ function users_pagesetup() {
 	$owner = elgg_get_page_owner_entity();
 	$viewer = elgg_get_logged_in_user_entity();
 
-	if ($owner) {		
+	if ($owner) {
 		elgg_register_menu_item('page', array(
 			'name' => 'edit_avatar',
 			'href' => "avatar/edit/{$owner->username}",
@@ -1152,7 +1165,7 @@ function users_init() {
 
 	elgg_register_page_handler('register', 'elgg_user_account_page_handler');
 	elgg_register_page_handler('forgotpassword', 'elgg_user_account_page_handler');
-	elgg_register_page_handler('resetpassword', 'elgg_user_account_page_handler');
+	elgg_register_page_handler('changepassword', 'elgg_user_account_page_handler');
 	elgg_register_page_handler('login', 'elgg_user_account_page_handler');
 	elgg_register_page_handler('avatar', 'elgg_avatar_page_handler');
 	elgg_register_page_handler('profile', 'elgg_profile_page_handler');
@@ -1168,7 +1181,7 @@ function users_init() {
 
 	elgg_register_plugin_hook_handler('entity:icon:url', 'user', 'user_avatar_hook');
 
-	elgg_register_action('user/passwordreset', '', 'public');
+	elgg_register_action('user/changepassword', '', 'public');
 	elgg_register_action('user/requestnewpassword', '', 'public');
 
 	// Register the user type

@@ -115,12 +115,16 @@ function elgg_format_url($url) {
  *
  * @return string HTML attributes to be inserted into a tag (e.g., <tag $attrs>)
  */
-function elgg_format_attributes(array $attrs) {
+function elgg_format_attributes(array $attrs = array()) {
+	if (!is_array($attrs) || !count($attrs)) {
+		return '';
+	}
+
 	$attrs = _elgg_clean_vars($attrs);
 	$attributes = array();
 
 	if (isset($attrs['js'])) {
-		//@todo deprecated notice?
+		elgg_deprecated_notice('Use associative array of attr => val pairs instead of $vars[\'js\']', 1.8);
 
 		if (!empty($attrs['js'])) {
 			$attributes[] = $attrs['js'];
@@ -136,11 +140,18 @@ function elgg_format_attributes(array $attrs) {
 			$val = $attr; //e.g. checked => true ==> checked="checked"
 		}
 
-		// ignore $vars['entity'] => ElggEntity stuff
-		if ($val !== null && $val !== false && (is_array($val) || !is_object($val))) {
-
-			// allow $vars['class'] => array('one', 'two');
-			// @todo what about $vars['style']? Needs to be semi-colon separated...
+		/**
+		 * Ignore non-array values and allow attribute values to be an array
+		 *  <code>
+		 *  $attrs = array(
+		 *		'entity' => <ElggObject>, // will be ignored
+		 * 		'class' => array('elgg-input', 'elgg-input-text'), // will be imploded with spaces
+		 * 		'style' => array('margin-left:10px;', 'color: #666;'), // will be imploded with spaces
+		 *		'alt' => 'Alt text', // will be left as is
+		 *  );
+		 *  </code>
+		 */
+		if ($val !== NULL && $val !== false && (is_array($val) || !is_object($val))) {
 			if (is_array($val)) {
 				$val = implode(' ', $val);
 			}
@@ -303,7 +314,7 @@ function elgg_normalize_url($url) {
 		// '//example.com' (Shortcut for protocol.)
 		// '?query=test', #target
 		return $url;
-	
+
 	} elseif (stripos($url, 'javascript:') === 0 || stripos($url, 'mailto:') === 0) {
 		// 'javascript:' and 'mailto:'
 		// Not covered in FILTER_VALIDATE_URL
@@ -313,7 +324,7 @@ function elgg_normalize_url($url) {
 		// 'install.php', 'install.php?step=step'
 		return elgg_get_site_url() . $url;
 
-	} elseif (preg_match("#^[^/]*\.#i", $url)) {
+	} elseif (preg_match("#^[^/?]*\.#i", $url)) {
 		// 'example.com', 'example.com/subpage'
 		return "http://$url";
 
@@ -345,7 +356,7 @@ function elgg_get_friendly_title($title) {
 
 	// titles are often stored HTML encoded
 	$title = html_entity_decode($title, ENT_QUOTES, 'UTF-8');
-	
+
 	$title = Elgg_Translit::urlize($title);
 
 	return $title;
@@ -363,7 +374,7 @@ function elgg_get_friendly_title($title) {
  * @since 1.7.2
  */
 function elgg_get_friendly_time($time, $current_time = null) {
-	
+
 	if (!$current_time) {
 		$current_time = time();
 	}
@@ -384,7 +395,7 @@ function elgg_get_friendly_time($time, $current_time = null) {
 	if ($diff < $minute) {
 		return elgg_echo("friendlytime:justnow");
 	}
-	
+
 	if ($diff < $hour) {
 		$granularity = ':minutes';
 		$diff = round($diff / $minute);
@@ -399,7 +410,7 @@ function elgg_get_friendly_time($time, $current_time = null) {
 	if ($diff == 0) {
 		$diff = 1;
 	}
-	
+
 	$future = ((int)$current_time - (int)$time < 0) ? ':future' : '';
 	$singular = ($diff == 1) ? ':singular' : '';
 
@@ -407,18 +418,68 @@ function elgg_get_friendly_time($time, $current_time = null) {
 }
 
 /**
+ * Returns a human-readable message for PHP's upload error codes
+ *
+ * @param int $error_code The code as stored in $_FILES['name']['error']
+ * @return string
+ */
+function elgg_get_friendly_upload_error($error_code) {
+	switch ($error_code) {
+		case UPLOAD_ERR_OK:
+			return '';
+
+		case UPLOAD_ERR_INI_SIZE:
+			$key = 'ini_size';
+			break;
+
+		case UPLOAD_ERR_FORM_SIZE:
+			$key = 'form_size';
+			break;
+
+		case UPLOAD_ERR_PARTIAL:
+			$key = 'partial';
+			break;
+
+		case UPLOAD_ERR_NO_FILE:
+			$key = 'no_file';
+			break;
+
+		case UPLOAD_ERR_NO_TMP_DIR:
+			$key = 'no_tmp_dir';
+			break;
+
+		case UPLOAD_ERR_CANT_WRITE:
+			$key = 'cant_write';
+			break;
+
+		case UPLOAD_ERR_EXTENSION:
+			$key = 'extension';
+			break;
+
+		default:
+			$key = 'unknown';
+			break;
+	}
+
+	return elgg_echo("upload:error:$key");
+}
+
+
+/**
  * Strip tags and offer plugins the chance.
  * Plugins register for output:strip_tags plugin hook.
  * Original string included in $params['original_string']
  *
- * @param string $string Formatted string
+ * @param string $string         Formatted string
+ * @param string $allowable_tags Optional parameter to specify tags which should not be stripped
  *
  * @return string String run through strip_tags() and any plugin hooks.
  */
-function elgg_strip_tags($string) {
+function elgg_strip_tags($string, $allowable_tags = null) {
 	$params['original_string'] = $string;
+	$params['allowable_tags'] = $allowable_tags;
 
-	$string = strip_tags($string);
+	$string = strip_tags($string, $allowable_tags);
 	$string = elgg_trigger_plugin_hook('format', 'strip_tags', $params, $string);
 
 	return $string;
@@ -468,7 +529,7 @@ function _elgg_html_decode($string) {
 
 /**
  * Prepares query string for output to prevent CSRF attacks.
- * 
+ *
  * @param string $string
  * @return string
  *

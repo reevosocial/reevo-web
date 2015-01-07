@@ -8,7 +8,7 @@
  * @subpackage Session
  */
 
-/** 
+/**
  * Elgg magic session
  * @deprecated 1.9
  */
@@ -16,7 +16,7 @@ global $SESSION;
 
 /**
  * Gets Elgg's session object
- * 
+ *
  * @return ElggSession
  * @since 1.9
  */
@@ -291,60 +291,6 @@ function elgg_set_cookie(ElggCookie $cookie) {
 }
 
 /**
- * Add a remember me cookie to storage
- * 
- * @param ElggUser $user The user being remembered
- * @param string   $code 32 letter code
- * @return void
- * @access private
- */
-function _elgg_add_remember_me_cookie(ElggUser $user, $code) {
-	$db = _elgg_services()->db;
-	$prefix = $db->getTablePrefix();
-	$time = time();
-	$code = $db->sanitizeString($code);
-
-	$query = "INSERT INTO {$prefix}users_remember_me_cookies
-		(code, guid, timestamp) VALUES ('$code', $user->guid, $time)";
-	try {
-		$db->insertData($query);
-	} catch (DatabaseException $e) {
-		if (false !== strpos($e->getMessage(), "users_remember_me_cookies' doesn't exist")) {
-			// schema has not been updated so we swallow this exception
-			return null;
-		} else {
-			throw $e;
-		}
-	}
-}
-
-/**
- * Remove a remember me cookie from storage
- * 
- * @param string $code 32 letter code
- * @return void
- * @access private
- */
-function _elgg_delete_remember_me_cookie($code) {
-	$db = _elgg_services()->db;	
-	$prefix = $db->getTablePrefix();
-	$code = $db->sanitizeString($code);
-
-	$query = "DELETE FROM {$prefix}users_remember_me_cookies
-		WHERE code = '$code'";
-	try {
-		$db->deleteData($query);
-	} catch (DatabaseException $e) {
-		if (false !== strpos($e->getMessage(), "users_remember_me_cookies' doesn't exist")) {
-			// schema has not been updated so we swallow this exception
-			return null;
-		} else {
-			throw $e;
-		}
-	}
-}
-
-/**
  * Logs in a specified ElggUser. For standard registration, use in conjunction
  * with elgg_authenticate.
  *
@@ -380,20 +326,9 @@ function login(ElggUser $user, $persistent = false) {
 		throw new LoginException(elgg_echo('LoginException:Unknown'));
 	}
 
-	// if remember me checked, set cookie with token and store token on user
+	// if remember me checked, set cookie with token and store hash(token) for user
 	if ($persistent) {
-		$code = md5($user->name . $user->username . time() . rand());
-		// @todo oooh, hashing a hash adds magical powers
-		_elgg_add_remember_me_cookie($user, md5($code));
-		$session->set('code', $code);
-
-		$cookies = elgg_get_config('cookies');
-		$cookie = new ElggCookie($cookies['remember_me']['name']);
-		$cookie->value = $code;
-		foreach (array('expire', 'path', 'domain', 'secure', 'httponly') as $key) {
-			$cookie->$key = $cookies['remember_me'][$key];
-		}
-		elgg_set_cookie($cookie);
+		_elgg_services()->persistentLogin->makeLoginPersistent($user);
 	}
 
 	// User's privilege has been elevated, so change the session id (prevents session fixation)
@@ -406,10 +341,11 @@ function login(ElggUser $user, $persistent = false) {
 
 	// if memcache is enabled, invalidate the user in memcache @see https://github.com/Elgg/Elgg/issues/3143
 	if (is_memcache_available()) {
+		$guid = $user->getGUID();
 		// this needs to happen with a shutdown function because of the timing with set_last_login()
-		register_shutdown_function("_elgg_invalidate_memcache_for_entity", $_SESSION['guid']);
+		register_shutdown_function("_elgg_invalidate_memcache_for_entity", $guid);
 	}
-	
+
 	return true;
 }
 
@@ -436,21 +372,7 @@ function logout() {
 		return false;
 	}
 
-	$cookies = elgg_get_config('cookies');
-	$cookie_name = $cookies['remember_me']['name'];
-
-	// remove remember cookie
-	if (isset($_COOKIE[$cookie_name])) {
-		_elgg_delete_remember_me_cookie(md5($_COOKIE[$cookie_name]));
-
-		// tell browser to delete cookie
-		$cookie = new ElggCookie($cookie_name);
-		foreach (array('expire', 'path', 'domain', 'secure', 'httponly') as $key) {
-			$cookie->$key = $cookies['remember_me'][$key];
-		}
-		$cookie->setExpiresTime("-30 days");
-		elgg_set_cookie($cookie);
-	}
+	_elgg_services()->persistentLogin->removePersistentLogin();
 
 	// pass along any messages into new session
 	$old_msg = $session->get('msg');
@@ -473,24 +395,26 @@ function _elgg_session_boot() {
 	elgg_register_action('login', '', 'public');
 	elgg_register_action('logout');
 	register_pam_handler('pam_auth_userpass');
-	
+
 	$session = _elgg_services()->session;
 	$session->start();
 
 	// test whether we have a user session
 	if ($session->has('guid')) {
-		$session->setLoggedInUser(get_user($session->get('guid')));
+		$user = get_user($session->get('guid'));
+		if (!$user) {
+			// OMG user has been deleted.
+			$session->invalidate();
+			forward('');
+		}
+
+		$session->setLoggedInUser($user);
+
+		_elgg_services()->persistentLogin->replaceLegacyToken($user);
 	} else {
-		// is there a remember me cookie
-		$cookies = elgg_get_config('cookies');
-		$cookie_name = $cookies['remember_me']['name'];
-		if (isset($_COOKIE[$cookie_name])) {
-			// we have a cookie, so try to log the user in
-			$user = get_user_by_code(md5($_COOKIE[$cookie_name]));
-			if ($user) {
-				$session->setLoggedInUser($user);
-				$session->set('code', md5($_COOKIE[$cookie_name]));
-			}
+		$user = _elgg_services()->persistentLogin->bootSession();
+		if ($user) {
+			$session->setLoggedInUser($user);
 		}
 	}
 
@@ -500,7 +424,7 @@ function _elgg_session_boot() {
 
 	// initialize the deprecated global session wrapper
 	global $SESSION;
-	$SESSION = new Elgg_DeprecationWrapper(_elgg_services()->session, "\$SESSION is deprecated", 1.9);
+	$SESSION = new Elgg_DeprecationWrapper($session, "\$SESSION is deprecated", 1.9);
 
 	// logout a user with open session who has been banned
 	$user = $session->getLoggedInUser();

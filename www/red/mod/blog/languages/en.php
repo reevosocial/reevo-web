@@ -1,9 +1,4 @@
 <?php
-/**
- * Blog English language file.
- *
- */
-
 return array(
 	'blog' => 'Blogs',
 	'blog:blogs' => 'Blogs',
@@ -26,7 +21,7 @@ return array(
 	'blog:excerpt' => 'Excerpt',
 	'blog:body' => 'Body',
 	'blog:save_status' => 'Last saved: ',
-	
+
 	'blog:revision' => 'Revision',
 	'blog:auto_saved_revision' => 'Auto Saved Revision',
 

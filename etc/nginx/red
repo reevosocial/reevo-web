@@ -1,250 +1,123 @@
-#
-## Nginx configuration for Lorea's Elgg 1.9
-#
-# Copyright 2012,2013 Lorea Faeries <federation@lorea.org>
-# License: FDLv1.3+
-#
-# SSL configuration is commented out to be able to run a test node on localhost.
-# In that case, you want to add `127.0.1.1 lorea lorea.example.org` in /etc/hosts.
-#
 
-## Upstream configuration
-#
-# Choose host-based or socket-based according to your local setup.
-# Note that if you're hosting multiple seeds, you need to rename upstream for each!
-#
-# You have to match this name in the rest of the configuration. The easy way:
-# `sed -e 's/lorea_seed_example/lorea_seed_foo/g' lorea.example.org > lorea.foo.org`
-#
 upstream reevo_red {
-        # socket-based
-        server  unix:/srv/dev/run/red.socket;
+    # socket-based
+    server  unix:/srv/dev/run/red.socket;
 }
 
-## HTTP configuration
-# Normally, Lorea seeds run over TLS, so we simply redirect to SSL port.
 server {
-        listen          80;
-        server_name     red.devreevo.org;
-##------------%<------------------------------------ Uncomment to activate TLS
-#       add_header      Strict-Transport-Security    "max-age=31536000; includeSubdomains";
-#       rewrite         ^ https://$server_name$request_uri permanent;
-#       access_log      off;
-#}
+    listen          80;
+    server_name     red.devreevo.org;
+    charset         utf8;
 
-### TLS configuration
-#server {
-#       listen          443 ssl;
-#       server_name     lorea lorea.example.org;
-##------------%<------------------------------------ Uncomment to activate TLS
-        charset         utf8;
+    access_log      off;
+    access_log      /srv/dev/log/nginx-red.access.log;
+    error_log       /srv/dev/log/nginx-red.error.log debug;
+		rewrite_log on;
+    
+    root            /srv/dev/www/red;
+    index           index.php;
 
-        access_log      off;
-        access_log      /srv/dev/log/nginx-red.access.log;
-        error_log       /srv/dev/log/nginx-red.error.log debug;
-
-        root            /srv/dev/www/red;
-        index           index.php;
-
-		# Sitio offline
-
-        if ($maintenance) {
-            return 503;
-        }
-	    error_page 503 @maintenance;
-    		location @maintenance {
-        	rewrite ^(.*)$ /errors/503/index.html break;
-    	}
 
 		try_files       /maintenance.html $uri @rewrite;
         error_page      404 502 504 = @elgg;
         # I'm a teapot: used in redirections to avoid duplication of backend configuration
         error_page              418                     = @elgg;
 
-##------------%<------------------------------------ Uncomment to activate TLS
-#       ssl                             on;
-#       ssl_certificate                 ssl/lorea.example.org/www.crt.pem;
-#       ssl_certificate_key             ssl/lorea.example.org/www.key.pem;
-#       ssl_session_timeout             10m;
-#       ssl_session_cache               shared:ssl:10m;
-#       ssl_protocols                   TLSv1.2 TLSv1.1 TLSv1;
-#       ssl_ciphers                     ECDHE-ECDSA-RC4-SHA:ECDHE-RSA-RC4-SHA:RC4-SHA:ECDHE-RSA-AES128-SHA:RC4:HIGH:!aNULL:!MD5:!EDH;
-#       ssl_prefer_server_ciphers       on;
-##------------%<------------------------------------ Uncomment to activate TLS
-
-        # WebID support is available in NginX >= 1.3.6
-#       ssl_verify_client              optional_no_ca;
-#       fastcgi_param  X_CLIENT_CERT   $ssl_client_raw_cert;
-
-        # More security options. YMMV
-        add_header Access-Control-Allow-Origin  $server_name;
-        add_header Strict-Transport-Security    "max-age=31536000; includeSubdomains";
-#       add_header X-Frame-Options              SAMEORIGIN;
-        add_header X-Frame-Options              DENY;
-        # CSP is a complex matter, read the docs and fine tune it to your special case!
-        # - http://www.w3.org/TR/CSP/
-        # - http://hashbang.ca/2013/02/01/planning-a-content-security-policy-with-dancer
-        # - http://feeding.cloud.geek.nz/posts/using-browserid-and-content-security/
-#       add_header X-Content-Security-Policy    "default-src 'self'; connect-src none";
-
-        ### Limit requests to HEAD, GET, and POST
-        # Linked Data needs DELETE, MKCOL, PATCH, and PUT
-        # In that case the following needs to move to a location
-        if ($request_method !~ ^(GET|HEAD|POST)$ ) {
-                return 405;
-        }
-
-        ### Memcached support
-#       set             $memcached_key  "lorea.example.org";
-#       include         memcached_params;
-
-        ### Rewrite dynamic requests to Elgg handlers
 
     # Cache bypasses the Elgg engine
     location ~ ^/cache/ {
-        rewrite ^/cache/(.*)$                                                   /engine/handlers/cache_handler.php?request=$1                           last;
+        rewrite ^/cache\/(.*)$ /engine/handlers/cache_handler.php?request=$1&$query_string;
     }
+
+
 
     # Export allows data export
-    location ~ ^/export/ {
-        rewrite ^/export/([A-Za-z]+)/([0-9]+)/?$                                /engine/handlers/export_handlers.php?view=$1&guid=$2                    last;
-        rewrite ^/export/([A-Za-z]+)/([0-9]+)/([A-Za-z]+)/([A-Za-z0-9_]+)/$     /engine/handlers/export_handlers.php?view=$1&guid=$2&type=$3&idname=$4  last;
+    location /export {
+        rewrite ^/export\/([A-Za-z]+)\/([0-9]+)\/?$ /engine/handlers/export_handler.php?view=$1&guid=$2;
+        rewrite ^/export\/([A-Za-z]+)\/([0-9]+)\/([A-Za-z]+)\/([A-Za-z0-9\_]+)\/$ /engine/handlers/export_handler.php?view=$1&guid=$2&type=$3&idname=$4;
     }
 
-    # Only useful during installation: you can comment it afterwards.
-        # If the test fails, you might need to add a fake entry to your hosts file:
-        #       `echo 127.1.0.1 lorea.example.org | sudo tee -a /etc/hosts`
     location = /rewrite.php {
-        rewrite ^/rewrite.php$                                                  /install.php                                                            last;
+        rewrite ^(.*)$ /install.php;
     }
 
-#       # Is it still useful, or is it taken care of by the router?
-#       location ~ ^/services/api/ {
-#               rewrite ^/services/api/([A-Za-z0-9_-]+)/(.*)$                           /engine/handlers/service_handler.php?handler=$1&request=$2              last;
-#       }
 
-        # Unmatched locations fall into this bucket
-        location @rewrite {
-#               # Legacy URL rewriting (for use with the legacy URL plugin)
-#               rewrite ^/pg/([A-Za-z0-9_-]+)$                                                                  /engine/handlers/page_handler.php?handler=$1                                last;
-#               rewrite ^/pg/([A-Za-z0-9_-]+)/(.*)$                                                             /engine/handlers/page_handler.php?handler=$1&page=$2                          last;
-#               rewrite ^/tag/(.+)/?$                                                                           /engine/handlers/page_handler.php?handler=search&page=$1                      last;
-                # Fallback to the new router
-                rewrite ^(.*)$                                                                                                                  /index.php$uri?$args                          last;
-        }
 
-        # force static locations
-        location = /favicon.ico         {
-                expires                 +1y;
-                log_not_found   off;
-        }
-        # Elgg 1.9 takes care of the robots.txt
-        # But on a busy site, you might prefer a static response.
-#       location = /robots.txt          {
-#               default_type text/plain;
-#               expires +1M;
-#               echo "User-Agent: *";
-#               echo "Disallow: /";
-#               echo_flush;
-#       }
-        # PHP-FPM provides /.ping, otherwise:
-#       location = /.ping { default_type text/plain; expires +5m; echo "pong $server_name"; echo_flush; }
+    # Pass known PHP files to backend
+    location ~ /(index|install|upgrade)\.php(/|$) {
+            return  418;
+    }
+    # Only authorize access to PHP handlers via internal redirections (@rewrite rules)
+    location ~ ^/engine/handlers/(action|cache|export|page|service)_handler\.php(/|$) {
+            internal;
+            return 418;
+    }
 
-        # Only present during maintenance
-        location = /maintenance.html    {
-                log_not_found   off;
-        }
-        # Cache and/or compress assets
-        location ~* \.(css|js|html)$ {
-                expires         modified +1y;
-                gzip_static     on;
-                log_not_found   off;
-        }
 
-        # Non-static images FTW :P
-        location ~ ^/(^groupicon) {
-                location ~* \.(jpg|jpeg|gif|png|mp3|ogg|oga|ogv|mpg|mpeg|flv|mov|avi|3pg|swf|ico)$ {
-                        expires         modified +1y;
-                        gzip_static     off;
-                        log_not_found   off;
-                }
-        }
-        # Hide version.php from the Web
-        location = /version.php {
-                internal;
-        }
+
+
+    # force static locations
+    location = /favicon.ico         {
+            expires                 +1y;
+            log_not_found   off;
+    }
+
+    # Only present during maintenance
+    location = /maintenance.html    {
+            log_not_found   off;
+    }
+    # Cache and/or compress assets
+    location ~* \.(css|js|html)$ {
+            expires         modified +1y;
+            gzip_static     on;
+            log_not_found   off;
+    }
+
+    # Non-static images FTW :P
+    location ~ ^/(^groupicon) {
+            location ~* \.(jpg|jpeg|gif|png|mp3|ogg|oga|ogv|mpg|mpeg|flv|mov|avi|3pg|swf|ico)$ {
+                    expires         modified +1y;
+                    gzip_static     off;
+                    log_not_found   off;
+            }
+    }
+    # Hide version.php from the Web
+    location = /version.php {
+            internal;
+    }
+
     # Hide dotfiles
     location ~ /\. {
         return 403;
     }
+		
+    location / {
+        try_files $uri $uri/ /index.php?__elgg_uri=$uri&$query_string;
+    }
 
-        ## URLs for the Backend
+    location ~ /mod/profile/icondirect\.php$ {
+            return 418;
+    }
+    # file plugin
+    location ~ /mod/file/thumbnail\.php {
+            return 418;
+    }
 
-        # Pass known PHP files to backend
-        location ~ /(index|install|upgrade)\.php(/|$) {
-                return  418;
-        }
-        # Only authorize access to PHP handlers via internal redirections (@rewrite rules)
-        location ~ ^/engine/handlers/(action|cache|export|page|service)_handler\.php(/|$) {
-                internal;
-                return 418;
-        }
+    # Enable catching faulty modules missing a page_handler
+    location ~ \.php(/|$) {
+            access_log      /var/log/red-direct-php-access.log;
+            return 403;
 
-        ## These URLs need fixing
+    }
+		
+    location @elgg {
 
-#       # Ah, ugly icondirect
-        location ~ /mod/profile/icondirect\.php$ {
-                return 418;
-        }
-        # file plugin
-        location ~ /mod/file/thumbnail\.php {
-                return 418;
-        }
-
-        ## Block all direct calls to other PHP files
-
-        # Enable catching faulty modules missing a page_handler
-        location ~ \.php(/|$) {
-                access_log      /var/log/nginx/lorea-direct-php-access.log;
-                return 403;
-
-        }
-
-        ## Pass everything else to the backend (I'm a Teapot!)
-
-        # CAVEAT: if you change upstream name above, make sure to match it here in fastcgi_pass!
-        location @elgg {
-                # This file contains PATH_INFO and parameters, including optimizations
-#               include         lorea_params;
-                include         fastcgi_params;
-                fastcgi_index   index.php;
-                fastcgi_pass    reevo_red;     # upstream
-
-                # For local development, I don't use SSL
-                fastcgi_param   HTTPS   off;
-
-                # Contents of the lorea_params file:
-		        fastcgi_split_path_info ^((?U).+\.php)(/?.+)$;
-
-		        fastcgi_param           PATH_INFO $fastcgi_path_info;
-		        fastcgi_param           PATH_TRANSLATED $document_root$fastcgi_path_info;
-		        fastcgi_param           SCRIPT_FILENAME $document_root$fastcgi_script_name;
-		#       fastcgi_param           HTTPS off;
-		#       fastcgi_param           HTTPS on;
-
-		        fastcgi_connect_timeout          60;
-		        fastcgi_send_timeout            180;
-		        fastcgi_read_timeout            180;
-		        fastcgi_buffer_size             128k;
-		        fastcgi_buffers               4 256k;
-		        fastcgi_busy_buffers_size       256k;
-		        fastcgi_temp_file_write_size    256k;
-        		fastcgi_intercept_errors        on;
-
-                # Allow larger file uploads
-                client_max_body_size            12M;
-                client_body_buffer_size         256k;
-        }
-
-
+				fastcgi_split_path_info ^(.+\.php)(/.+)$;
+				# NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
+				fastcgi_param  SCRIPT_FILENAME    $document_root$fastcgi_script_name;
+				# With php5-cgi alone:
+				fastcgi_pass    reevo_red;     # upstream
+				fastcgi_index index.php;
+				include fastcgi_params;
+    }
 }

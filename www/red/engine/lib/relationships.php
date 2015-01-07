@@ -291,7 +291,7 @@ function get_entity_relationships($guid, $inverse_relationship = false) {
  *
  *  inverse_relationship => false|BOOL Is relationship_guid is the target entity of the relationship? By default,
  * 	                        relationship_guid is the subject.
- * 
+ *
  *  relationship_join_on => null|STR How the entities relate: guid (default), container_guid, or owner_guid
  *                          Add in Elgg 1.9.0. Examples using the relationship 'friend':
  *                          1. use 'guid' if you want the user's friends
@@ -343,6 +343,10 @@ function elgg_get_entities_from_relationship($options) {
 		$select = array('r.id');
 
 		$options['selects'] = array_merge($options['selects'], $select);
+
+		if (!isset($options['group_by'])) {
+			$options['group_by'] = $clauses['group_by'];
+		}
 	}
 
 	return elgg_get_entities_from_metadata($options);
@@ -374,6 +378,7 @@ $relationship_guid = null, $inverse_relationship = false) {
 
 	$wheres = array();
 	$joins = array();
+	$group_by = '';
 
 	if ($inverse_relationship) {
 		$joins[] = "JOIN {$CONFIG->dbprefix}entity_relationships r on r.guid_one = $column";
@@ -391,11 +396,15 @@ $relationship_guid = null, $inverse_relationship = false) {
 		} else {
 			$wheres[] = "r.guid_one = '$relationship_guid'";
 		}
+	} else {
+		// See #5775. Queries that do not include a relationship_guid must be grouped by entity table alias,
+		// otherwise the result set is not unique
+		$group_by = $column;
 	}
 
 	if ($where_str = implode(' AND ', $wheres)) {
 
-		return array('wheres' => array("($where_str)"), 'joins' => $joins);
+		return array('wheres' => array("($where_str)"), 'joins' => $joins, 'group_by' => $group_by);
 	}
 
 	return '';

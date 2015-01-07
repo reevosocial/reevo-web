@@ -87,7 +87,7 @@ elgg.ui.popupOpen = function(event) {
 		at: 'center bottom',
 		of: $(this),
 		collision: 'fit fit'
-	}
+	};
 
 	options = elgg.trigger_hook('getOptions', 'ui.popup', params, options);
 
@@ -216,7 +216,7 @@ elgg.ui.initHoverMenu = function(parent) {
 
 	// hide avatar menu when user clicks elsewhere
 	$(document).click(function(event) {
-		if ($(event.target).parents(".elgg-avatar").length == 0) {
+		if ($(event.target).parents(".elgg-avatar").length === 0) {
 			$(".elgg-menu-hover").fadeOut();
 		}
 	});
@@ -284,7 +284,7 @@ elgg.ui.initDatePicker = function() {
 			}
 		});
 	};
-	
+
 	if ($('.elgg-input-date').length && elgg.get_language() == 'en') {
 		loadDatePicker();
 	} else if ($('.elgg-input-date').length) {
@@ -301,7 +301,7 @@ elgg.ui.initDatePicker = function() {
 /**
  * This function registers two menu items that are actions that are the opposite
  * of each other and ajaxifies them. E.g. like/unlike, friend/unfriend, ban/unban, etc.
- * 
+ *
  * Note the menu item names must be given in their normalized form. So if the
  * name is remove_friend, you should call this function with "remove-friend" instead.
  */
@@ -309,10 +309,10 @@ elgg.ui.registerTogglableMenuItems = function(menuItemNameA, menuItemNameB) {
 	// Handles clicking the first button.
 	$('.elgg-menu-item-' + menuItemNameA + ' a').live('click', function() {
 		var $menu = $(this).closest('.elgg-menu');
-		
+
 		// Be optimistic about success
 		elgg.ui.toggleMenuItems($menu, menuItemNameB, menuItemNameA);
-		
+
 		// Send the ajax request
 		elgg.action($(this).attr('href'), {
 			success: function(json) {
@@ -325,19 +325,19 @@ elgg.ui.registerTogglableMenuItems = function(menuItemNameA, menuItemNameB) {
 				// Something went wrong, so undo the optimistic changes
 				elgg.ui.toggleMenuItems($menu, menuItemNameA, menuItemNameB);
 			}
-		}); 
-		
+		});
+
 		// Don't want to actually click the link
 		return false;
 	});
-	
+
 	// Handles clicking the second button
 	$('.elgg-menu-item-' + menuItemNameB + ' a').live('click', function() {
 		var $menu = $(this).closest('.elgg-menu');
-		
+
 		// Be optimistic about success
 		elgg.ui.toggleMenuItems($menu, menuItemNameA, menuItemNameB);
-		
+
 		// Send the ajax request
 		elgg.action($(this).attr('href'), {
 			success: function(json) {
@@ -350,8 +350,8 @@ elgg.ui.registerTogglableMenuItems = function(menuItemNameA, menuItemNameB) {
 				// Something went wrong, so undo the optimistic changes
 				elgg.ui.toggleMenuItems($menu, menuItemNameB, menuItemNameA);
 			}
-		}); 
-		
+		});
+
 		// Don't want to actually click the link
 		return false;
 	});
@@ -375,7 +375,7 @@ elgg.ui.initAccessInputs = function () {
 	$('.elgg-input-access').each(function () {
 		function updateMembersonlyNote() {
 			var val = $select.val();
-			if (val != acl && val != 0) {
+			if (val != acl && val !== 0) {
 				// .show() failed in Chrome. Maybe a float/jQuery bug
 				$note.css('visibility', 'visible');
 			} else {

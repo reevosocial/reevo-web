@@ -97,7 +97,7 @@ function forward($location = "", $reason = 'system') {
 		}
 	} else {
 		throw new SecurityException("Redirect could not be issued due to headers already being sent. Halting execution for security. "
-			. "Output started in file $file at line $line. Search http://docs.elgg.org/ for more information.");
+			. "Output started in file $file at line $line. Search http://learn.elgg.org/ for more information.");
 	}
 }
 
@@ -126,17 +126,42 @@ function forward($location = "", $reason = 'system') {
  * @since 1.8.0
  */
 function elgg_register_js($name, $url, $location = 'head', $priority = null) {
-	if (is_array($url)) {
-		$config = $url;
-		$url = elgg_extract('src', $config);
-		$location = elgg_extract('location', $config, 'footer');
-		$priority = elgg_extract('priority', $config);
-		
-		_elgg_services()->amdConfig->setShim($name, $config);
-		_elgg_services()->amdConfig->setPath($name, elgg_normalize_url($url));
+	return elgg_register_external_file('js', $name, $url, $location, $priority);
+}
+
+/**
+ * Defines a JS lib as an AMD module. This is useful for shimming
+ * traditional JS or for setting the paths of AMD modules.
+ *
+ * Calling multiple times for the same name will:
+ *     * set the preferred path to the last call setting a path
+ *     * overwrite the shimmed AMD modules with the last call setting a shimmed module
+ *
+ * Use elgg_require_js($name) to load on the current page.
+ *
+ * Calling this function is not needed if your JS are in views named like `js/module/name.js`
+ * Instead, simply call elgg_require_js("module/name").
+ *
+ * @param string $name   The module name
+ * @param array  $config An array like the following:
+ *                       array  'deps'    An array of AMD module dependencies
+ *                       string 'exports' The name of the exported module
+ *                       string 'src'     The URL to the JS. Can be relative.
+ *
+ * @return void
+ */
+function elgg_define_js($name, $config) {
+	$src = elgg_extract('src', $config);
+
+	if ($src) {
+		$url = elgg_normalize_url($src);
+		_elgg_services()->amdConfig->addPath($name, $url);
 	}
 
-	return elgg_register_external_file('js', $name, $url, $location, $priority);
+	// shimmed module
+	if (isset($config['deps']) || isset($config['exports'])) {
+		_elgg_services()->amdConfig->addShim($name, $config);
+	}
 }
 
 /**
@@ -263,7 +288,7 @@ function elgg_register_external_file($type, $name, $url, $location, $priority = 
 
 	$url = elgg_format_url($url);
 	$url = elgg_normalize_url($url);
-	
+
 	_elgg_bootstrap_externals_data_structure($type);
 
 	$name = trim(strtolower($name));
@@ -935,6 +960,24 @@ function _elgg_php_exception_handler($exception) {
 	$CONFIG->pagesetupdone = true;
 
 	try {
+		// allow custom scripts to trigger on exception
+		// $CONFIG->exception_include can be set locally in settings.php
+		// value should be a system path to a file to include
+		if (!empty($CONFIG->exception_include) && is_file($CONFIG->exception_include)) {
+			ob_start();
+			include $CONFIG->exception_include;
+			$exception_output = ob_get_clean();
+
+			// if content is returned from the custom handler we will output
+			// that instead of our default failsafe view
+			if (!empty($exception_output)) {
+				echo $exception_output;
+				exit;
+			}
+		}
+
+		elgg_set_viewtype('failsafe');
+
 		if (elgg_is_admin_logged_in()) {
 			if (!elgg_view_exists("messages/exceptions/admin_exception")) {
 				elgg_set_viewtype('failsafe');
@@ -1002,7 +1045,7 @@ function _elgg_php_error_handler($errno, $errmsg, $filename, $linenum, $vars) {
 		case E_WARNING :
 		case E_USER_WARNING :
 		case E_RECOVERABLE_ERROR: // (e.g. type hint violation)
-			
+
 			// check if the error wasn't suppressed by the error control operator (@)
 			if (error_reporting()) {
 				error_log("PHP WARNING: $error");
@@ -1444,9 +1487,9 @@ function elgg_extract($key, array $array, $default = null, $strict = true) {
  * @param array  &$array     Array to sort
  * @param string $element    Element to sort by
  * @param int    $sort_order PHP sort order
- *                           {@see http://us2.php.net/array_multisort}
+ *                           {@link http://us2.php.net/array_multisort}
  * @param int    $sort_type  PHP sort type
- *                           {@see http://us2.php.net/sort}
+ *                           {@link http://us2.php.net/sort}
  *
  * @return bool
  */
@@ -1593,7 +1636,7 @@ function _elgg_shutdown_hook() {
 		elgg_trigger_event('shutdown', 'system');
 
 		$time = (float)(microtime(true) - $START_MICROTIME);
-		$uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : 'CLI';
+		$uri = _elgg_services()->request->server->get('REQUEST_URI', 'CLI');
 		// demoted to NOTICE from DEBUG so javascript is not corrupted
 		elgg_log("Page {$uri} generated in $time seconds", 'INFO');
 	} catch (Exception $e) {
@@ -1602,6 +1645,9 @@ function _elgg_shutdown_hook() {
 		error_log($message);
 		error_log("Exception trace stack: {$e->getTraceAsString()}");
 	}
+
+	// Prevent an APC session bug: https://bugs.php.net/bug.php?id=60657
+	session_write_close();
 }
 
 /**
@@ -1646,7 +1692,7 @@ function _elgg_ajax_page_handler($page) {
 
 		// pull out GET parameters through filter
 		$vars = array();
-		foreach ($_GET as $name => $value) {
+		foreach (_elgg_services()->request->query->keys() as $name) {
 			$vars[$name] = get_input($name);
 		}
 
@@ -1686,7 +1732,7 @@ function _elgg_css_page_handler($page) {
 		// default css
 		$page[0] = 'elgg';
 	}
-	
+
 	return _elgg_cacheable_view_page_handler($page, 'css');
 }
 
@@ -1885,7 +1931,7 @@ function _elgg_walled_garden_index() {
 
 	elgg_load_css('elgg.walled_garden');
 	elgg_load_js('elgg.walled_garden');
-	
+
 	$content = elgg_view('core/walled_garden/login');
 
 	$params = array(
@@ -1934,8 +1980,6 @@ function _elgg_walled_garden_ajax_handler($page) {
 function _elgg_walled_garden_init() {
 	global $CONFIG;
 
-	elgg_register_simplecache_view('js/walled_garden');
-	elgg_register_simplecache_view('css/walled_garden');
 	elgg_register_css('elgg.walled_garden', elgg_get_simplecache_url('css', 'walled_garden'));
 	elgg_register_js('elgg.walled_garden', elgg_get_simplecache_url('js', 'walled_garden'));
 
@@ -2023,16 +2067,15 @@ function _elgg_init() {
 	elgg_register_external_view('js/elgg/UserPicker.js', true);
 
 	elgg_register_js('elgg.friendspicker', 'js/lib/ui.friends_picker.js');
-	elgg_register_js('jquery.easing', 'vendors/jquery/jquery.easing.1.3.packed.js');
 	elgg_register_js('elgg.avatar_cropper', 'js/lib/ui.avatar_cropper.js');
 	elgg_register_js('jquery.imgareaselect', 'vendors/jquery/jquery.imgareaselect/scripts/jquery.imgareaselect.min.js');
 	elgg_register_js('elgg.ui.river', 'js/lib/ui.river.js');
 
 	elgg_register_css('jquery.imgareaselect', 'vendors/jquery/jquery.imgareaselect/css/imgareaselect-deprecated.css');
-	
+
 	// Trigger the shutdown:system event upon PHP shutdown.
 	register_shutdown_function('_elgg_shutdown_hook');
-	
+
 	// Sets a blacklist of words in the current language.
 	// This is a comma separated list in word:blacklist.
 	// @todo possibly deprecate
@@ -2122,5 +2165,4 @@ elgg_register_event_handler('init', 'system', '_elgg_init');
 elgg_register_event_handler('boot', 'system', '_elgg_engine_boot', 1);
 elgg_register_plugin_hook_handler('unit_test', 'system', '_elgg_api_test');
 
-elgg_register_event_handler('init', 'system', 'add_custom_menu_items', 1000);
 elgg_register_event_handler('init', 'system', '_elgg_walled_garden_init', 1000);

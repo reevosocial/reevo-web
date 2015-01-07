@@ -13,7 +13,6 @@ class ElggPlugin extends ElggObject {
 	private $manifest;
 
 	private $path;
-	private $pluginID;
 	private $errorMsg = '';
 
 	/**
@@ -58,6 +57,8 @@ class ElggPlugin extends ElggObject {
 			parent::__construct($path);
 			$this->path = elgg_get_plugins_path() . $this->getID();
 		} else {
+			$this->initializeAttributes();
+
 			$mod_dir = elgg_get_plugins_path();
 
 			// not a full path, so assume a directory name and use the default path
@@ -71,18 +72,14 @@ class ElggPlugin extends ElggObject {
 			$this->path = $path;
 			$path_parts = explode('/', rtrim($path, '/'));
 			$plugin_id = array_pop($path_parts);
-			$this->pluginID = $plugin_id;
+			$this->title = $plugin_id;
 
 			// check if we're loading an existing plugin
-			$existing_plugin = elgg_get_plugin_from_id($this->pluginID);
-			$existing_guid = null;
+			$existing_plugin = elgg_get_plugin_from_id($plugin_id);
 
 			if ($existing_plugin) {
-				$existing_guid = $existing_plugin->guid;
+				$this->load($existing_plugin->guid);
 			}
-
-			// load the rest of the plugin
-			parent::__construct($existing_guid);
 		}
 
 		_elgg_cache_plugin_by_id($this);
@@ -100,7 +97,6 @@ class ElggPlugin extends ElggObject {
 		$this->attributes['site_guid'] = $site->guid;
 		$this->attributes['owner_guid'] = $site->guid;
 		$this->attributes['container_guid'] = $site->guid;
-		$this->attributes['title'] = $this->pluginID;
 
 		if (parent::save()) {
 			// make sure we have a priority
@@ -127,7 +123,7 @@ class ElggPlugin extends ElggObject {
 
 	/**
 	 * Returns the manifest's name if available, otherwise the ID.
-	 * 
+	 *
 	 * @return string
 	 * @since 1.8.1
 	 */
@@ -161,7 +157,7 @@ class ElggPlugin extends ElggObject {
 
 	/**
 	 * Returns an array of available markdown files for this plugin
-	 * 
+	 *
 	 * @return array
 	 */
 	public function getAvailableTextFiles() {
@@ -333,7 +329,15 @@ class ElggPlugin extends ElggObject {
 		if (!$this->guid) {
 			return false;
 		}
-
+		
+		// Hook to validate setting
+		$value = elgg_trigger_plugin_hook('setting', 'plugin', array(
+			'plugin_id' => $this->getID(),
+			'plugin' => $this,
+			'name' => $name,
+			'value' => $value,
+		), $value);
+		
 		return $this->setPrivateSetting($name, $value);
 	}
 
@@ -358,8 +362,8 @@ class ElggPlugin extends ElggObject {
 	 */
 	public function unsetAllSettings() {
 		$db_prefix = get_config('dbprefix');
-		$us_prefix = elgg_namespace_plugin_private_setting('user_setting', '', $this->getID());
-		$is_prefix = elgg_namespace_plugin_private_setting('internal', '', $this->getID());
+		$us_prefix = _elgg_namespace_plugin_private_setting('user_setting', '', $this->getID());
+		$is_prefix = _elgg_namespace_plugin_private_setting('internal', '', $this->getID());
 
 		$q = "DELETE FROM {$db_prefix}private_settings
 			WHERE entity_guid = $this->guid
@@ -649,8 +653,8 @@ class ElggPlugin extends ElggObject {
 			// we need to do this after it's been fully activated
 			// or the deactivate will be confused.
 			$params = array(
-				'plugin_id' => $this->pluginID,
-				'plugin_entity' => $this
+				'plugin_id' => $this->getID(),
+				'plugin_entity' => $this,
 			);
 
 			$return = elgg_trigger_event('activate', 'plugin', $params);
@@ -691,8 +695,8 @@ class ElggPlugin extends ElggObject {
 
 		// emit an event. returning false will cause this to not be deactivated.
 		$params = array(
-			'plugin_id' => $this->pluginID,
-			'plugin_entity' => $this
+			'plugin_id' => $this->getID(),
+			'plugin_entity' => $this,
 		);
 
 		$return = elgg_trigger_event('deactivate', 'plugin', $params);
@@ -727,7 +731,7 @@ class ElggPlugin extends ElggObject {
 		if ($flags & ELGG_PLUGIN_REGISTER_CLASSES) {
 			$this->registerClasses();
 		}
-		
+
 		// include start file
 		if ($flags & ELGG_PLUGIN_INCLUDE_START) {
 			$this->includeFile('start.php');
@@ -927,15 +931,8 @@ class ElggPlugin extends ElggObject {
 
 			$this->attributes[$name] = $value;
 		} else {
-			// Hook to validate setting
-			$value = elgg_trigger_plugin_hook('setting', 'plugin', array(
-				'plugin_id' => $this->pluginID,
-				'plugin' => $this,
-				'name' => $name,
-				'value' => $value
-			), $value);
-
-			$this->setPrivateSetting($name, $value);
+			// to make sure we trigger the correct hooks
+			$this->setSetting($name, $value);
 		}
 	}
 

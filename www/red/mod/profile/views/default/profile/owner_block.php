@@ -14,6 +14,7 @@ if (!$user) {
 $icon = elgg_view_entity_icon($user, 'large', array(
 	'use_hover' => false,
 	'use_link' => false,
+	'img_class' => 'photo u-photo',
 ));
 
 // grab the actions and admin menu items from user hover
@@ -46,7 +47,7 @@ if (elgg_is_admin_logged_in() && elgg_get_logged_in_user_guid() != elgg_get_page
 	}
 	$admin_links .= '</ul>';
 	$admin_links .= '</li>';
-	$admin_links .= '</ul>';	
+	$admin_links .= '</ul>';
 }
 
 // content links
