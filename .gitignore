@@ -13,7 +13,8 @@ files/wiki/*
 
 run/*
 
-tmp/*
+tmp/equipo/*
+tmp/wiki/cache/*
 !tmp/equipo/.gitkeep
 !tmp/wiki/cache/.gitkeep
 
