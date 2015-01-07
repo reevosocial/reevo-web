@@ -1,6 +1,10 @@
 bin/sync/database_auth.sh
 
-log/*
+log/*.log
+log/equipo/*
+log/php-fpm/*
+!log/equipo/.gitkeep
+!log/php-fpm/.gitkeep
 
 etc/global_config.php
 etc/equipo-db.conf
@@ -10,8 +14,6 @@ files/crm/*
 files/equipo/*
 files/red/*
 files/wiki/*
-
-run/*
 
 tmp/equipo/*
 tmp/wiki/cache/*
