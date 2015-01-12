@@ -1,16 +1,16 @@
 server {
   listen   80;
   server_name  blog.devreevo.org devreevo.org;
-  access_log  /srv/dev/log/nginx-blog.access.log;
-  error_log  /srv/dev/log/nginx-blog.error.log debug;
+  access_log  /srv/reevo-web/log/nginx-blog.access.log;
+  error_log  /srv/reevo-web/log/nginx-blog.error.log debug;
 
-  root  /srv/dev/www/blog;
+  root  /srv/reevo-web/www/blog;
 
   index  index.html index.htm index.php;
 
   location ~ \.php$ {
         include         /etc/nginx/fastcgi_params;
-        fastcgi_pass    unix:/srv/dev/run/blog.socket;
+        fastcgi_pass    unix:/srv/reevo-web/run/blog.socket;
         fastcgi_index   index.php;
         fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
   }

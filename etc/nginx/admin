@@ -1,16 +1,16 @@
 server {
   listen   80;
   server_name  admin.devreevo.org;
-  access_log  /srv/dev/log/nginx-admin.access.log;
-  error_log  /srv/dev/log/nginx-admin.error.log debug;
+  access_log  /srv/reevo-web/log/nginx-admin.access.log;
+  error_log  /srv/reevo-web/log/nginx-admin.error.log debug;
 
-  root  /srv/dev/www/admin;
+  root  /srv/reevo-web/www/admin;
 
   index  index.html index.htm index.php;
 
     location ~ \.php$ {
         include         /etc/nginx/fastcgi_params;
-        fastcgi_pass    unix:/srv/dev/run/admin.socket;
+        fastcgi_pass    unix:/srv/reevo-web/run/admin.socket;
         fastcgi_index   index.php;
         fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
     }

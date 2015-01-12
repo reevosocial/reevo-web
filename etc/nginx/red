@@ -1,7 +1,7 @@
 
 upstream reevo_red {
     # socket-based
-    server  unix:/srv/dev/run/red.socket;
+    server  unix:/srv/reevo-web/run/red.socket;
 }
 
 server {
@@ -10,11 +10,11 @@ server {
     charset         utf8;
 
     access_log      off;
-    access_log      /srv/dev/log/nginx-red.access.log;
-    error_log       /srv/dev/log/nginx-red.error.log debug;
+    access_log      /srv/reevo-web/log/nginx-red.access.log;
+    error_log       /srv/reevo-web/log/nginx-red.error.log debug;
 		rewrite_log on;
     
-    root            /srv/dev/www/red;
+    root            /srv/reevo-web/www/red;
     index           index.php;
 
 
