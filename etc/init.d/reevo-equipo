@@ -2,7 +2,7 @@
 
 # Script para iniciar el servicio de Redmine con Puma
 
-APP_ROOT="/srv/dev/www/equipo"
+APP_ROOT="/srv/reevo-web/www/equipo"
 APP_USER="reevo"
 DAEMON_OPTS="-C $APP_ROOT/config/puma.rb"
 PID_PATH="$APP_ROOT/tmp/pids"
