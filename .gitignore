@@ -10,10 +10,16 @@ etc/global_config.php
 etc/equipo-db.conf
 
 files/blog/*
+!files/blog/.gitkeep
 files/crm/*
+!files/crm/.gitkeep
 files/equipo/*
+!files/equipo/.gitkeep
 files/red/*
+!files/red/.gitkeep
 files/wiki/*
+!files/wiki/.gitkeep
+
 
 tmp/equipo/*
 tmp/wiki/cache/*
