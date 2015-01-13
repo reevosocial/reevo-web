@@ -1,6 +1,6 @@
 server {
   listen   80;
-  server_name  admin.$REEVO_HOSTNAME;
+  server_name  admin.devreevo.org;
   access_log  /srv/reevo-web/log/nginx-admin.access.log;
   error_log  /srv/reevo-web/log/nginx-admin.error.log debug;
 

@@ -1,5 +1,5 @@
 server {
-  server_name  equipo.$REEVO_HOSTNAME;
+  server_name  equipo.devreevo.org;
 
 	access_log  /srv/reevo-web/log/nginx-equipo.access.log;
 	error_log  /srv/reevo-web/log/nginx-equipo.error.log debug;

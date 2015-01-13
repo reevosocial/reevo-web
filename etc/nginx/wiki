@@ -3,7 +3,7 @@ server {
 	listen		80;
 #	listen		443 ssl;
 
-	server_name	wiki.$REEVO_HOSTNAME;
+	server_name	wiki.devreevo.org;
 	root		/srv/reevo-web/www/wiki;
 	index		index.php;
 	charset		utf8;

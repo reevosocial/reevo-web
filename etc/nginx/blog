@@ -1,6 +1,6 @@
 server {
   listen   80;
-  server_name  blog.$REEVO_HOSTNAME $REEVO_HOSTNAME;
+  server_name  blog.devreevo.org devreevo.org;
   access_log  /srv/reevo-web/log/nginx-blog.access.log;
   error_log  /srv/reevo-web/log/nginx-blog.error.log debug;
 
