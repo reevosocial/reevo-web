@@ -1,13 +1,9 @@
-#
-## wiki.reevo.org
-#
-
 server {
 
 	listen		80;
-	listen		443 ssl;
+#	listen		443 ssl;
 
-	server_name	wiki.devreevo.org;
+	server_name	wiki.$REEVO_HOSTNAME;
 	root		/srv/reevo-web/www/wiki;
 	index		index.php;
 	charset		utf8;
@@ -24,6 +20,7 @@ server {
 	location = /favicon.ico {
 		expires	+1y;
 	}
+	
 	location = /robots.txt {
 		default_type	text/plain;
 		expires		+1M;
@@ -35,6 +32,7 @@ server {
 		echo "Disallow: /w/Special:Special";
 		echo_flush;
 	}
+	
 	# Only present during maintenance
 	location = /maintenance.html {
 		log_not_found	off;
@@ -51,6 +49,7 @@ server {
 	location ^~ /(bin|docs|extensions|includes|maintenance|resources|serialized|tests)/ {
 		internal;
 	}
+	
 	## Uncomment after install
 	# location ^~ /mw-config/ { internal; }
 
@@ -58,17 +57,15 @@ server {
 	location ~* /images/.*\.[^\\/:*?\x22<>|%]+(#|\?|$) {
 		types		{ }
 		default_type	text/plain;
-   	}
+	}
 
 	location / {
 		try_files	$uri $uri/ =404;
 		error_page	404 = @mediawiki;
 
-        if ($maintenance) {
-            return 503;
-        }
-
-
+    if ($maintenance) {
+      return 503;
+    }
 	}
 
 	location @mediawiki {
@@ -82,12 +79,11 @@ server {
 		fastcgi_param	SCRIPT_FILENAME $document_root$fastcgi_script_name;
 	}
 
-# Sitio offline
-
-    error_page 503 @maintenance;
-    location @maintenance {
-        rewrite ^(.*)$ /errors/503/index.html break;
-    }
+	# Sitio offline
+  error_page 503 @maintenance;
+  location @maintenance {
+      rewrite ^(.*)$ /errors/503/index.html break;
+  }
 
 
 }

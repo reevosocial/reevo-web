@@ -1,6 +1,6 @@
 server {
   listen   80;
-  server_name  admin.devreevo.org;
+  server_name  admin.$REEVO_HOSTNAME;
   access_log  /srv/reevo-web/log/nginx-admin.access.log;
   error_log  /srv/reevo-web/log/nginx-admin.error.log debug;
 
@@ -8,12 +8,12 @@ server {
 
   index  index.html index.htm index.php;
 
-    location ~ \.php$ {
-        include         /etc/nginx/fastcgi_params;
-        fastcgi_pass    unix:/srv/reevo-web/run/admin.socket;
-        fastcgi_index   index.php;
-        fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
-    }
+  location ~ \.php$ {
+    include         /etc/nginx/fastcgi_params;
+    fastcgi_pass    unix:/srv/reevo-web/run/admin.socket;
+    fastcgi_index   index.php;
+    fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
+  }
 
   add_header Access-Control-Allow-Origin *;
   rewrite /wp-admin$ $scheme://$host$uri/ permanent;
