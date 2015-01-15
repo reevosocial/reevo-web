@@ -3,7 +3,7 @@
 source database_auth.sh
 
 BD='reevo_crm'
-BDIMPORT='dev_crm'
+BDIMPORT='reevo_crm'
 SITIO='crm.reevo.org'
 
 echo "ETAPA 1: Vamos a sincronizar la BD y archivos de $SITIO remoto en el servidor local de pruebas..."

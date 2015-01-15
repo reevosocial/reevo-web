@@ -3,7 +3,7 @@
 source database_auth.sh
 
 BD='reevo_blog'
-BDIMPORT='dev_blog'
+BDIMPORT='reevo_blog'
 SITIO='blog.reevo.org'
 
 echo "ETAPA 1: Vamos a sincronizar la BD y archivos de $SITIO remoto en el servidor local de pruebas..."
