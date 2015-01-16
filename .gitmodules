@@ -1,6 +1,3 @@
-[submodule "lib/theme"]
-	path = lib/theme
-	url = git://git.reevo.org/reevo/reevo-theme
 [submodule "lib/equipo-plugins"]
 	path = lib/equipo-plugins
 	url = git://git.reevo.org/redmine/reevo-redmine-plugins
@@ -13,3 +10,6 @@
 [submodule "lib/wiki-plugins"]
 	path = lib/wiki-plugins
 	url = git://git.reevo.org/mediawiki/reevo-mediawiki-plugins
+[submodule "lib/theme"]
+	path = lib/theme
+	url = git://git.reevo.org/reevo/reevo-theme
