@@ -1,3 +1,5 @@
+.gitmodules
+
 bin/sync/database_auth.sh
 
 log/*.log
