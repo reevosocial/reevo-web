@@ -8,6 +8,8 @@ log/php-fpm/*
 
 etc/global_config.php
 etc/equipo-db.conf
+etc/nginx/*
+!etc/nginx/*.sample
 
 files/blog/*
 !files/blog/.gitkeep

@@ -1,0 +1,88 @@
+server {
+
+	listen		80;
+
+	server_name	wiki.example.org;
+	root		/srv/reevo-web/www/wiki;
+	index		index.php;
+	charset		utf8;
+
+	access_log	/srv/reevo-web/log/nginx-wiki.access.log;
+	error_log	/srv/reevo-web/log/nginx-wiki.error.log;
+
+	# Limit requests to HEAD, GET, and POST
+	if ($request_method !~ ^(GET|HEAD|POST)$) {
+		return 405;
+	}
+
+	# Force static locations
+	location = /favicon.ico {
+		expires	+1y;
+	}
+	
+	location = /robots.txt {
+		default_type	text/plain;
+		expires		+1M;
+		echo "User-Agent: *";
+		echo "Disallow: /index.php";
+		echo "Disallow: /Special:Random";
+		echo "Disallow: /Special:Search";
+		echo "Disallow: /w/Special:Random";
+		echo "Disallow: /w/Special:Special";
+		echo_flush;
+	}
+	
+	# Only present during maintenance
+	location = /maintenance.html {
+		log_not_found	off;
+	}
+
+	# Forbid access to files starting with .
+	location ~ /\. {
+		access_log	off;
+		log_not_found	off;
+		deny		all;
+	}
+
+	# Prevent access to internal URIs
+	location ^~ /(bin|docs|extensions|includes|maintenance|resources|serialized|tests)/ {
+		internal;
+	}
+	
+	## Uncomment after install
+	# location ^~ /mw-config/ { internal; }
+
+	# Prevent non-images in /images
+	location ~* /images/.*\.[^\\/:*?\x22<>|%]+(#|\?|$) {
+		types		{ }
+		default_type	text/plain;
+	}
+
+	location / {
+		try_files	$uri $uri/ =404;
+		error_page	404 = @mediawiki;
+
+    if ($maintenance) {
+      return 503;
+    }
+	}
+
+	location @mediawiki {
+		rewrite ^/(.*)$ /index.php?title=$1&$args	last;
+	}
+
+	location ~ \.php$ {
+		include			/etc/nginx/fastcgi_params;
+		fastcgi_pass	unix:/srv/reevo-web/run/wiki.socket;
+		fastcgi_index	index.php;
+		fastcgi_param	SCRIPT_FILENAME $document_root$fastcgi_script_name;
+	}
+
+	# Sitio offline
+  error_page 503 @maintenance;
+  location @maintenance {
+      rewrite ^(.*)$ /errors/503/index.html break;
+  }
+
+
+}
