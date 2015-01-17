@@ -1,0 +1,15 @@
+[submodule "lib/equipo-plugins"]
+	path = lib/equipo-plugins
+	url = git://git.reevo.org/redmine/reevo-redmine-plugins
+[submodule "lib/blog-plugins"]
+	path = lib/blog-plugins
+	url = git://git.reevo.org/wordpress/reevo-wp-plugins
+[submodule "lib/red-plugins"]
+	path = lib/red-plugins
+	url = git://git.reevo.org/elgg/reevo-elgg-plugins
+[submodule "lib/wiki-plugins"]
+	path = lib/wiki-plugins
+	url = git://git.reevo.org/mediawiki/reevo-mediawiki-plugins
+[submodule "lib/theme"]
+	path = lib/theme
+	url = git://git.reevo.org/reevo/reevo-theme
