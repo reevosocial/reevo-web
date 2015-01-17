@@ -21,7 +21,7 @@ pm.max_spare_servers = 30
 pm.status_path = /.status
 
 ping.path = /.ping
-ping.response = pong $pool.devreevo.org
+ping.response = pong $pool.example.org
 
 request_slowlog_timeout = 10
 request_terminate_timeout = 10m
@@ -34,7 +34,7 @@ catch_workers_output = yes
 
 security.limit_extensions = .php .jpg .png .js .css
  
-env[HOSTNAME]   = $pool.devreevo.org
+env[HOSTNAME]   = $pool.example.org
 env[TMP]        = /srv/reevo-web/tmp/$pool
 env[TMPDIR]     = /srv/reevo-web/tmp/$pool
 env[TEMP]       = /srv/reevo-web/tmp/$pool
@@ -48,7 +48,7 @@ php_admin_value[memory_limit] = 64M
 php_admin_value[post_max_size] = 12M
 php_admin_value[upload_max_filesize] = 10M
 
-php_admin_value[session.cookie_domain] = .devreevo.org
+php_admin_value[session.cookie_domain] = .example.org
 
 php_admin_value[cgi.fix_pathinfo] = 1
 

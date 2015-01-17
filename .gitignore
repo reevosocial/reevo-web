@@ -10,6 +10,8 @@ etc/global_config.php
 etc/equipo-db.conf
 etc/nginx/*
 !etc/nginx/*.sample
+etc/php-fpm/*
+!etc/php-fpm/*.sample
 
 files/blog/*
 !files/blog/.gitkeep
@@ -21,7 +23,6 @@ files/red/*
 !files/red/.gitkeep
 files/wiki/*
 !files/wiki/.gitkeep
-
 
 tmp/equipo/*
 tmp/wiki/cache/*
