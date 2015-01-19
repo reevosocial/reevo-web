@@ -26,8 +26,8 @@ mysql --user=$USER --password=$PASS $BDIMPORT <  ~/tmp/$BD.sql
 
 echo ""
 echo "Cambiamos valores de algunas tablas de las BD"
-mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE elgg_sites_entity SET name = "Reevo (DEV)";'
-mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE elgg_sites_entity SET url = "http://red.devreevo.org/";'
+mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE elgg_sites_entity SET name = "Reevo '$VERSION'";'
+mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE elgg_sites_entity SET url = "http://red.'$DOMAIN'/";'
 mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE elgg_datalists SET value = "/srv/reevo-web/www/red/" WHERE name = "path";'
 mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE elgg_datalists SET value = "/srv/reevo-web/files/red/" WHERE name = "dataroot";'
 mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE elgg_metastrings SET string = "/srv/reevo-web/files/red/" WHERE id = (SELECT value_id    FROM elgg_metadata    WHERE name_id = (       SELECT *       FROM (          SELECT id          FROM elgg_metastrings          WHERE string = "filestore::dir_root"       ) as ms2    )    LIMIT 1 );'

@@ -5,5 +5,7 @@
 
 USER="mysql_user"
 PASS="mysql_password"
+DOMAIN="example.org"
+VERSION="ALFA"
 
 
