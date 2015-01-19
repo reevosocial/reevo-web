@@ -15,14 +15,14 @@ ssh beta.reevo.org "rm ~/dump/* && ~/dumpdb.sh $BD"
 
 echo ""
 echo "Copiamos la BD desde el servidor hasta aqui"
-scp beta.reevo.org:~/dump/$BD.sql.bz2 ~/tmp
+scp beta.reevo.org:~/dump/$BD.sql.bz2 $HOME/tmp
 
 
 echo ""
 echo "Descomprimimos e importamos"
 bunzip2 ~/tmp/$BD.sql.bz2
 mysql --user=$USER --password=$PASS -e "CREATE database if not exists $BDIMPORT;"
-mysql --user=$USER --password=$PASS $BDIMPORT <  ~/tmp/$BD.sql
+mysql --user=$USER --password=$PASS $BDIMPORT <  $HOME/tmp/$BD.sql
 
 echo ""
 echo "Cambiamos valores de algunas tablas de las BD"
@@ -35,7 +35,7 @@ mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE elgg_metas
 
 echo ""
 echo "Borramos los temporales"
-rm ~/tmp/*
+rm $HOME/tmp/*
 
 echo ""
 echo "ETAPA 2: Vamos a sincronizar algunos directorios con archivos..."
