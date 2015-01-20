@@ -6,7 +6,7 @@ upstream reevo_red {
 
 server {
   listen          80;
-  server_name     red.example.org;
+  server_name     red.peervox.org;
   charset         utf8;
 
   access_log      off;
@@ -18,7 +18,7 @@ server {
   index           index.php;
 
 
-	try_files       /maintenance.html $uri @rewrite;
+  try_files       /maintenance.html $uri @rewrite;
   error_page      404 502 504 = @elgg;
   # I'm a teapot: used in redirections to avoid duplication of backend configuration
   error_page              418                     = @elgg;
@@ -89,6 +89,12 @@ server {
 	
   location / {
     try_files $uri $uri/ /index.php?__elgg_uri=$uri&$query_string;
+
+  # Sitio offline
+    if ($maintenance) {
+      return 503;
+    }
+
   }
 
   location ~ /mod/profile/icondirect\.php$ {
@@ -115,4 +121,11 @@ server {
 		fastcgi_index index.php;
 		include fastcgi_params;
   }
+
+  error_page 503 @maintenance;
+  location @maintenance {
+    rewrite ^(.*)$ /errors/503/index.html break;
+  }
+
+
 }

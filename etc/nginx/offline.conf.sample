@@ -3,9 +3,9 @@
 geo $maintenance {
 	
 	# ES: cambiar a 1 para entrar en modo mantenimiento
-	default 0;
+	default 1;
 
 	# ES: listado de IP's con acceso cuando se está en modo mantenimiento
-	192.168.56.1 0; # IP en contexto de VM
+	#192.168.56.1 0; # IP en contexto de VM
 }
 

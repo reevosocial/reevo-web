@@ -1,6 +1,7 @@
 server {
 
 	listen		80;
+#	listen		443 ssl;
 
 	server_name	wiki.example.org;
 	root		/srv/reevo-web/www/wiki;
@@ -32,10 +33,6 @@ server {
 		echo_flush;
 	}
 	
-	# Only present during maintenance
-	location = /maintenance.html {
-		log_not_found	off;
-	}
 
 	# Forbid access to files starting with .
 	location ~ /\. {
@@ -59,12 +56,13 @@ server {
 	}
 
 	location / {
-		try_files	$uri $uri/ =404;
-		error_page	404 = @mediawiki;
 
-    if ($maintenance) {
-      return 503;
-    }
+    	if ($maintenance) {
+      		return 503;
+    	}
+#        try_files   $uri $uri/ =404;
+#        error_page  404 = @mediawiki;
+
 	}
 
 	location @mediawiki {
@@ -79,6 +77,7 @@ server {
 	}
 
 	# Sitio offline
+
   error_page 503 @maintenance;
   location @maintenance {
       rewrite ^(.*)$ /errors/503/index.html break;
