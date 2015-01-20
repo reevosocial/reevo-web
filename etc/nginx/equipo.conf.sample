@@ -27,7 +27,7 @@ server {
 	  }
 
 	  if (!-f $request_filename) {
-	    proxy_pass http://unix:/srv/reevo-web/www/equipo/tmp/sockets/redmine.socket;
+	    proxy_pass http://unix:/srv/reevo-web/run/equipo.socket;
 	    break;
 	  }
 
