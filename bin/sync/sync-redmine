@@ -15,7 +15,7 @@ ssh beta.reevo.org "rm ~/dump/* && ~/dumpdb.sh $BD"
 
 echo ""
 echo "Copiamos la BD desde el servidor hasta aqui"
-scp beta.reevo.org:~/dump/$BD.sql.bz2 ~/tmp
+scp beta.reevo.org:~/dump/$BD.sql.bz2 $HOME/tmp
 
 
 echo ""
@@ -32,7 +32,7 @@ mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE settings S
 
 echo ""
 echo "Borramos los temporales"
-rm ~/tmp/*
+rm $HOME/tmp/*
 
 echo ""
 echo "ETAPA 2: Vamos a sincronizar algunos directorios con archivos..."
