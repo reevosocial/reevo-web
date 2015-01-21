@@ -25,10 +25,16 @@ mysql --user=$USER --password=$PASS -e "CREATE database if not exists $BDIMPORT;
 mysql --user=$USER --password=$PASS $BDIMPORT <  ~/tmp/$BD.sql
 
 echo ""
+echo "Cambiamos valores de algunas tablas de las BD"
+mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE settings SET value = "Equipos de Reevo ('$VERSION')" WHERE name = "app_title";'
+mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE settings SET value = "equipo.'$DOMAIN')" WHERE name = "host_name";'
+
+
+echo ""
 echo "Borramos los temporales"
 rm ~/tmp/*
 
-#echo ""
-#echo "ETAPA 2: Vamos a sincronizar algunos directorios con archivos..."
-#sleep 2s
-#rsync -P -r -a -v -e "ssh -l reevo" --delete beta.reevo.org:/srv/reevo/blog.reevo.org/wp-content/uploads/ /srv/dev/files/blog/
+echo ""
+echo "ETAPA 2: Vamos a sincronizar algunos directorios con archivos..."
+sleep 2s
+rsync -P -r -a -v -e "ssh -l reevo" --delete beta.reevo.org:/srv/reevo/equipo.reevo.org/files/ /srv/reevo-web/files/equipo/
