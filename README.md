@@ -8,7 +8,8 @@ La Plataforma Web busca ingegrar diversas herramientas libres. Este repositorio 
 * blog: Wordpress 4.0 [OUTDATED]
 	* CiviCRM: 4.4.6 [OUTDATED]
 * equipo: Redmine 4.5 [OUTDATED]
-* red: Elgg 1.9.7
+* mapa: Ushahidi 2.7.1 [OUTDATED]
+* red: Elgg 1.9.7 [OUTDATED]
 * wiki: MediaWiki 1.20.0 [OUTDATED]
 * admin
 	* phpMyAdmin: 4.3.3
@@ -51,6 +52,15 @@ La Plataforma Web busca ingegrar diversas herramientas libres. Este repositorio 
 ** Elgg: https://www.transifex.com/projects/p/elgg-core/language/es/
 
 ## Licencias
+
+Los modulos y software producido por el equipo de Reevo se publica bajo: GNU AGPLv3
+
+El software incluído se encuentra bajo las siguientes licencias:
+
+* Elgg, PhpMyAdmin, Wordpress se encuentra bajo licencia GNU GPLv2.
+* MediaWiki se encuentra bajo una licencia GNU GPLv2 o superior.
+* Ushahidi se encuentra bajo una licencia GNU GPLv3.
+
 
 Todo:
 

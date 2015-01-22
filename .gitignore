@@ -5,7 +5,9 @@ bin/sync/database_auth.sh
 log/*.log
 log/equipo/*
 log/php-fpm/*
+log/mapa/*
 !log/equipo/.gitkeep
+!log/mapa/.gitkeep
 !log/php-fpm/.gitkeep
 
 etc/global_config.php
@@ -25,10 +27,14 @@ files/red/*
 !files/red/.gitkeep
 files/wiki/*
 !files/wiki/.gitkeep
+files/mapa/*
+!files/mapa/.gitkeep
 
 tmp/equipo/*
+tmp/mapa/*
 tmp/wiki/cache/*
 !tmp/equipo/.gitkeep
+!tmp/mapa/.gitkeep
 !tmp/wiki/cache/.gitkeep
 
 www/equipo/.bundle
