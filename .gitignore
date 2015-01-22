@@ -31,8 +31,10 @@ files/mapa/*
 !files/mapa/.gitkeep
 
 tmp/equipo/*
+tmp/mapa/*
 tmp/wiki/cache/*
 !tmp/equipo/.gitkeep
+!tmp/mapa/.gitkeep
 !tmp/wiki/cache/.gitkeep
 
 www/equipo/.bundle
