@@ -8,7 +8,8 @@ La Plataforma Web busca ingegrar diversas herramientas libres. Este repositorio 
 * blog: Wordpress 4.0 [OUTDATED]
 	* CiviCRM: 4.4.6 [OUTDATED]
 * equipo: Redmine 4.5 [OUTDATED]
-* red: Elgg 1.9.7
+* mapa: Ushahidi 2.7.1 [OUTDATED]
+* red: Elgg 1.9.7 [OUTDATED]
 * wiki: MediaWiki 1.20.0 [OUTDATED]
 * admin
 	* phpMyAdmin: 4.3.3
