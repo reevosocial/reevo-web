@@ -53,6 +53,15 @@ La Plataforma Web busca ingegrar diversas herramientas libres. Este repositorio 
 
 ## Licencias
 
+Los modulos y software producido por el equipo de Reevo se publica bajo: GNU AGPLv3
+
+El software incluído se encuentra bajo las siguientes licencias:
+
+* Elgg, PhpMyAdmin, Wordpress se encuentra bajo licencia GNU GPLv2.
+* MediaWiki se encuentra bajo una licencia GNU GPLv2 o superior.
+* Ushahidi se encuentra bajo una licencia GNU GPLv3.
+
+
 Todo:
 
 * Especificar las licencias de cada pieza.
