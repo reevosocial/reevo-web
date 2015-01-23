@@ -29,6 +29,8 @@ files/wiki/*
 !files/wiki/.gitkeep
 files/mapa/*
 !files/mapa/.gitkeep
+files/equipo/*
+!files/equipo/.gitkeep
 
 tmp/equipo/*
 tmp/mapa/*
