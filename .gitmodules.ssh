@@ -1,15 +1,15 @@
 [submodule "lib/theme"]
 	path = lib/theme
-	url = ssh://git@git.reevo.org/~/reevo/reevo/reevo-theme
+	url = git@git.reevo.org:reevo/reevo/reevo-web/lib/theme
 [submodule "lib/equipo-plugins"]
 	path = lib/equipo-plugins
-	url = ssh://git@git.reevo.org/~/reevo/redmine/reevo-redmine-plugins
+	url = git@git.reevo.org:reevo/reevo/reevo-web/lib/equipo-plugins
 [submodule "lib/blog-plugins"]
 	path = lib/blog-plugins
-	url = ssh://git@git.reevo.org/~/reevo/wordpress/reevo-wp-plugins
+	url = git@git.reevo.org:reevo/reevo/reevo-web/lib/blog-plugins
 [submodule "lib/red-plugins"]
 	path = lib/red-plugins
-	url = ssh://git@git.reevo.org/~/reevo/elgg/reevo-elgg-plugins
+	url = git@git.reevo.org:reevo/reevo/reevo-web/lib/red-plugins
 [submodule "lib/wiki-plugins"]
 	path = lib/wiki-plugins
-	url = ssh://git@git.reevo.org/~/reevo/mediawiki/reevo-mediawiki-plugins
+	url = git@git.reevo.org:reevo/reevo/reevo-web/lib/wiki-plugins
