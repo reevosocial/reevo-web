@@ -13,6 +13,3 @@
 [submodule "lib/wiki-plugins"]
 	path = lib/wiki-plugins
 	url = git@git.reevo.org:reevo/reevo/reevo-web/lib/wiki-plugins
-[submodule "lib/mapa-plugins"]
-	path = lib/mapa-plugins
-	url = git@git.reevo.org:reevo/reevo/reevo-web/lib/mapa-plugins
