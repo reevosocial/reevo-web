@@ -13,6 +13,7 @@ echo ""
 echo "Volcamos la BD en el servidor"
 ssh beta.reevo.org "rm ~/dump/* && ~/dumpdb.sh $BD"
 
+
 echo ""
 echo "Copiamos la BD desde el servidor hasta aqui"
 scp beta.reevo.org:~/dump/$BD.sql.bz2 ~/tmp
@@ -23,6 +24,14 @@ echo "Descomprimimos e importamos"
 bunzip2 ~/tmp/$BD.sql.bz2
 mysql --user=$USER --password=$PASS -e "CREATE database if not exists $BDIMPORT;"
 mysql --user=$USER --password=$PASS $BDIMPORT <  ~/tmp/$BD.sql
+
+echo ""
+echo "Cambiamos valores de algunas tablas de las BD"
+mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE civicrm_setting SET value = "s:38:\"/srv/reevo-web/files/crm/upload\";" WHERE name = "uploadDir";'
+mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE civicrm_setting SET value = "s:38:\"/srv/reevo-web/files/crm/images\";" WHERE name = "imageUploadDir";'
+mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE civicrm_setting SET value = "s:38:\"/srv/reevo-web/files/crm/custom\";" WHERE name = "customFileUploadDir";'
+#mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE civicrm_setting SET value = "s:60:\"http://'$DOMAIN'/wp-content/plugins/civicrm/civicrm/\";" WHERE name = "userFrameworkResourceURL";'
+#mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE civicrm_setting SET value = "s:77:\"http://'$DOMAIN'/wp-content/plugins/files/civicrm/persist/contribute/\";" WHERE name = "imageUploadURL";'
 
 echo ""
 echo "Borramos los temporales"
