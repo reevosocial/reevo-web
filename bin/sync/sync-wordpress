@@ -24,6 +24,14 @@ bunzip2 ~/tmp/$BD.sql.bz2
 mysql --user=$USER --password=$PASS -e "CREATE database if not exists $BDIMPORT;"
 mysql --user=$USER --password=$PASS $BDIMPORT <  ~/tmp/$BD.sql
 
+
+echo ""
+echo "Cambiamos valores de algunas tablas de las BD"
+mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE wp_options SET option_value = "http://'$DOMAIN'" WHERE option_name = "siteurl";'
+mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE wp_options SET option_value = "http://'$DOMAIN'" WHERE option_name = "home";'
+
+
+
 echo ""
 echo "Borramos los temporales"
 rm ~/tmp/*
