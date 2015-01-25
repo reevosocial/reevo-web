@@ -19,7 +19,12 @@ etc/php-fpm/*
 
 files/blog/*
 !files/blog/.gitkeep
-files/crm/*
+files/crm/custom/*
+!files/crm/custom/.gitkeep
+files/crm/images/*
+!files/crm/images/.gitkeep
+files/crm/upload/*
+!files/crm/upload/.gitkeep
 !files/crm/.gitkeep
 files/equipo/*
 !files/equipo/.gitkeep
