@@ -56,14 +56,19 @@ server {
 	}
 
 	location / {
+		if ($maintenance) {
+				return 503;
+		}
 
-    	if ($maintenance) {
-      		return 503;
-    	}
-#        try_files   $uri $uri/ =404;
-#        error_page  404 = @mediawiki;
-
+    try_files   $uri $uri/ =404;
+    error_page  404 = @mediawiki;
+    error_page  503 = @maintenance;
 	}
+
+  location @maintenance {
+		# Sitio offline
+    rewrite ^(.*)$ /errors/503/index.html break;
+  }
 
 	location @mediawiki {
 		rewrite ^/(.*)$ /index.php?title=$1&$args	last;
@@ -75,13 +80,4 @@ server {
 		fastcgi_index	index.php;
 		fastcgi_param	SCRIPT_FILENAME $document_root$fastcgi_script_name;
 	}
-
-	# Sitio offline
-
-  error_page 503 @maintenance;
-  location @maintenance {
-      rewrite ^(.*)$ /errors/503/index.html break;
-  }
-
-
 }
