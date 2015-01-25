@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo "## Se cambia el protocolo a SSH en todos los submodulos que apunten a git.reevo.org"
+
+echo ""
+echo "### Primero sincronizamos los sub con lo indicado en .gitmodules"
+
+git submodule sync --recursive
+
+echo ""
+echo "### Finalmente cambiamos el acceso de HTTP a SSH"
+
+for i in `find .git | grep config`; do sed -i 's:http\://git.reevo.org/:git@git.reevo.org\:reevo/:g' $i; done
+
+echo ""
+echo "Terminado"
+echo ""
