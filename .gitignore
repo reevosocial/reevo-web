@@ -40,9 +40,12 @@ files/equipo/*
 tmp/equipo/*
 tmp/mapa/*
 tmp/wiki/cache/*
+tmp/crm/*
 !tmp/equipo/.gitkeep
 !tmp/mapa/.gitkeep
 !tmp/wiki/cache/.gitkeep
+!tmp/crm/.gitkeep
+
 
 www/equipo/.bundle
 www/equipo/db/schema.rb
