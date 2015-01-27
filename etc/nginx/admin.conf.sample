@@ -1,21 +1,25 @@
 server {
+
   listen   80;
   server_name  admin.example.org;
   access_log  /srv/reevo-web/log/nginx-admin.access.log;
   error_log  /srv/reevo-web/log/nginx-admin.error.log warn;
 
   root  /srv/reevo-web/www/admin;
-
   index  index.html index.htm index.php;
 
-  location ~ \.php$ {
-    include         /etc/nginx/fastcgi_params;
-    fastcgi_pass    unix:/srv/reevo-web/run/admin.socket;
-    fastcgi_index   index.php;
-    fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
-  }
 
-  add_header Access-Control-Allow-Origin *;
-  rewrite /wp-admin$ $scheme://$host$uri/ permanent;
-  try_files $uri $uri/ /index.php?$args;
-}
+	# php-fpm configuration
+        location ~ .php$ {
+            try_files $uri =404;
+            fastcgi_pass    unix:/srv/reevo-web/run/admin.socket;
+            fastcgi_index  index.php;
+            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
+            include        fastcgi_params;
+            fastcgi_buffer_size 128k;
+            fastcgi_buffers 256 4k;
+            fastcgi_busy_buffers_size 256k;
+            fastcgi_temp_file_write_size 256k;
+        }
+
+  }
