@@ -2,7 +2,7 @@ server {
   listen   80;
   server_name  admin.example.org;
   access_log  /srv/reevo-web/log/nginx-admin.access.log;
-  error_log  /srv/reevo-web/log/nginx-admin.error.log debug;
+  error_log  /srv/reevo-web/log/nginx-admin.error.log warn;
 
   root  /srv/reevo-web/www/admin;
 
