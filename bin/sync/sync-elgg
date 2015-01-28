@@ -2,7 +2,7 @@
 
 source database_auth.sh
 
-BD='reevo_elgg'
+BD='old_reevo_elgg'
 BDIMPORT='reevo_red'
 SITIO='red.reevo.org'
 

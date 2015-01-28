@@ -2,7 +2,7 @@
 
 source database_auth.sh
 
-BD='reevo_blog'
+BD='old_reevo_blog'
 BDIMPORT='reevo_blog'
 SITIO='blog.reevo.org'
 

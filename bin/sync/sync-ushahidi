@@ -2,7 +2,7 @@
 
 source database_auth.sh
 
-BD='reevo_ushahidi'
+BD='old_reevo_ushahidi'
 BDIMPORT='reevo_mapa'
 SITIO='map.reevo.org'
 

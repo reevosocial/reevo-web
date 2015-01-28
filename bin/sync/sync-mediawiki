@@ -2,7 +2,7 @@
 
 source database_auth.sh
 
-BD='reevo_wiki'
+BD='old_reevo_wiki'
 BDIMPORT='reevo_wiki'
 SITIO='wiki.reevo.org'
 

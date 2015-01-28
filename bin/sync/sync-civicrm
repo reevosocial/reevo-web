@@ -2,7 +2,7 @@
 
 source database_auth.sh
 
-BD='reevo_crm'
+BD='old_reevo_crm'
 BDIMPORT='reevo_crm'
 SITIO='crm.reevo.org'
 
