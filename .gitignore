@@ -18,7 +18,6 @@ log/wiki/*
 etc/global_config.php
 etc/equipo-db.conf
 etc/nginx/*
-!etc/nginx/global.conf
 !etc/nginx/*.sample
 etc/php-fpm/*
 !etc/php-fpm/*.sample
