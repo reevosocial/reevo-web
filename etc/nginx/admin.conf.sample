@@ -1,25 +1,22 @@
 server {
+	server_name admin.example.org;
+	root /srv/reevo-web/www/admin;
 
-  listen   80;
-  server_name  admin.example.org;
-  access_log  /srv/reevo-web/log/nginx-admin.access.log;
-  error_log  /srv/reevo-web/log/nginx-admin.error.log warn;
+	access_log /srv/reevo-web/log/admin/nginx.access.log;
+	error_log /srv/reevo-web/log/admin/nginx.error.log warn;
 
-  root  /srv/reevo-web/www/admin;
-  index  index.html index.htm index.php;
+	index  index.html index.htm index.php;
 
-
-	# php-fpm configuration
-        location ~ .php$ {
-            try_files $uri =404;
-            fastcgi_pass    unix:/srv/reevo-web/run/admin.socket;
-            fastcgi_index  index.php;
-            fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
-            include        fastcgi_params;
-            fastcgi_buffer_size 128k;
-            fastcgi_buffers 256 4k;
-            fastcgi_busy_buffers_size 256k;
-            fastcgi_temp_file_write_size 256k;
-        }
-
-  }
+	location ~ .php$ {
+		try_files $uri =404;
+		fastcgi_pass unix:/srv/reevo-web/run/admin.socket;
+		fastcgi_index index.php;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		include fastcgi_params;
+		fastcgi_buffer_size 128k;
+		fastcgi_buffers 256 4k;
+		fastcgi_busy_buffers_size 256k;
+		fastcgi_temp_file_write_size 256k;
+		add_header  X-Robots-Tag "noindex, nofollow, nosnippet, noarchive";
+	}
+}

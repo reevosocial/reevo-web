@@ -1,32 +1,31 @@
 server {
-  listen   80;
-  server_name  blog.example.org example.org;
-  access_log  /srv/reevo-web/log/nginx-blog.access.log;
-  error_log  /srv/reevo-web/log/nginx-blog.error.log warn;
+	server_name blog.example.org example.org;
+	root /srv/reevo-web/www/blog;
 
-  root  /srv/reevo-web/www/blog;
+	access_log /srv/reevo-web/log/blog/nginx.access.log;
+	error_log /srv/reevo-web/log/blog/nginx.error.log warn;
 
-  index  index.html index.htm index.php;
+	index index.html index.htm index.php;
 
-  location ~ \.php$ {
+	location ~ \.php$ {
 		# Sitio offline
-		if ($maintenance) {
-			return 503;
-		}
+		if ($maintenance) {	return 503;	}
 		
-	  include         /etc/nginx/fastcgi_params;
-	  fastcgi_pass    unix:/srv/reevo-web/run/blog.socket;
-	  fastcgi_index   index.php;
-	  fastcgi_param   SCRIPT_FILENAME $document_root$fastcgi_script_name;
-  }
+		# Bloquea bots
+		if ($limit_bots) { add_header  X-Robots-Tag "noindex, nofollow, nosnippet, noarchive"; }
+		
+		include /etc/nginx/fastcgi_params;
+		fastcgi_pass unix:/srv/reevo-web/run/blog.socket;
+		fastcgi_index index.php;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+	}
 
-  add_header Access-Control-Allow-Origin *;
-  rewrite /wp-admin$ $scheme://$host$uri/ permanent;
-  try_files $uri $uri/ /index.php?$args;
+	add_header Access-Control-Allow-Origin *;
+	rewrite /wp-admin$ $scheme://$host$uri/ permanent;
+	try_files $uri $uri/ /index.php?$args;
 
 	error_page 503 @maintenance;
 	location @maintenance {
 		rewrite ^(.*)$ /errors/503/index.html break;
 	}
-
 }

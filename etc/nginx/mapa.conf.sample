@@ -1,65 +1,40 @@
 server {
+	server_name map.example.org mapa.example.org;
+	root /srv/reevo-web/www/mapa;
 
-  listen 80 default;
+	access_log /srv/reevo-web/log/mapa/nginx.access.log;
+	error_log /srv/reevo-web/log/mapa/nginx.error.log warn;
 
-  root /srv/reevo-web/www/mapa;
+	index index.php index.html index.htm;
 
-	access_log  /srv/reevo-web/log/nginx-mapa.access.log;
-	error_log  /srv/reevo-web/log/nginx-mapa.error.log warn;
+	location / {
+		# Sitio offline
+		if ($maintenance) { return 503; }
+		try_files $uri $uri/ /index.php$uri?$args;
 
-  index index.php index.html index.htm;
-
-  server_name  map.example.org mapa.example.org;
-  
-  location / {
-		if ($maintenance) {
-			return 503;
-		}
-      try_files $uri $uri/ /index.php$uri?$args;
-  }
+		# Bloquea bots
+		if ($limit_bots) { add_header  X-Robots-Tag "noindex, nofollow, nosnippet, noarchive"; }
+	}
 
 	error_page 503 @maintenance;
 	location @maintenance {
 		rewrite ^(.*)$ /errors/503/index.html break;
 	}
 
-  location ~* ^/(modules|application|system) {
-      return 403;
-  }
-
-	location ~ \.php {
-	    fastcgi_param QUERY_STRING      $query_string;
-	    fastcgi_param REQUEST_METHOD    $request_method;
-	    fastcgi_param CONTENT_TYPE      $content_type;
-	    fastcgi_param CONTENT_LENGTH    $content_length;
-
-	    fastcgi_param SCRIPT_FILENAME   $document_root$fastcgi_script_name;
-	    fastcgi_param SCRIPT_NAME       $fastcgi_script_name;
-	    fastcgi_param REQUEST_URI       $request_uri;
-	    fastcgi_param DOCUMENT_ROOT     $document_root;
-	    fastcgi_param REMOTE_ADDR       $remote_addr;
-	    fastcgi_param REMOTE_PORT       $remote_port;
-	    fastcgi_param SERVER_NAME        $server_name;
-	    fastcgi_param SERVER_PROTOCOL   $server_protocol;
-	   
-	    fastcgi_param  GATEWAY_INTERFACE  CGI/1.1;
-	    fastcgi_param  SERVER_SOFTWARE    nginx;
-
-	    fastcgi_param REDIRECT_STATUS   200;
-	    fastcgi_split_path_info ^(.*\.php)(.*)$;
-	    fastcgi_param PATH_INFO         $fastcgi_path_info;
-	    fastcgi_intercept_errors        on;
-	    fastcgi_index                   index.php;
-
-	    # PHP5-fpm configured to run via socket instead of TCP
-			fastcgi_pass    unix:/srv/reevo-web/run/mapa.socket;
-
-
+	location ~* ^/(modules|application|system) {
+		return 403;
 	}
 
-  # deny access to .htaccess files, if Apache's document root
-  # concurs with nginx's one
-  location ~ /\.ht {
-      deny all;
-  }
+	location ~ \.php {
+		fastcgi_pass  unix:/srv/reevo-web/run/mapa.socket;
+		include /etc/nginx/fastcgi_params;
+		fastcgi_split_path_info ^(.*\.php)(.*)$;
+		fastcgi_param PATH_INFO $fastcgi_path_info;
+		fastcgi_intercept_errors        on;
+		fastcgi_index                   index.php;
+	}
+
+	location ~ /\.ht {
+		deny all;
+	}
 }

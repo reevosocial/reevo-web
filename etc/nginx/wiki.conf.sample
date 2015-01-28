@@ -1,17 +1,12 @@
 server {
+	server_name wiki.example.org;
+	root /srv/reevo-web/www/wiki;
 
-	listen		80;
-#	listen		443 ssl;
+	index index.php;
 
-	server_name	wiki.example.org;
-	root		/srv/reevo-web/www/wiki;
-	index		index.php;
-	charset		utf8;
+	access_log /srv/reevo-web/log/wiki/nginx.access.log;
+	error_log /srv/reevo-web/log/wiki/nginx.error.log;
 
-	access_log	/srv/reevo-web/log/nginx-wiki.access.log;
-	error_log	/srv/reevo-web/log/nginx-wiki.error.log;
-
-	# Limit requests to HEAD, GET, and POST
 	if ($request_method !~ ^(GET|HEAD|POST)$) {
 		return 405;
 	}
@@ -21,24 +16,11 @@ server {
 		expires	+1y;
 	}
 	
-	location = /robots.txt {
-		default_type	text/plain;
-		expires		+1M;
-		echo "User-Agent: *";
-		echo "Disallow: /index.php";
-		echo "Disallow: /Special:Random";
-		echo "Disallow: /Special:Search";
-		echo "Disallow: /w/Special:Random";
-		echo "Disallow: /w/Special:Special";
-		echo_flush;
-	}
-	
-
 	# Forbid access to files starting with .
 	location ~ /\. {
-		access_log	off;
-		log_not_found	off;
-		deny		all;
+		access_log off;
+		log_not_found off;
+		deny all;
 	}
 
 	# Prevent access to internal URIs
@@ -51,33 +33,35 @@ server {
 
 	# Prevent non-images in /images
 	location ~* /images/.*\.[^\\/:*?\x22<>|%]+(#|\?|$) {
-		types		{ }
-		default_type	text/plain;
+		types { }
+		default_type text/plain;
 	}
 
 	location / {
-		if ($maintenance) {
-				return 503;
-		}
+	    # Sitio offline
+    	if ($maintenance) { return 503; }
 
-    try_files   $uri $uri/ =404;
-    error_page  404 = @mediawiki;
-    error_page  503 = @maintenance;
+    	# Bloquea bots
+		if ($limit_bots) { add_header  X-Robots-Tag "noindex, nofollow, nosnippet, noarchive"; }
+
+    	try_files   $uri $uri/ =404;
+    	error_page  404 = @mediawiki;
+    	error_page  503 = @maintenance;
 	}
 
-  location @maintenance {
+	location @maintenance {
 		# Sitio offline
-    rewrite ^(.*)$ /errors/503/index.html break;
-  }
+		rewrite ^(.*)$ /errors/503/index.html break;
+	}
 
 	location @mediawiki {
 		rewrite ^/(.*)$ /index.php?title=$1&$args	last;
 	}
 
 	location ~ \.php$ {
-		include			/etc/nginx/fastcgi_params;
-		fastcgi_pass	unix:/srv/reevo-web/run/wiki.socket;
-		fastcgi_index	index.php;
-		fastcgi_param	SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		fastcgi_pass unix:/srv/reevo-web/run/wiki.socket;
+		include /etc/nginx/fastcgi_params;
+		fastcgi_index index.php;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
 	}
 }

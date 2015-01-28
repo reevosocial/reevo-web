@@ -1,43 +1,42 @@
 server {
-  server_name  equipo.example.org;
+	server_name equipo.example.org;
+	root /srv/reevo-web/www/equipo/public/;
 
-	access_log  /srv/reevo-web/log/nginx-equipo.access.log;
-	error_log  /srv/reevo-web/log/nginx-equipo.error.log debug;
+	access_log /srv/reevo-web/log/equipo/nginx.access.log;
+	error_log /srv/reevo-web/log/equipo/nginx.error.log warn;
 
 	client_max_body_size 100M;
 
-  root  /srv/reevo-web/www/equipo/public/;
-
 	location / {
-	  proxy_set_header X-Reak-IP $remote_addr;
-	  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-	  proxy_set_header Host $http_host;
-	  proxy_redirect off;
+		proxy_set_header X-Reak-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header Host $http_host;
+		proxy_redirect off;
 
-	  if (-f $request_filename/index.html) {
-	    rewrite (.*) $1/index.html break;
-	  }
+		if (-f $request_filename/index.html) {
+			rewrite (.*) $1/index.html break;
+		}
 
-	  if (-f $request_filename.html) {
-	    rewrite (.*) $1.html break;
-	  }
+		if (-f $request_filename.html) {
+			rewrite (.*) $1.html break;
+		}
 
-	  if ($maintenance) {
-	      return 503;
-	  }
+		# Sitio offline
+		if ($maintenance) { return 503; }
 
-	  if (!-f $request_filename) {
-	    proxy_pass http://unix:/srv/reevo-web/run/equipo.socket;
-	    break;
-	  }
-
+		# Bloquea bots
+		if ($limit_bots) { add_header  X-Robots-Tag "noindex, nofollow, nosnippet, noarchive"; }
+		
+		if (!-f $request_filename) {
+			proxy_pass http://unix:/srv/reevo-web/run/equipo.socket;
+			break;
+		}
 	}
 
 	# Sitio offline
-  error_page 503 @maintenance;
-  location @maintenance {
-      rewrite ^(.*)$ /errors/503/index.html break;
-  }
-
+	error_page 503 @maintenance;
+	location @maintenance {
+		rewrite ^(.*)$ /errors/503/index.html break;
+	}
 }
 
