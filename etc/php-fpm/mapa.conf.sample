@@ -4,8 +4,8 @@ user = reevo
 group = www-data
 
 listen = /srv/reevo-web/run/$pool.socket
-access.log = /srv/reevo-web/log/php-fpm/$pool.access.log
-slowlog = /srv/reevo-web/log/php-fpm/$pool.slow.log
+access.log = /srv/reevo-web/log/$pool/php_fpm-$pool.access.log
+slowlog = /srv/reevo-web/log/$pool/php_fpm-$pool.slow.log
 
 listen.owner    = reevo
 listen.group    = www-data
