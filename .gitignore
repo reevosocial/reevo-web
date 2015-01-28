@@ -2,13 +2,18 @@
 
 bin/sync/database_auth.sh
 
-log/*.log
+log/admin/*
+log/blog/*
 log/equipo/*
-log/php-fpm/*
 log/mapa/*
+log/red/*
+log/wiki/*
+!log/admin/.gitkeep
+!log/blog/.gitkeep
 !log/equipo/.gitkeep
 !log/mapa/.gitkeep
-!log/php-fpm/.gitkeep
+!log/red/.gitkeep
+!log/wiki/.gitkeep
 
 etc/global_config.php
 etc/equipo-db.conf
