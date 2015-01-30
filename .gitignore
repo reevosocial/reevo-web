@@ -1,6 +1,6 @@
 .gitmodules
 
-bin/sync/database_auth.sh
+bin/database_auth.sh
 
 log/admin/*
 log/blog/*
