@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source database_auth.sh
+source ../database_auth.sh
 
 BD='old_reevo_crm'
 BDIMPORT='reevo_crm'
