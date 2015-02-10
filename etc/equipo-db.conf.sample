@@ -1,7 +1,9 @@
-# Default setup is given for MySQL with ruby1.9. If you're running Redmine
-# with MySQL and ruby1.8, replace the adapter name with `mysql`.
-# Examples for PostgreSQL, SQLite3 and SQL Server can be found at the end.
-# Line indentation must be 2 spaces (no tabs).
+# ----
+# Copyright (C) 2013-2015 - Reevo Project (http://reevo.org)
+# License: Affero GPL version 3 - http://www.gnu.org/licenses/agpl.html 
+# ES: Este archivos es parte de: reevo-web (http://git.reevo.org/reevo/reevo-web)
+# EN: This file is part of: reevo-web (http://git.reevo.org/reevo/reevo-web)
+# ----
 
 production:
   adapter: mysql2
