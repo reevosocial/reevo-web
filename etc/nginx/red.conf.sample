@@ -1,3 +1,10 @@
+# ----
+# Copyright (C) 2013-2015 - Reevo Project (http://reevo.org)
+# License: Affero GPL version 3 - http://www.gnu.org/licenses/agpl.html 
+# ES: Este archivos es parte de: reevo-web (http://git.reevo.org/reevo/reevo-web)
+# EN: This file is part of: reevo-web (http://git.reevo.org/reevo/reevo-web)
+# ----
+
 server {
 	server_name red.example.org;
 	root /srv/reevo-web/www/red;

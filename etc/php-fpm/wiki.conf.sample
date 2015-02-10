@@ -1,3 +1,10 @@
+# ----
+# Copyright (C) 2013-2015 - Reevo Project (http://reevo.org)
+# License: Affero GPL version 3 - http://www.gnu.org/licenses/agpl.html 
+# ES: Este archivos es parte de: reevo-web (http://git.reevo.org/reevo/reevo-web)
+# EN: This file is part of: reevo-web (http://git.reevo.org/reevo/reevo-web)
+# ----
+
 [wiki]
 
 user = reevo
@@ -28,7 +35,7 @@ request_terminate_timeout = 10m
 rlimit_files = 1024
 rlimit_core = 0
  
-chdir = /srv/reevo-web/www/wiki
+chdir = /srv/reevo-web/www/$pool
 
 catch_workers_output = yes
 

@@ -1,17 +1,28 @@
+# ----
+# Copyright (C) 2013-2015 - Reevo Project (http://reevo.org)
+# License: Affero GPL version 3 - http://www.gnu.org/licenses/agpl.html 
+# ES: Este archivos es parte de: reevo-web (http://git.reevo.org/reevo/reevo-web)
+# EN: This file is part of: reevo-web (http://git.reevo.org/reevo/reevo-web)
+# ----
 
-## Modo mantenimiento
+## ES: Modo mantenimiento
+## EN: Maintance mode
 geo $maintenance {
 	
 	# ES: cambiar a 1 para entrar en modo mantenimiento
+	# EN: change to 1 to enable maintance mode
 	default 0;
 
 	# ES: listado de IP's con acceso cuando se está en modo mantenimiento
-	#192.168.56.1 0; # IP en contexto de VM
+	# EN: list of allowd IPs in MM
+	# 192.168.56.1 0; # IP en contexto de VM
 }
 
-## No indexar en buscadores
+## ES: No indexar en buscadores
+## EN: Avoid indexing by search engines
 map $http_user_agent $limit_bots {
 
 	# ES: cambiar a 1 para evitar que los sitios sean indexados
+	# EN: change to 1 to avoid indexing
 	default 0;
 } 

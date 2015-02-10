@@ -1,5 +1,15 @@
 #! /bin/bash
 
+# ----
+# Copyright (C) 2013-2015 - Reevo Project (http://reevo.org)
+# License: Affero GPL version 3 - http://www.gnu.org/licenses/agpl.html 
+# ES: Este archivos es parte de: reevo-web (http://git.reevo.org/reevo/reevo-web)
+# EN: This file is part of: reevo-web (http://git.reevo.org/reevo/reevo-web)
+# ----
+
+## ES: Script para iniciar el servicio de Redmine con Puma
+## EN: Script used to start the redmine service with Puma
+
 ### BEGIN INIT INFO
 # Provides:          reevo-equipo
 # Required-Start:    
@@ -9,8 +19,6 @@
 # Short-Description: reevo-equipo
 # Description:       reevo redmine init script
 ### END INIT INFO
-
-# Script para iniciar el servicio de Redmine con Puma
 
 APP_ROOT="/srv/reevo-web/www/equipo"
 APP_USER="reevo"

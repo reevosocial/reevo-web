@@ -1,3 +1,10 @@
+# ----
+# Copyright (C) 2013-2015 - Reevo Project (http://reevo.org)
+# License: Affero GPL version 3 - http://www.gnu.org/licenses/agpl.html 
+# ES: Este archivos es parte de: reevo-web (http://git.reevo.org/reevo/reevo-web)
+# EN: This file is part of: reevo-web (http://git.reevo.org/reevo/reevo-web)
+# ----
+
 [blog]
 
 user = reevo
@@ -6,6 +13,7 @@ group = www-data
 listen = /srv/reevo-web/run/$pool.socket
 access.log = /srv/reevo-web/log/$pool/php_fpm-$pool.access.log
 slowlog = /srv/reevo-web/log/$pool/php_fpm-$pool.slow.log
+
 listen.owner    = reevo
 listen.group    = www-data
 listen.mode     = 0660
