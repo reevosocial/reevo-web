@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# ----
+# Copyright (C) 2013-2015 - Reevo Project (http://reevo.org)
+# License: Affero GPL version 3 - http://www.gnu.org/licenses/agpl.html 
+# ES: Este archivos es parte de: reevo-web (http://git.reevo.org/reevo/reevo-web)
+# EN: This file is part of: reevo-web (http://git.reevo.org/reevo/reevo-web)
+# ----
+
 source ../database_auth.sh
 
 BD='old_reevo_redmine'

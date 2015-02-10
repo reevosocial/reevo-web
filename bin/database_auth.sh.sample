@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# ----
+# Copyright (C) 2013-2015 - Reevo Project (http://reevo.org)
+# License: Affero GPL version 3 - http://www.gnu.org/licenses/agpl.html 
+# ES: Este archivos es parte de: reevo-web (http://git.reevo.org/reevo/reevo-web)
+# EN: This file is part of: reevo-web (http://git.reevo.org/reevo/reevo-web)
+# ----
+
 # ES: Reemplaza con las credenciales de acceso a Mysql y renombra este archivo como "database_auth.sh"
 # EN: Replace with Mysql DB access information and rename this file as "database_auth.sh"
 
