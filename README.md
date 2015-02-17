@@ -1,5 +1,5 @@
 # Reevo - Plataforma Web
-## Rama DEV -  Versión 15.01.02
+## Rama DEV - Versión 15.01.03
 
 La Plataforma Web busca ingegrar diversas herramientas libres. Este repositorio incluye una estructura comun para la gestión del código de las diversas herramientas.
 
@@ -15,41 +15,12 @@ La Plataforma Web busca ingegrar diversas herramientas libres. Este repositorio 
 	* phpMyAdmin: 4.3.3
 
 
-## Estructura de directorios
-
-```
-.
-├── bin
-│   └── sync
-├── etc
-│   ├── init.d
-│   ├── nginx
-│   ├── php-fpm
-├── files
-├── lib
-│   ├── blog-plugins
-│   ├── equipo-plugins
-│   ├── red-plugins
-│   ├── theme
-│   └── wiki-plugins
-├── log
-├── run
-├── tmp
-└── www
-    ├── admin
-    ├── blog
-    ├── equipo
-    ├── red
-    └── wiki
-```
-
-
 ## ToDo
 
 * Unificar la gestion de idiomas
-** Wordpress: https://downloads.wordpress.org/translation/core/4.0/es_ES.zip
-** CiviCRM: http://sourceforge.net/projects/civicrm/files/civicrm-stable/4.4.6/civicrm-4.4.6-l10n.tar.gz/download
-** Elgg: https://www.transifex.com/projects/p/elgg-core/language/es/
+  * Wordpress: https://downloads.wordpress.org/translation/core/4.0/es_ES.zip
+  * CiviCRM: http://sourceforge.net/projects/civicrm/files/civicrm-stable/4.4.6/civicrm-4.4.6-l10n.tar.gz/download
+  * Elgg: https://www.transifex.com/projects/p/elgg-core/language/es/
 
 ## Licencias
 
@@ -57,7 +28,7 @@ Los modulos y software producido por el equipo de Reevo se publica bajo: GNU AGP
 
 El software incluído se encuentra bajo las siguientes licencias:
 
-* Elgg, PhpMyAdmin, Wordpress se encuentra bajo licencia GNU GPLv2.
+* Elgg, PhpMyAdmin, Wordpress y Redmine se encuentran bajo licencia GNU GPLv2.
 * MediaWiki se encuentra bajo una licencia GNU GPLv2 o superior.
 * Ushahidi se encuentra bajo una licencia GNU GPLv3.
 
