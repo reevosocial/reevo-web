@@ -22,6 +22,7 @@
 
 APP_ROOT="/srv/reevo-web/www/equipo"
 APP_USER="reevo"
+APP_GROUP="www-data"
 DAEMON_OPTS="-C $APP_ROOT/config/puma.rb"
 PID_PATH="$APP_ROOT/tmp/pids"
 WEB_SERVER_PID="$PID_PATH/puma.pid"
