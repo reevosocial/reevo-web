@@ -17,6 +17,7 @@ $REEVO_DB_PASS	= "password";
 
 $REEVO_DB_BLOG	= "reevo_blog";
 $REEVO_DB_CRM	= "reevo_crm";
+$REEVO_DB_MAPA  = "reevo_mapa";
 $REEVO_DB_RED	= "reevo_red";
 $REEVO_DB_WIKI	= "reevo_wiki";
 
