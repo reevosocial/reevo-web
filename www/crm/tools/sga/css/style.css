@@ -1,0 +1,115 @@
+/* tables */
+
+body {
+	font-family:"Open Sans";
+	font-size: 11pt !important;
+
+}
+
+.icono {
+	width: 24px;
+	height: 24px;
+	opacity: 0.3;
+	display: block;
+	float: left;
+	margin-right: 3px;
+}
+.icono:hover {
+	opacity: 1 !important;
+}
+
+#agregar {
+	background: no-repeat url('../images/agregar.png');	
+}
+
+#editar{
+	background: no-repeat url('../images/editar.png');	
+}
+
+#ver {
+	background: no-repeat url('../images/ver.png');	
+}
+
+#ascender {
+	background: no-repeat url('../images/subir.png');	
+}
+
+#descender {
+	background: no-repeat url('../images/bajar.png');	
+}
+
+
+/* Colores segun autor de notas */
+table .row-author-2 td { /* fiacomella */
+	background: #99ffff !important;
+}
+
+table .row-author-3 td { /* gedoca */
+	background: #fce94f !important;
+}
+
+table .row-author-66 td { /* mthomson */
+	background: #c4a000 !important;
+}
+
+table .row-author-15175 td { /* rchacon */
+        background: #fce94f !important;
+}
+
+table .row-author-25 td { /* ddelgado  */
+        background: #FF67FF !important;
+}
+
+
+table tr td {
+	opacity: 0.9;
+}
+
+table tr:hover td {
+/* 	background: #eeeeec !important; */
+	opacity: 1;
+/* 	box-shadow: 2px 2px 19px 12px rgba(68,68,68,0.15) inset; */
+	text-shadow: 0px 0px 4px rgba(68,68,68,0.5);
+	
+}
+
+table tr:hover td .icono {
+	opacity: 0.8;
+}
+
+table.tablesorter {
+	font-family:"Open Sans";
+	background-color: #CDCDCD;
+	margin:10px 0pt 15px;
+	width: 100%;
+	text-align: left;
+}
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+	background-color: #e6EEEE;
+	border: 1px solid #FFF;
+	padding: 4px;
+}
+table.tablesorter thead tr .header {
+	background-image: url(bg.gif);
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+table.tablesorter tbody td {
+	color: #3D3D3D;
+	padding: 4px;
+	background-color: #FFF;
+	vertical-align: top;
+}
+table.tablesorter tbody tr.odd td {
+	background-color:#F0F0F6;
+}
+table.tablesorter thead tr .headerSortUp {
+	background-image: url(asc.gif);
+}
+table.tablesorter thead tr .headerSortDown {
+	background-image: url(desc.gif);
+}
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp {
+background-color: #8dbdd8;
+}
