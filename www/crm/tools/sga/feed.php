@@ -1,6 +1,6 @@
 <?php 
 
-require_once "../../wp-content/plugins/civicrm/civicrm.settings.php";
+require_once "../../civicrm.settings.php";
 require_once 'CRM/Core/Config.php';
 $config = CRM_Core_Config::singleton( );
 require_once 'api/api.php';

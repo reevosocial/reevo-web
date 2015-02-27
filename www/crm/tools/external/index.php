@@ -2,7 +2,7 @@
 // error_reporting(E_ALL);
 // ini_set('display_errors', True);
 // echo "Hola";
-require_once "/srv/reevo/crm.reevo.org/civicrm/civicrm.settings.php";
+require_once "../../civicrm.settings.php";
 require_once 'CRM/Core/Config.php';
 $config = CRM_Core_Config::singleton( );
 require_once 'api/api.php';
