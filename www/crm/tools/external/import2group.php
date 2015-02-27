@@ -15,7 +15,7 @@ if ($handle) {
 
 			$data = array(
 			  'contact_id' 		=> $contact_id,
-			  'group_id' 		=> '20',
+			  'group_id' 		=> '183', // id del grupo del epep
 			);
 
 			$new_grupos_agregar = civicrm_api3('group_contact', 'create', $data);
