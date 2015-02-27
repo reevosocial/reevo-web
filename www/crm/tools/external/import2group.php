@@ -7,9 +7,10 @@ require_once 'api/api.php';
 $handle = fopen("lista.txt", "r");
 if ($handle) {
     while (($line = fgets($handle)) !== false) {
-
+		echo intval($line);
+		$valor=(int)$line;
 		$data = array(
-		  'contact_id' 		=> $line,
+		  'contact_id' 		=> $valor,
 		  'group_id' 		=> '183', // id del grupo del epep
 		);
 
