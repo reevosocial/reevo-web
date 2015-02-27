@@ -56,6 +56,7 @@ php_admin_value[post_max_size] = 12M
 php_admin_value[upload_max_filesize] = 10M
 
 php_admin_value[session.cookie_domain] = .example.org
+php_admin_value[session.save_path] = /srv/reevo-web/tmp/$pool
 
 php_admin_value[cgi.fix_pathinfo] = 1
 
