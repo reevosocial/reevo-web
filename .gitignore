@@ -42,6 +42,7 @@ files/mapa/*
 files/equipo/*
 !files/equipo/.gitkeep
 
+tmp/*
 tmp/blog/*
 tmp/equipo/*
 tmp/mapa/*
