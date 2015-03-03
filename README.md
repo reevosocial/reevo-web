@@ -1,11 +1,11 @@
 # Reevo - Plataforma Web
-## Rama DEV - Versión 15.01.03
+## Versión 15.03.01
 
 La Plataforma Web busca ingegrar diversas herramientas libres. Este repositorio incluye una estructura comun para la gestión del código de las diversas herramientas.
 
 ## Herramientas incluidas
 
-* blog: Wordpress 4.0 [OUTDATED]
+* blog: Wordpress 4.1.1
 	* CiviCRM: 4.4.6 [OUTDATED]
 * equipo: Redmine 4.5 [OUTDATED]
 * mapa: Ushahidi 2.7.1 [OUTDATED]
