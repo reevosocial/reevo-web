@@ -1,6 +1,6 @@
 <?php
 // Checks if we are logged in our CMS
-require('/srv/reevo/blog.reevo.org/wp-blog-header.php');
+require('/srv/reevo-web/www/blog/wp-blog-header.php');
 
 if (!is_user_logged_in()){
     echo "No estás logueado en el CRM. <a href='/wp-login.php?redirect_to=http%3A%2F%2Fevo.re%2Fsga&reauth=1'>Ingresa ahora</a>";
@@ -22,12 +22,11 @@ $current_user = $result['values'][$key[0]]['contact_id'];
 
 function CountsContactsInGroup($group_id) {
 
-
-	
 	$array = civicrm_api('Contact','Get',array('group' => array($group_id => 1), 'version' =>3, 'rowCount' => 0 ));
+	
 	foreach($array as $valor) {
-
-		foreach($valor as $valor2) {
+		
+		foreach ((array) $valor as $valor2) {
 				$total++;
 		}
 	}
@@ -60,13 +59,13 @@ function ContactsNotesTableByGroup($group_id, $table_title,$grupo_superior,$grup
 	$array = civicrm_api('Contact','Get',array('group' => array($group_id => 1), 'version' =>3, 'rowCount' => 0 ));
 	foreach($array as $valor) {
 
-			foreach($valor as $valor2) {
+			foreach ((array) $valor as $valor2) {
 				// print_r ($valor2);
 					$notes = civicrm_api('Note', 'Get', array('entity_table' => 'civicrm_contact', 'entity_id' => $valor2['id'], 'version' => 3));
 					$max = 0;
 					if ($notes['count'] != '0') {
 						foreach($notes as $valor3) {
-								foreach(array_reverse($valor3) as $valor4) {
+								foreach ((array) array_reverse($valor3) as $valor4) {
 									if ($max == 0) {
 										$autor_css = $valor4['contact_id'];
 										$max = 1;
@@ -88,13 +87,13 @@ function ContactsNotesTableByGroup($group_id, $table_title,$grupo_superior,$grup
 					
 					$max = 0;
 					foreach($notes as $valor3) {
-							foreach(array_reverse($valor3) as $valor4) {
+							foreach ((array) array_reverse($valor3) as $valor4) {
 								if ($max == 0) {
 									echo '<td style="min-width: 60px;">' . $valor4['modified_date'] . '</td>';
 									echo '<td style="min-width: 150px;">' . $valor4['subject'] . '</td>';
 									echo '<td>' . $valor4['note'] . '</td>';
 									$autor = civicrm_api('Contact','Get', array('id' => $valor4['contact_id'], 'version' =>3));
-										foreach($autor as $valor5) { foreach($valor5 as $valor6) {
+										foreach ((array) $autor as $valor5) { foreach((array) $valor5 as $valor6) {
 												echo '<td>' . $valor6['first_name'] . '</td>';
 											}
 										}
