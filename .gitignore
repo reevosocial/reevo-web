@@ -42,10 +42,12 @@ files/mapa/*
 files/equipo/*
 !files/equipo/.gitkeep
 
+tmp/blog/*
 tmp/equipo/*
 tmp/mapa/*
 tmp/wiki/cache/*
 tmp/crm/*
+!tmp/blog/.gitkeep
 !tmp/equipo/.gitkeep
 !tmp/mapa/.gitkeep
 !tmp/wiki/cache/.gitkeep
