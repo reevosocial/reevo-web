@@ -9,7 +9,7 @@
 
 source ../database_auth.sh
 
-BD='old_reevo_redmine'
+BD='reevo_equipo'
 BDIMPORT='reevo_equipo'
 SITIO='equipo.reevo.org'
 
