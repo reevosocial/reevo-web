@@ -1,3 +1,61 @@
+2015-01-11  Steve Clay <steve@mrclay.org>
+
+  	* CHANGELOG.md, composer.json: chore(release): v1.9.8
+
+  	* docs/locale/fr/LC_MESSAGES/index.mo, docs/locale/fr/LC_MESSAGES/index.po,
+  docs/locale/ja/LC_MESSAGES/about.mo, docs/locale/pot/about.pot,
+  docs/locale/pot/admin.pot, docs/locale/pot/appendix.pot,
+  docs/locale/pot/contribute.pot, docs/locale/pot/design.pot,
+  docs/locale/pot/guides.pot, docs/locale/pot/index.pot,
+  docs/locale/pot/intro.pot, docs/locale/pot/plugins.pot,
+  docs/locale/pot/tutorials.pot, install/languages/es.php,
+  install/languages/fi.php, install/languages/fr.php, languages/de.php,
+  languages/fr.php, languages/ja.php, languages/nl.php,
+  mod/blog/languages/es.php, mod/blog/languages/nl.php,
+  mod/bookmarks/languages/es.php, mod/bookmarks/languages/nl.php,
+  mod/categories/languages/nl.php, mod/categories/languages/pt_BR.php,
+  mod/ckeditor/languages/fr.php, mod/ckeditor/languages/nl.php,
+  mod/ckeditor/languages/pl.php, mod/ckeditor/languages/pt_BR.php,
+  mod/developers/languages/de.php, mod/developers/languages/fi.php,
+  mod/developers/languages/fr.php, mod/developers/languages/ja.php,
+  mod/developers/languages/nl.php, mod/diagnostics/languages/nl.php,
+  mod/embed/languages/nl.php, mod/externalpages/languages/nl.php,
+  mod/file/languages/nl.php, mod/garbagecollector/languages/nl.php,
+  mod/groups/languages/de.php, mod/groups/languages/ja.php,
+  mod/groups/languages/nl.php, mod/invitefriends/languages/nl.php,
+  mod/legacy_urls/languages/nl.php, mod/likes/languages/nl.php,
+  mod/logbrowser/languages/nl.php, mod/logrotate/languages/nl.php,
+  mod/messageboard/languages/nl.php, mod/messages/languages/nl.php,
+  mod/notifications/languages/nl.php, mod/pages/languages/nl.php,
+  mod/pages/languages/pt_BR.php, mod/reportedcontent/languages/nl.php,
+  mod/site_notifications/languages/de.php,
+  mod/site_notifications/languages/es.php,
+  mod/site_notifications/languages/fr.php,
+  mod/site_notifications/languages/ja.php,
+  mod/site_notifications/languages/nl.php,
+  mod/site_notifications/languages/pl.php, mod/thewire/languages/nl.php,
+  mod/twitter_api/languages/nl.php, mod/uservalidationbyemail/languages/nl.php:
+  chore(i18n): update translations
+
+2015-01-02  Juho Jaakkola <juho.jaakkola@mediamaisteri.com>
+
+  	* engine/lib/comments.php, mod/groups/start.php: fix(notifications): subject
+  of comment notification email always starts with "Re: "  Subjects of comment
+  notification emails were starting with "Re: " only when the groups plugin was
+  enabled. This moves the logic out from the groups plugin, so comment
+  notifications use the correct subject regardless if the groups plugin is
+  enabled or not.  Fixes #7743
+
+2015-01-07  iionly <iionly@gmx.de>
+
+  	* .../views/default/css/elements/forms.php,
+  views/default/css/elements/forms.php: fix(css): Correct z-index for
+  autocomplete form field when opened in lightbox
+
+2014-12-15  Paweł Sroka <srokap@gmail.com>
+
+  	* .travis.yml, composer.json: chore(travis): Cleaned up .travis.yml for 1.9
+
 2014-12-14  Paweł Sroka <srokap@gmail.com>
 
   	* .travis.yml, composer.json: chore(travis): Moved PHP_CodeSniffer from pear
@@ -14,6 +72,14 @@
   docs/locale/pot/plugins.pot, docs/locale/pot/tutorials.pot,
   mod/blog/languages/sr.php, mod/externalpages/languages/sr.php: chore(i18n):
   update translations
+
+2014-12-05  Matt Beckett <beck24@gmail.com>
+
+  	* actions/profile/fields/add.php, engine/lib/users.php,
+  .../admin/appearance/profile_fields/list.php: fix(profile): admin defined
+  profile fields are once again back-compatible  Fixes #7634 - This brings back
+  the index counting from 0 instead of 1, making profile field changes back
+  compatible for older sites
 
 2014-12-04  Jerome Bakker <jeabakker@coldtrick.com>
 
@@ -621,6 +687,9 @@
   scope of the include so upgrades cannot break the process.  Fixes #7198
 
 2014-09-07  Juho Jaakkola <juho.jaakkola@mediamaisteri.com>
+
+  	* CHANGES.txt, version.php: chore(release): updated CHANGES.txt and
+  version.php for 1.8.20
 
   	* CHANGELOG.md, composer.json: chore(release): v1.9.0
 
