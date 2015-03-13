@@ -1,9 +1,9 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 4.4                                                |
+ | CiviCRM version 4.5                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2013                                |
+ | Copyright CiviCRM LLC (c) 2004-2014                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -28,7 +28,7 @@
 /**
  *
  * @package CRM
- * @copyright CiviCRM LLC (c) 2004-2013
+ * @copyright CiviCRM LLC (c) 2004-2014
  * $Id$
  *
  */
@@ -64,9 +64,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
    * @access public
    */
   public static function dataExists(&$params) {
-    if (CRM_Utils_Array::value('source_contact_id', $params) ||
-      CRM_Utils_Array::value('id', $params)
-    ) {
+    if (!empty($params['source_contact_id']) || !empty($params['id'])) {
       return TRUE;
     }
     return FALSE;
@@ -79,9 +77,10 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
    * of time. This is the inverse function of create. It also stores all the retrieved
    * values in the default array
    *
-   * @param array  $params   (reference ) an assoc array of name/value pairs
-   * @param array  $defaults (reference ) an assoc array to hold the flattened values
-   * @param string $activityType activity type
+   * @param array $params (reference ) an assoc array of name/value pairs
+   * @param array $defaults (reference ) an assoc array to hold the flattened values
+   *
+   * @internal param string $activityType activity type
    *
    * @return object CRM_Core_BAO_Meeting object
    * @access public
@@ -149,15 +148,16 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
   /**
    * Function to delete the activity
    *
-   * @param array  $params  associated array
+   * @param array $params associated array
+   *
+   * @param bool $moveToTrash
    *
    * @return void
    * @access public
-   *
    */
   public static function deleteActivity(&$params, $moveToTrash = FALSE) {
     // CRM-9137
-    if (CRM_Utils_Array::value('id', $params) && !is_array($params['id'])) {
+    if (!empty($params['id']) && !is_array($params['id'])) {
       CRM_Utils_Hook::pre('delete', 'Activity', $params['id'], $params);
     }
     else {
@@ -192,6 +192,10 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
 
         // CRM-8708
         $activity->case_id = CRM_Case_BAO_Case::getCaseIdByActivityId($activity->id);
+
+        // CRM-13994 delete activity entity_tag
+        $query = "DELETE FROM civicrm_entity_tag WHERE entity_table = 'civicrm_activity' AND entity_id = {$activity->id}";
+        $dao = CRM_Core_DAO::executeQuery($query);
       }
     }
     else {
@@ -201,9 +205,9 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
       $activity->is_deleted = 1;
       $result = $activity->save();
 
-      //log activty delete.CRM-4525.
-      $logMsg          = 'Case Activity deleted for';
-      $msgs            = array();
+      // CRM-4525 log activity delete
+      $logMsg = 'Case Activity deleted for';
+      $msgs = array();
 
       $activityContacts = CRM_Core_OptionGroup::values('activity_contacts', FALSE, FALSE, FALSE, NULL, 'name');
       $sourceID = CRM_Utils_Array::key('Activity Source', $activityContacts);
@@ -252,7 +256,10 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
   /**
    * Delete activity assignment record
    *
-   * @param int    $id  activity id
+   * @param $activityId
+   * @param null $recordTypeID
+   *
+   * @internal param int $id activity id
    *
    * @return null
    * @access public
@@ -263,25 +270,33 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
     if ($recordTypeID) {
       $activityContact->record_type_id = $recordTypeID;
     }
-    $activityContact->delete();
+
+    //let's check if activity contact record exits and then delete.
+    //looks like delete leads to deadlock when multiple simultaneous
+    //requests are done. CRM-15470
+    if ($activityContact->find()) {
+      $activityContact->delete();
+    }
   }
 
   /**
    * Function to process the activities
    *
-   * @param object $form         form object
-   * @param array  $params       associated array of the submitted values
-   * @param array  $ids          array of ids
-   * @param string $activityType activity Type
-   * @param boolean $record   true if it is Record Activity
+   * @param array $params associated array of the submitted values
+   *
+   * @throws CRM_Core_Exception
+   * @internal param object $form form object
+   * @internal param array $ids array of ids
+   * @internal param string $activityType activity Type
+   * @internal param bool $record true if it is Record Activity
    * @access public
    *
-   * @return
+   * @return $this|null|object
    */
   public static function create(&$params) {
     // check required params
     if (!self::dataExists($params)) {
-      CRM_Core_Error::fatal('Not enough data to create activity object,');
+      throw new CRM_Core_Exception('Not enough data to create activity object');
     }
 
     $activity = new CRM_Activity_DAO_Activity();
@@ -290,10 +305,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
       unset($params['id']);
     }
 
-    if (!CRM_Utils_Array::value('status_id', $params) &&
-      !CRM_Utils_Array::value('activity_status_id', $params) &&
-      !CRM_Utils_Array::value('id', $params)
-    ) {
+    if (empty($params['status_id']) && empty($params['activity_status_id']) && empty($params['id'])) {
       if (isset($params['activity_date_time']) &&
         strcmp($params['activity_date_time'], CRM_Utils_Date::processDate(date('Ymd')) == -1)
       ) {
@@ -321,7 +333,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
     }
 
     // CRM-9137
-    if (CRM_Utils_Array::value('id', $params)) {
+    if (!empty($params['id'])) {
       CRM_Utils_Hook::pre('edit', 'Activity', $activity->id, $params);
     }
     else {
@@ -369,7 +381,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
 
     // attempt to save activity assignment
     $resultAssignment = NULL;
-    if (CRM_Utils_Array::value('assignee_contact_id', $params)) {
+    if (!empty($params['assignee_contact_id'])) {
 
       $assignmentParams = array('activity_id' => $activityId);
 
@@ -395,7 +407,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
       else {
         $assignmentParams['contact_id'] = $params['assignee_contact_id'];
         $assignmentParams['record_type_id'] = $assigneeID;
-        if (CRM_Utils_Array::value('id', $params)) {
+        if (!empty($params['id'])) {
           $assignment = new CRM_Activity_BAO_ActivityContact();
           $assignment->activity_id = $activityId;
           $assignment->record_type_id = $assigneeID;
@@ -424,7 +436,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
 
     // attempt to save activity targets
     $resultTarget = NULL;
-    if (CRM_Utils_Array::value('target_contact_id', $params)) {
+    if (!empty($params['target_contact_id'])) {
 
       $targetParams = array('activity_id' => $activityId);
       $resultTarget = array();
@@ -451,7 +463,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
       else {
         $targetParams['contact_id'] = $params['target_contact_id'];
         $targetParams['record_type_id'] = $targetID;
-        if (CRM_Utils_Array::value('id', $params)) {
+        if (!empty($params['id'])) {
           $target = new CRM_Activity_BAO_ActivityContact();
           $target->activity_id = $activityId;
           $target->record_type_id = $targetID;
@@ -475,7 +487,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
 
     // write to changelog before transaction is committed/rolled
     // back (and prepare status to display)
-    if (CRM_Utils_Array::value('id', $params)) {
+    if (!empty($params['id'])) {
       $logMsg = "Activity (id: {$result->id} ) updated with ";
     }
     else {
@@ -487,7 +499,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
       $msgs[] = "source={$params['source_contact_id']}";
     }
 
-    if (CRM_Utils_Array::value('target_contact_id', $params)) {
+    if (!empty($params['target_contact_id'])) {
       if (is_array($params['target_contact_id']) && !CRM_Utils_array::crmIsEmptyArray($params['target_contact_id'])) {
         $msgs[] = "target=" . implode(',', $params['target_contact_id']);
         // take only first target
@@ -495,7 +507,9 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
         $t = array_slice($params['target_contact_id'], 0, 1);
         $recentContactId = $t[0];
       }
-      elseif (isset($params['target_contact_id'])) {
+      //is array check fixes warning without degrading functionality but it seems this bit of code may no longer work
+      // as it may always be an array
+      elseif (isset($params['target_contact_id']) && !is_array($params['target_contact_id'])) {
         $msgs[] = "target={$params['target_contact_id']}";
         // will be used for recently viewed display
         $recentContactId = $params['target_contact_id'];
@@ -518,23 +532,23 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
 
     self::logActivityAction($result, $logMsg);
 
-    if (CRM_Utils_Array::value('custom', $params) &&
+    if (!empty($params['custom']) &&
       is_array($params['custom'])
     ) {
       CRM_Core_BAO_CustomValueTable::store($params['custom'], 'civicrm_activity', $result->id);
     }
 
     $transaction->commit();
-    if (!CRM_Utils_Array::value('skipRecentView', $params)) {
+    if (empty($params['skipRecentView'])) {
       $recentOther = array();
-      if (CRM_Utils_Array::value('case_id', $params)) {
+      if (!empty($params['case_id'])) {
         $caseContactID = CRM_Core_DAO::getFieldValue('CRM_Case_DAO_CaseContact', $params['case_id'], 'contact_id', 'case_id');
         $url = CRM_Utils_System::url('civicrm/case/activity/view',
           "reset=1&aid={$activity->id}&cid={$caseContactID}&caseID={$params['case_id']}&context=home"
         );
       }
       else {
-        $q = "action=view&reset=1&id={$activity->id}&atype={$activity->activity_type_id}&cid={$params['source_contact_id']}&context=home";
+        $q = "action=view&reset=1&id={$activity->id}&atype={$activity->activity_type_id}&cid=" . CRM_Utils_Array::value('source_contact_id', $params) . "&context=home";
         if ($activity->activity_type_id != CRM_Core_OptionGroup::getValue('activity_type', 'Email', 'name')) {
           $url = CRM_Utils_System::url('civicrm/activity', $q);
           if ($activity->activity_type_id == CRM_Core_OptionGroup::getValue('activity_type', 'Print PDF Letter', 'name')) {
@@ -544,13 +558,13 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
           }
           else {
             $recentOther['editUrl'] = CRM_Utils_System::url('civicrm/activity/add',
-              "action=update&reset=1&id={$activity->id}&atype={$activity->activity_type_id}&cid={$params['source_contact_id']}&context=home"
+              "action=update&reset=1&id={$activity->id}&atype={$activity->activity_type_id}&cid=" . CRM_Utils_Array::value('source_contact_id', $params) . "&context=home"
             );
           }
 
           if (CRM_Core_Permission::check("delete activities")) {
             $recentOther['deleteUrl'] = CRM_Utils_System::url('civicrm/activity',
-              "action=delete&reset=1&id={$activity->id}&atype={$activity->activity_type_id}&cid={$params['source_contact_id']}&context=home"
+              "action=delete&reset=1&id={$activity->id}&atype={$activity->activity_type_id}&cid=" . CRM_Utils_Array::value('source_contact_id', $params) . "&context=home"
             );
           }
         }
@@ -558,7 +572,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
           $url = CRM_Utils_System::url('civicrm/activity/view', $q);
           if (CRM_Core_Permission::check('delete activities')) {
             $recentOther['deleteUrl'] = CRM_Utils_System::url('civicrm/activity',
-              "action=delete&reset=1&id={$activity->id}&atype={$activity->activity_type_id}&cid={$params['source_contact_id']}&context=home"
+              "action=delete&reset=1&id={$activity->id}&atype={$activity->activity_type_id}&cid=" . CRM_Utils_Array::value('source_contact_id', $params) . "&context=home"
             );
           }
         }
@@ -576,7 +590,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
         }
 
         $title = $title . $recentContactDisplay;
-        if (CRM_Utils_Array::value($activity->activity_type_id, $activityTypes)) {
+        if (!empty($activityTypes[$activity->activity_type_id])) {
           $title .= ' (' . $activityTypes[$activity->activity_type_id] . ')';
         }
 
@@ -594,7 +608,7 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
     // reset the group contact cache since smart groups might be affected due to this
     CRM_Contact_BAO_GroupContactCache::remove();
 
-    if (CRM_Utils_Array::value('id', $params)) {
+    if (!empty($params['id'])) {
       CRM_Utils_Hook::post('edit', 'Activity', $activity->id, $activity);
     }
     else {
@@ -622,6 +636,12 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
     return $result;
   }
 
+  /**
+   * @param $activity
+   * @param null $logMessage
+   *
+   * @return bool
+   */
   public static function logActivityAction($activity, $logMessage = NULL) {
     $session = CRM_Core_Session::singleton();
     $id = $session->get('userID');
@@ -667,6 +687,11 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
       'Bulk Email',
       'name'
     );
+
+    $activityContacts = CRM_Core_OptionGroup::values('activity_contacts', FALSE, FALSE, FALSE, NULL, 'name');
+    $sourceID = CRM_Utils_Array::key('Activity Source', $activityContacts);
+    $assigneeID = CRM_Utils_Array::key('Activity Assignees', $activityContacts);
+    $targetID = CRM_Utils_Array::key('Activity Targets', $activityContacts);
 
     $config = CRM_Core_Config::singleton();
 
@@ -738,9 +763,6 @@ class CRM_Activity_BAO_Activity extends CRM_Activity_DAO_Activity {
     }
 
     $input['count'] = FALSE;
-
-    // skip bulk activities in activity tab
-    $input['activity_type_exclude_id'][$bulkActivityTypeID] = $bulkActivityTypeID;
     list($sqlClause, $params) = self::getActivitySQLClause($input);
 
     $query = "{$insertSQL}
@@ -764,7 +786,7 @@ LEFT JOIN  civicrm_case_activity ON ( civicrm_case_activity.activity_id = tbl.ac
     $activityContactTempTable = "civicrm_temp_activity_contact_{$randomNum}";
     $query = "CREATE TEMPORARY TABLE {$activityContactTempTable} (
                 activity_id int unsigned, contact_id int unsigned, record_type_id varchar(16),
-                 contact_name varchar(255), is_deleted int unsigned, INDEX index_activity_id( activity_id ) )
+                 contact_name varchar(255), is_deleted int unsigned, counter int unsigned, INDEX index_activity_id( activity_id ) )
                 ENGINE=MYISAM DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci";
 
     CRM_Core_DAO::executeQuery($query);
@@ -778,11 +800,33 @@ SELECT     ac.activity_id,
            c.sort_name,
            c.is_deleted
 FROM       {$activityTempTable}
-INNER JOIN civicrm_activity a ON ( a.id = {$activityTempTable}.activity_id  )
+INNER JOIN civicrm_activity a ON ( a.id = {$activityTempTable}.activity_id )
 INNER JOIN civicrm_activity_contact ac ON ( ac.activity_id = {$activityTempTable}.activity_id )
 INNER JOIN civicrm_contact c ON c.id = ac.contact_id
+WHERE ac.record_type_id != %1
 ";
-    CRM_Core_DAO::executeQuery($query);
+    $params = array(1 => array($targetID, 'Integer'));
+    CRM_Core_DAO::executeQuery($query, $params);
+
+    // for each activity insert one target contact
+    // if we load all target contacts the performance will suffer a lot for mass-activities;
+    $query = "
+INSERT INTO {$activityContactTempTable} ( activity_id, contact_id, record_type_id, contact_name, is_deleted, counter )
+SELECT     ac.activity_id,
+           ac.contact_id,
+           ac.record_type_id,
+           c.sort_name,
+           c.is_deleted,
+           count(ac.contact_id)
+FROM       {$activityTempTable}
+INNER JOIN civicrm_activity a ON ( a.id = {$activityTempTable}.activity_id )
+INNER JOIN civicrm_activity_contact ac ON ( ac.activity_id = {$activityTempTable}.activity_id )
+INNER JOIN civicrm_contact c ON c.id = ac.contact_id
+WHERE ac.record_type_id = %1
+GROUP BY ac.activity_id
+";
+
+    CRM_Core_DAO::executeQuery($query, $params);
 
     // step 3: Combine all temp tables to get final query for activity selector
     // sort by the original sort order, stored in fixed_sort_order
@@ -791,12 +835,12 @@ SELECT     {$activityTempTable}.*,
            {$activityContactTempTable}.contact_id,
            {$activityContactTempTable}.record_type_id,
            {$activityContactTempTable}.contact_name,
-           {$activityContactTempTable}.is_deleted
+           {$activityContactTempTable}.is_deleted,
+           {$activityContactTempTable}.counter
 FROM       {$activityTempTable}
 INNER JOIN {$activityContactTempTable} on {$activityTempTable}.activity_id = {$activityContactTempTable}.activity_id
 ORDER BY    fixed_sort_order
         ";
-
 
     $dao = CRM_Core_DAO::executeQuery($query);
 
@@ -810,14 +854,7 @@ ORDER BY    fixed_sort_order
 
     //get all campaigns.
     $allCampaigns = CRM_Campaign_BAO_Campaign::getCampaigns(NULL, NULL, FALSE, FALSE, FALSE, TRUE);
-
     $values = array();
-    $activityContacts = CRM_Core_OptionGroup::values('activity_contacts', FALSE, FALSE, FALSE, NULL, 'name');
-    $sourceID = CRM_Utils_Array::key('Activity Source', $activityContacts);
-    $assigneeID = CRM_Utils_Array::key('Activity Assignees', $activityContacts);
-    $targetID = CRM_Utils_Array::key('Activity Targets', $activityContacts);
-
-
     while ($dao->fetch()) {
       $activityID = $dao->activity_id;
       $values[$activityID]['activity_id'] = $dao->activity_id;
@@ -833,12 +870,13 @@ ORDER BY    fixed_sort_order
         $values[$activityID]['campaign'] = $allCampaigns[$dao->campaign_id];
       }
 
-      if (!CRM_Utils_Array::value('assignee_contact_name', $values[$activityID])) {
+      if (empty($values[$activityID]['assignee_contact_name'])) {
         $values[$activityID]['assignee_contact_name'] = array();
       }
 
-      if (!CRM_Utils_Array::value('target_contact_name', $values[$activityID])) {
+      if (empty($values[$activityID]['target_contact_name'])) {
         $values[$activityID]['target_contact_name'] = array();
+        $values[$activityID]['target_contact_counter'] = $dao->counter;
       }
 
       // if deleted, wrap in <del>
@@ -865,7 +903,7 @@ ORDER BY    fixed_sort_order
         $values[$activityID]['case_subject'] = $dao->case_subject;
       }
       else {
-        $values[$activityID]['recipients'] = ts('(recipients)');
+        $values[$activityID]['recipients'] =  ts('(%1 recipients)', array(1 => $dao->counter));
         $values[$activityID]['mailingId'] = false;
         if (
           $accessCiviMail &&
@@ -891,7 +929,7 @@ ORDER BY    fixed_sort_order
     $components = array();
     $compInfo = CRM_Core_Component::getEnabledComponents();
     foreach ($compInfo as $compObj) {
-      if (CRM_Utils_Array::value('showActivitiesInCore', $compObj->info)) {
+      if (!empty($compObj->info['showActivitiesInCore'])) {
         if ($compObj->info['name'] == 'CiviCampaign') {
           $componentPermission = "administer {$compObj->name}";
         }
@@ -929,14 +967,6 @@ ORDER BY    fixed_sort_order
    * @static
    */
   static function &getActivitiesCount($input) {
-    // skip bulk activities in activity tab
-    $bulkActivityTypeID = CRM_Core_OptionGroup::getValue(
-      'activity_type',
-      'Bulk Email',
-      'name'
-    );
-    $input['activity_type_exclude_id'][$bulkActivityTypeID] = $bulkActivityTypeID;
-
     $input['count'] = TRUE;
     list($sqlClause, $params) = self::getActivitySQLClause($input);
 
@@ -1140,18 +1170,20 @@ LEFT JOIN civicrm_activity_contact src ON (src.activity_id = ac.activity_id AND 
    * send the message to all the contacts and also insert a
    * contact activity in each contacts record
    *
-   * @param array  $contactDetails the array of contact details to send the email
-   * @param string $subject      the subject of the message
-   * @param string $message      the message contents
+   * @param array $contactDetails the array of contact details to send the email
+   * @param string $subject the subject of the message
+   * @param $text
+   * @param $html
    * @param string $emailAddress use this 'to' email address instead of the default Primary address
-   * @param int    $userID       use this userID if set
+   * @param int $userID use this userID if set
    * @param string $from
-   * @param array  $attachments  the array of attachments if any
-   * @param string $cc           cc recipient
-   * @param string $bcc          bcc recipient
-   * @param array $contactIds    contact ids
+   * @param array $attachments the array of attachments if any
+   * @param string $cc cc recipient
+   * @param string $bcc bcc recipient
+   * @param array $contactIds contact ids
    * @param string $additionalDetails the additional information of CC and BCC appended to the activity Details
    *
+   * @internal param string $message the message contents
    * @return array               ( sent, activityId) if any email is sent and activityId
    * @access public
    * @static
@@ -1339,6 +1371,16 @@ LEFT JOIN civicrm_activity_contact src ON (src.activity_id = ac.activity_id AND 
     return array($sent, $activity->id);
   }
 
+  /**
+   * @param $contactDetails
+   * @param $activityParams
+   * @param array $smsParams
+   * @param $contactIds
+   * @param null $userID
+   *
+   * @return array
+   * @throws CRM_Core_Exception
+   */
   static function sendSMS(&$contactDetails,
     &$activityParams,
     &$smsParams = array(),
@@ -1350,16 +1392,12 @@ LEFT JOIN civicrm_activity_contact src ON (src.activity_id = ac.activity_id AND 
       $userID = $session->get('userID');
     }
 
-    $text = &$activityParams['text_message'];
-    $html = &$activityParams['html_message'];
+    $text = &$activityParams['sms_text_message'];
 
     // CRM-4575
     // token replacement of addressee/email/postal greetings
     // get the tokens added in subject and message
     $messageToken = CRM_Utils_Token::getTokens($text);
-    $messageToken = array_merge($messageToken,
-      CRM_Utils_Token::getTokens($html)
-    );
 
     //create the meta level record first ( sms activity )
     $activityTypeID = CRM_Core_OptionGroup::getValue('activity_type',
@@ -1367,13 +1405,7 @@ LEFT JOIN civicrm_activity_contact src ON (src.activity_id = ac.activity_id AND 
       'name'
     );
 
-    // CRM-6265: save both text and HTML parts in details (if present)
-    if ($html and $text) {
-      $details = "-ALTERNATIVE ITEM 0-\n$html\n-ALTERNATIVE ITEM 1-\n$text\n-ALTERNATIVE END-\n";
-    }
-    else {
-      $details = $html ? $html : $text;
-    }
+    $details = $text;
 
     $activitySubject = $activityParams['activity_subject'];
     $activityParams = array(
@@ -1429,9 +1461,6 @@ LEFT JOIN civicrm_activity_contact src ON (src.activity_id = ac.activity_id AND 
       $tokenText = CRM_Utils_Token::replaceContactTokens($text, $values, FALSE, $messageToken, FALSE, $escapeSmarty);
       $tokenText = CRM_Utils_Token::replaceHookTokens($tokenText, $values, $categories, FALSE, $escapeSmarty);
 
-      $tokenHtml = CRM_Utils_Token::replaceContactTokens($html, $values, TRUE, $messageToken, FALSE, $escapeSmarty);
-      $tokenHtml = CRM_Utils_Token::replaceHookTokens($tokenHtml, $values, $categories, TRUE, $escapeSmarty);
-
       // Only send if the phone is of type mobile
       $phoneTypes = CRM_Core_OptionGroup::values('phone_type', TRUE, FALSE, FALSE, NULL, 'name');
       if ($values['phone_type_id'] == CRM_Utils_Array::value('Mobile', $phoneTypes)) {
@@ -1444,7 +1473,6 @@ LEFT JOIN civicrm_activity_contact src ON (src.activity_id = ac.activity_id AND 
       $sendResult = self::sendSMSMessage(
         $contactId,
         $tokenText,
-        $tokenHtml,
         $smsParams,
         $activityID,
         $userID
@@ -1475,9 +1503,13 @@ LEFT JOIN civicrm_activity_contact src ON (src.activity_id = ac.activity_id AND 
   /**
    * send the sms message to a specific contact
    *
-   * @param int    $toID              the contact id of the recipient
-   * @param int    $activityID        the activity ID that tracks the message
-   * @param array  $smsParams         the params used for sending sms
+   * @param int $toID the contact id of the recipient
+   * @param $tokenText
+   * @param $tokenHtml
+   * @param array $smsParams the params used for sending sms
+   *
+   * @param int $activityID the activity ID that tracks the message
+   * @param null $userID
    *
    * @return mixed                    true on success or PEAR_Error object
    * @access public
@@ -1485,7 +1517,6 @@ LEFT JOIN civicrm_activity_contact src ON (src.activity_id = ac.activity_id AND 
    */
   static function sendSMSMessage($toID,
     &$tokenText,
-    &$tokenHtml,
     $smsParams = array(),
     $activityID,
     $userID = null
@@ -1518,13 +1549,12 @@ LEFT JOIN civicrm_activity_contact src ON (src.activity_id = ac.activity_id AND 
       );
     }
 
-    $message = $tokenHtml ? $tokenHtml : $tokenText;
     $recipient = $smsParams['To'];
     $smsParams['contact_id'] = $toID;
     $smsParams['parent_activity_id'] = $activityID;
 
     $providerObj = CRM_SMS_Provider::singleton(array('provider_id' => $smsParams['provider_id']));
-    $sendResult = $providerObj->send($recipient, $smsParams, $message, NULL, $userID);
+    $sendResult = $providerObj->send($recipient, $smsParams, $tokenText, NULL, $userID);
     if (PEAR::isError($sendResult)) {
       return $sendResult;
     }
@@ -1547,13 +1577,20 @@ LEFT JOIN civicrm_activity_contact src ON (src.activity_id = ac.activity_id AND 
   /**
    * send the message to a specific contact
    *
-   * @param string $from         the name and email of the sender
-   * @param int    $toID         the contact id of the recipient
-   * @param string $subject      the subject of the message
-   * @param string $message      the message contents
+   * @param string $from the name and email of the sender
+   * @param $fromID
+   * @param int $toID the contact id of the recipient
+   * @param string $subject the subject of the message
+   * @param $text_message
+   * @param $html_message
    * @param string $emailAddress use this 'to' email address instead of the default Primary address
-   * @param int    $activityID   the activity ID that tracks the message
+   * @param int $activityID the activity ID that tracks the message
    *
+   * @param null $attachments
+   * @param null $cc
+   * @param null $bcc
+   *
+   * @internal param string $message the message contents
    * @return boolean             true if successfull else false.
    * @access public
    * @static
@@ -1624,7 +1661,9 @@ LEFT JOIN civicrm_activity_contact src ON (src.activity_id = ac.activity_id AND 
    * scheme. Adding weight is super important and should be done in the
    * next week or so, before this can be called complete.
    *
-   * @param NULL
+   * @param bool $status
+   *
+   * @internal param $NULL
    *
    * @return array    array of importable Fields
    * @access public
@@ -1752,10 +1791,13 @@ WHERE      activity.id IN ($activityIds)";
   /**
    * Function to add activity for Membership/Event/Contribution
    *
-   * @param object  $activity   (reference) particular component object
-   * @param string  $activityType for Membership Signup or Renewal
+   * @param object $activity (reference) particular component object
+   * @param string $activityType for Membership Signup or Renewal
    *
    *
+   * @param null $targetContactID
+   *
+   * @return bool
    * @static
    * @access public
    */
@@ -1799,10 +1841,10 @@ SELECT  display_name
       $status = CRM_Event_PseudoConstant::participantStatus();
 
       $subject = $event[$activity->event_id];
-      if (CRM_Utils_Array::value($activity->role_id, $roles)) {
+      if (!empty($roles[$activity->role_id])) {
         $subject .= ' - ' . $roles[$activity->role_id];
       }
-      if (CRM_Utils_Array::value($activity->status_id, $status)) {
+      if (!empty($status[$activity->status_id])) {
         $subject .= ' - ' . $status[$activity->status_id];
       }
       $date = date('YmdHis');
@@ -1852,6 +1894,10 @@ SELECT  display_name
       $activityParams['target_contact_id'][] = $activity->contact_id;
     }
 
+    // CRM-14945
+    if (property_exists($activity, 'details')) {
+      $activityParams['details'] = $activity->details;
+    }
     //CRM-4027
     if ($targetContactID) {
       $activityParams['target_contact_id'][] = $targetContactID;
@@ -1892,7 +1938,9 @@ SELECT  display_name
   /**
    * Function to get total count of prior revision of currently viewd activity
    *
-   * @param int  $activityId   current activity id
+   * @param $activityID
+   *
+   * @internal param int $activityId current activity id
    *
    * @return int $params  count of prior activities otherwise false.
    * @access public
@@ -1930,7 +1978,10 @@ AND id < {$activityID}
    * Function to get all prior activities of currently viewe
    * d activity
    *
-   * @param int  $activityId   current activity id
+   * @param $activityID
+   * @param bool $onlyPriorRevisions
+   *
+   * @internal param int $activityId current activity id
    *
    * @return array $result  prior activities info.
    * @access public
@@ -1969,7 +2020,6 @@ AND cl.modified_id  = c.id
           $priorActivities[$index][$dao->activityID]['id'] = $dao->activityID;
           $priorActivities[$index][$dao->activityID]['name'] = $dao->name;
           $priorActivities[$index][$dao->activityID]['date'] = $dao->date;
-          $priorActivities[$index][$dao->activityID]['link'] = 'javascript:viewActivity( $dao->activityID );';
         }
         $dao->free();
       }
@@ -1980,7 +2030,9 @@ AND cl.modified_id  = c.id
   /**
    * Function to find the latest revision of a given activity
    *
-   * @param int  $activityId    prior activity id
+   * @param $activityID
+   *
+   * @internal param int $activityId prior activity id
    *
    * @return int $params  current activity id.
    * @access public
@@ -2014,7 +2066,11 @@ AND cl.modified_id  = c.id
    *
    * @activityId int activity id of parent activity
    *
-   * @param array  $activity details
+   * @param $activityId
+   * @param $params
+   *
+   * @return $this|null|object
+   * @internal param array $activity details
    *
    * @access public
    */
@@ -2033,9 +2089,10 @@ AND cl.modified_id  = c.id
     $followupParams['activity_type_id'] = $params['followup_activity_type_id'];
     // Get Subject of Follow-up Activiity, CRM-4491
     $followupParams['subject'] = CRM_Utils_Array::value('followup_activity_subject', $params);
+    $followupParams['assignee_contact_id'] = CRM_Utils_Array::value('followup_assignee_contact_id', $params);
 
     //create target contact for followup
-    if (CRM_Utils_Array::value('target_contact_id', $params)) {
+    if (!empty($params['target_contact_id'])) {
       $followupParams['target_contact_id'] = $params['target_contact_id'];
     }
 
@@ -2050,7 +2107,9 @@ AND cl.modified_id  = c.id
   /**
    * Function to get Activity specific File according activity type Id.
    *
-   * @param int  $activityTypeId  activity id
+   * @param int $activityTypeId activity id
+   *
+   * @param string $crmDir
    *
    * @return if file exists returns $activityTypeFile activity filename otherwise false.
    *
@@ -2446,30 +2505,22 @@ INNER JOIN  civicrm_option_group grp ON ( grp.id = val.option_group_id AND grp.n
             'civicrm/mailing/report/event',
             "mid={$values['source_record_id']}&reset=1&event=queue&cid={$params['contact_id']}&context=activitySelector");
         }
-        elseif (CRM_Utils_Array::value('recipients', $values)) {
+        elseif (!empty($values['recipients'])) {
           $contactActivities[$activityId]['target_contact'] = $values['recipients'];
+        }
+        elseif (isset($values['target_contact_counter']) && $values['target_contact_counter']) {
+          $contactActivities[$activityId]['target_contact'] = '';
+          foreach ($values['target_contact_name'] as $tcID => $tcName) {
+            $contactActivities[$activityId]['target_contact'] .= CRM_Utils_System::href($tcName,
+              'civicrm/contact/view', "reset=1&cid={$tcID}");
+          }
+
+          if ($extraCount = $values['target_contact_counter'] - 1) {
+            $contactActivities[$activityId]['target_contact'] .= ";<br />" . "(" . ts('%1 more', array(1 => $extraCount)) . ")";
+          }
         }
         elseif (!$values['target_contact_name']) {
           $contactActivities[$activityId]['target_contact'] = '<em>n/a</em>';
-        }
-        elseif (!empty($values['target_contact_name'])) {
-          $count = 0;
-          $contactActivities[$activityId]['target_contact'] = '';
-          foreach ($values['target_contact_name'] as $tcID => $tcName) {
-            if ($tcID && $count < 5) {
-              $contactActivities[$activityId]['target_contact'] .= CRM_Utils_System::href($tcName,
-                'civicrm/contact/view', "reset=1&cid={$tcID}");
-              $count++;
-              if ($count) {
-                $contactActivities[$activityId]['target_contact'] .= ";&nbsp;";
-              }
-
-              if ($count == 4) {
-                $contactActivities[$activityId]['target_contact'] .= "(" . ts('more') . ")";
-                break;
-              }
-            }
-          }
         }
 
         if (empty($values['assignee_contact_name'])) {
@@ -2511,7 +2562,7 @@ INNER JOIN  civicrm_option_group grp ON ( grp.id = val.option_group_id AND grp.n
         // build links
         $contactActivities[$activityId]['links'] = '';
         $accessMailingReport = FALSE;
-        if (CRM_Utils_Array::value('mailingId', $values)) {
+        if (!empty($values['mailingId'])) {
           $accessMailingReport = TRUE;
         }
 
@@ -2531,7 +2582,12 @@ INNER JOIN  civicrm_option_group grp ON ( grp.id = val.option_group_id AND grp.n
             'cid' => $params['contact_id'],
             'cxt' => $context,
             'caseid' => CRM_Utils_Array::value('case_id', $values),
-          )
+          ),
+          ts('more'),
+          FALSE,
+          'activity.tab.row',
+          'Activity',
+          $values['activity_id']
         );
       }
     }
@@ -2542,6 +2598,9 @@ INNER JOIN  civicrm_option_group grp ON ( grp.id = val.option_group_id AND grp.n
   /*
    * Used to copy custom fields and attachments from an existing activity to another.
    * see CRM_Case_Page_AJAX::_convertToCaseActivity() for example
+   */
+  /**
+   * @param $params
    */
   static function copyExtendedActivityData($params) {
     // attach custom data to the new activity
@@ -2580,6 +2639,13 @@ INNER JOIN  civicrm_option_group grp ON ( grp.id = val.option_group_id AND grp.n
     CRM_Core_BAO_File::copyEntityFile('civicrm_activity', $params['activityID'], 'civicrm_activity', $params['mainActivityId']);
   }
 
+  /**
+   * @param $activityId
+   * @param null $recordTypeID
+   * @param string $column
+   *
+   * @return null
+   */
   public static function getActivityContact($activityId, $recordTypeID = NULL, $column = 'contact_id') {
     $activityContact = new CRM_Activity_BAO_ActivityContact();
     $activityContact->activity_id = $activityId;
@@ -2592,6 +2658,11 @@ INNER JOIN  civicrm_option_group grp ON ( grp.id = val.option_group_id AND grp.n
     return NULL;
   }
 
+  /**
+   * @param $activityId
+   *
+   * @return null
+   */
   public static function getSourceContactID($activityId) {
     static $sourceID = NULL;
     if (!$sourceID) {
@@ -2602,6 +2673,9 @@ INNER JOIN  civicrm_option_group grp ON ( grp.id = val.option_group_id AND grp.n
     return self::getActivityContact($activityId, $sourceID);
   }
 
+  /**
+   * @param $params
+   */
   function setApiFilter(&$params) {
     if (CRM_Utils_Array::value('target_contact_id', $params)) {
       $this->selectAdd();

@@ -1,9 +1,9 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 4.4                                                |
+ | CiviCRM version 4.5                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2013                                |
+ | Copyright CiviCRM LLC (c) 2004-2014                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -28,7 +28,7 @@
 /**
  *
  * @package CRM
- * @copyright CiviCRM LLC (c) 2004-2013
+ * @copyright CiviCRM LLC (c) 2004-2014
  * $Id$
  *
  */
@@ -38,6 +38,15 @@ interface CRM_Contact_Form_Search_Interface {
    * The constructor gets the submitted form values
    */
   function __construct(&$formValues);
+
+  /**
+   * Builds the list of tasks or actions that a searcher can perform on a result set.
+   *
+   * @param CRM_Core_Form_Search $form
+   * @return array
+   */
+  // @todo: This interface change should not go into a minor version; save for 4.6
+  // function buildTaskList(CRM_Core_Form_Search $form);
 
   /**
    * Builds the quickform for this search
