@@ -35,4 +35,10 @@ server {
 	location @maintenance {
 		rewrite ^(.*)$ /errors/503/index.html break;
 	}
+
+	location /wp-content/plugins/files/civicrm/ {
+		 deny all;
+		return 404;
+	}
+
 }
