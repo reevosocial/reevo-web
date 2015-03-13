@@ -153,13 +153,6 @@ UPDATE civicrm_uf_join SET uf_group_id = @uf_group_id_honoree_individual WHERE m
 {/if}
 ALTER TABLE civicrm_contribution_page DROP honor_block_is_active;
 
-ALTER TABLE civicrm_contribution DROP FOREIGN KEY `FK_civicrm_contribution_honor_contact_id`;
-ALTER TABLE civicrm_contribution DROP honor_contact_id;
-ALTER TABLE civicrm_contribution DROP honor_type_id;
-
-ALTER TABLE civicrm_pledge DROP FOREIGN KEY `FK_civicrm_pledge_honor_contact_id`;
-ALTER TABLE civicrm_pledge DROP honor_contact_id;
-ALTER TABLE civicrm_pledge DROP honor_type_id;
 
 -- CRM-13964 and CRM-13965
 SELECT @option_group_id_cs   := max(id) from civicrm_option_group where name = 'contribution_status';
