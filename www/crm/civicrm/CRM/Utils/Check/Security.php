@@ -1,7 +1,7 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 4.4                                                |
+ | CiviCRM version 4.5                                                |
  +--------------------------------------------------------------------+
  | Copyright CiviCRM LLC (c) 2004-2014                                |
  +--------------------------------------------------------------------+
@@ -59,7 +59,8 @@ class CRM_Utils_Check_Security {
     $messages = array_merge(
       $this->checkLogFileIsNotAccessible(),
       $this->checkUploadsAreNotAccessible(),
-      $this->checkDirectoriesAreNotBrowseable()
+      $this->checkDirectoriesAreNotBrowseable(),
+      $this->checkFilesAreNotPresent()
     );
     return $messages;
   }
@@ -88,7 +89,7 @@ class CRM_Utils_Check_Security {
     $config = CRM_Core_Config::singleton();
 
     $log = CRM_Core_Error::createDebugLogger();
-    $log_filename = $log->_filename;
+    $log_filename = str_replace('\\', '/', $log->_filename);
 
     $filePathMarker = $this->getFilePathMarker();
 
@@ -207,6 +208,36 @@ class CRM_Utils_Check_Security {
     return $messages;
   }
 
+
+  /**
+   * Check that some files are not present.
+   *
+   * These files have generally been deleted but Civi source tree but could be
+   * left online if one does a faulty upgrade.
+   *
+   * @return array of messages
+   */
+  public function checkFilesAreNotPresent() {
+    global $civicrm_root;
+
+    $messages = array();
+    $files = array(
+      "{$civicrm_root}/packages/dompdf/dompdf.php", // CRM-16005, upgraded from Civi <= 4.5.6
+      "{$civicrm_root}/packages/vendor/dompdf/dompdf/dompdf.php", // CRM-16005, Civi >= 4.5.7
+      "{$civicrm_root}/vendor/dompdf/dompdf/dompdf.php", // CRM-16005, Civi >= 4.6.0
+    );
+    foreach ($files as $file) {
+      if (file_exists($file)) {
+        $messages[] = new CRM_Utils_Check_Message(
+          'checkFilesAreNotPresent',
+          ts('File \'%1\' presents a security risk and should be deleted.', array(1 => $file)),
+          ts('Security Warning')
+        );
+      }
+    }
+    return $messages;
+  }
+
   /**
    * Determine whether $url is a public, browsable listing for $dir
    *
@@ -267,6 +298,11 @@ class CRM_Utils_Check_Security {
     return $result;
   }
 
+  /**
+   * @param $topic
+   *
+   * @return string
+   */
   public function createDocUrl($topic) {
     return CRM_Utils_System::getWikiBaseURL() . $topic;
   }
@@ -282,7 +318,7 @@ class CRM_Utils_Check_Security {
     $config = CRM_Core_Config::singleton();
 
     list ($heuristicBaseUrl, $ignore) = explode($filePathMarker, $config->imageUploadURL);
-    list ($ignore, $heuristicSuffix) = explode($filePathMarker, $targetDir);
+    list ($ignore, $heuristicSuffix) = explode($filePathMarker, str_replace('\\', '/', $targetDir));
     return $heuristicBaseUrl . $filePathMarker . $heuristicSuffix;
   }
 }

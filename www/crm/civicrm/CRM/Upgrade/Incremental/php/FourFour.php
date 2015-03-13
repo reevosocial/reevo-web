@@ -1,9 +1,9 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 4.4                                                |
+ | CiviCRM version 4.5                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2013                                |
+ | Copyright CiviCRM LLC (c) 2004-2014                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -27,7 +27,7 @@
 /**
  *
  * @package CRM
- * @copyright CiviCRM LLC (c) 2004-2013
+ * @copyright CiviCRM LLC (c) 2004-2014
  * $Id$
  *
  */
@@ -36,6 +36,11 @@ class CRM_Upgrade_Incremental_php_FourFour {
 
   const MAX_WORD_REPLACEMENT_SIZE = 255;
 
+  /**
+   * @param $errors
+   *
+   * @return bool
+   */
   function verifyPreDBstate(&$errors) {
     return TRUE;
   }
@@ -46,8 +51,11 @@ class CRM_Upgrade_Incremental_php_FourFour {
    * Note: This function is called iteratively for each upcoming
    * revision to the database.
    *
-   * @param $postUpgradeMessage string, alterable
+   * @param $preUpgradeMessage
    * @param $rev string, a version number, e.g. '4.4.alpha1', '4.4.beta3', '4.4.0'
+   * @param null $currentVer
+   *
+   * @internal param string $postUpgradeMessage , alterable
    * @return void
    */
   function setPreUpgradeMessage(&$preUpgradeMessage, $rev, $currentVer = NULL) {
@@ -96,10 +104,15 @@ WHERE ceft.entity_table = 'civicrm_contribution' AND cft.payment_instrument_id I
       }
     }
     if ($rev == '4.4.6'){
-     $postUpgradeMessage .= '<br /><br /><strong>'. ts('Your contact image urls have been upgraded. If your contact image urls did not follow the standard format for image Urls they have not been upgraded. Please check the log to see image urls that were not upgraded.'); 
+     $postUpgradeMessage .= '<br /><br /><strong>'. ts('Your contact image urls have been upgraded. If your contact image urls did not follow the standard format for image Urls they have not been upgraded. Please check the log to see image urls that were not upgraded.');
     }
   }
 
+  /**
+   * @param $rev
+   *
+   * @return bool
+   */
   function upgrade_4_4_alpha1($rev) {
     // task to process sql
     $this->addTask(ts('Upgrade DB to %1: SQL', array(1 => '4.4.alpha1')), 'task_4_4_x_runSql', $rev);
@@ -110,6 +123,9 @@ WHERE ceft.entity_table = 'civicrm_contribution' AND cft.payment_instrument_id I
     return TRUE;
   }
 
+  /**
+   * @param $rev
+   */
   function upgrade_4_4_beta1($rev) {
     $this->addTask(ts('Upgrade DB to %1: SQL', array(1 => '4.4.beta1')), 'task_4_4_x_runSql', $rev);
 
@@ -136,6 +152,9 @@ WHERE ceft.entity_table = 'civicrm_contribution' AND cft.payment_instrument_id I
     $this->addTask('Migrate custom word-replacements', 'wordReplacements');
   }
 
+  /**
+   * @param $rev
+   */
   function upgrade_4_4_1($rev) {
     $config = CRM_Core_Config::singleton();
     // CRM-13327 upgrade handling for the newly added name badges
@@ -233,6 +252,11 @@ VALUES {$insertStatus}";
     $this->addTask('Patch word-replacement schema', 'wordReplacements_patch', $rev);
   }
 
+  /**
+   * @param $rev
+   *
+   * @return bool
+   */
   function upgrade_4_4_4($rev) {
     $fkConstraint = array();
     if (!CRM_Core_DAO::checkFKConstraintInFormat('civicrm_activity_contact', 'activity_id')) {
@@ -299,7 +323,7 @@ ALTER TABLE civicrm_dashboard
   END;
     ";
     CRM_Core_DAO::executeQuery($query, array(), TRUE, NULL, FALSE, FALSE);
- 
+
     // CRM-13998 : missing alter statements for civicrm_report_instance
     $this->addTask(ts('Confirm civicrm_report_instance sql table for upgrades'), 'updateReportInstanceTable');
 
@@ -307,12 +331,15 @@ ALTER TABLE civicrm_dashboard
     return TRUE;
   }
 
+  /**
+   * @param $rev
+   */
   function upgrade_4_4_6($rev){
     $sql = "SELECT count(*) AS count FROM INFORMATION_SCHEMA.STATISTICS where ".
-      "INDEX_NAME = 'index_image_url' AND TABLE_NAME = 'civicrm_contact';";
+      "TABLE_SCHEMA = database() AND INDEX_NAME = 'index_image_url' AND TABLE_NAME = 'civicrm_contact';";
     $dao = CRM_Core_DAO::executeQuery($sql);
     $dao->fetch();
-    if($dao->count < 1) {
+    if ($dao->count < 1) {
       $sql = "CREATE INDEX index_image_url ON civicrm_contact (image_url);";
       $dao = CRM_Core_DAO::executeQuery($sql);
     }
@@ -325,42 +352,55 @@ ALTER TABLE civicrm_dashboard
     }
   }
 
+  /**
+   * @param CRM_Queue_TaskContext $ctx
+   * @param $startId
+   * @param $endId
+   *
+   * @return bool
+   */
+  function upgrade_4_4_7($rev, $originalVer, $latestVer) {
+    // For WordPress/Joomla(?), cleanup broken image_URL from 4.4.6 upgrades - https://issues.civicrm.org/jira/browse/CRM-14971
+    $exBackendUrl = CRM_Utils_System::url('civicrm/contact/imagefile', 'photo=XXX', TRUE); // URL formula from 4.4.6 upgrade
+    $exFrontendUrl = CRM_Utils_System::url('civicrm/contact/imagefile', 'photo=XXX', TRUE, NULL, TRUE, TRUE);
+    if ($originalVer == '4.4.6' && $exBackendUrl != $exFrontendUrl) {
+      $minId = CRM_Core_DAO::singleValueQuery('SELECT coalesce(min(id),0) FROM civicrm_contact WHERE image_URL IS NOT NULL');
+      $maxId = CRM_Core_DAO::singleValueQuery('SELECT coalesce(max(id),0) FROM civicrm_contact WHERE image_URL IS NOT NULL');
+      for ($startId = $minId; $startId <= $maxId; $startId += self::BATCH_SIZE) {
+        $endId = $startId + self::BATCH_SIZE - 1;
+        $title = ts('Upgrade image_urls (%1 => %2)', array(1 => $startId, 2 => $endId));
+        $this->addTask($title, 'cleanupBackendImageUrls', $startId, $endId);
+      }
+    }
+    $this->addTask(ts('Update saved search information'), 'changeSavedSearch');
+  }
+
   static function upgradeImageUrls(CRM_Queue_TaskContext $ctx, $startId, $endId){
-    $sql = "
-SELECT id, image_url
-FROM civicrm_contact
-WHERE 1
-AND id BETWEEN %1 AND %2
-AND image_URL IS NOT NULL
-";
-    $params = array(
-      1 => array($startId, 'Integer'),
-      2 => array($endId, 'Integer'),
-    );
-    $dao = CRM_Core_DAO::executeQuery($sql, $params, TRUE, NULL, FALSE, FALSE);
+    $dao = self::findContactImageUrls($startId, $endId);
     $failures = array();
+    $config = CRM_Core_Config::singleton();
     while ($dao->fetch()){
       $imageURL = $dao->image_url;
       $baseurl = CIVICRM_UF_BASEURL;
+      //CRM-15897 - gross hack for joomla to remove the administrator/
+      if ($config->userFramework == 'Joomla') {
+        $baseurl = str_replace("/administrator/", "/", $baseurl);
+      }
       $baselen = strlen($baseurl);
       if (substr($imageURL, 0, $baselen)==$baseurl){
         $photo = basename($dao->image_url);
-        $config = CRM_Core_Config::singleton();
         $fullpath = $config->customFileUploadDir.$photo;
           if (file_exists($fullpath)){
-            $newimageurl =  CRM_Utils_System::url('civicrm/contact/imagefile', 'photo='.$photo, TRUE);
-            $sql = 'UPDATE civicrm_contact SET image_url=%1 WHERE id=%2';
-            $params = array(
-              1 => array($newimageurl, 'String'),
-              2 => array($dao->id, 'Integer'),
-            );
-            $updatedao = CRM_Core_DAO::executeQuery($sql, $params);
+            // For anyone who upgraded 4.4.6 release (eg 4.4.0=>4.4.6), the $newImageUrl incorrectly used backend URLs.
+            // For anyone who skipped 4.4.6 (eg 4.4.0=>4.4.7), the $newImageUrl correctly uses frontend URLs
+            self::setContactImageUrl($dao->id,
+              CRM_Utils_System::url('civicrm/contact/imagefile', 'photo='.$photo, TRUE, NULL, TRUE, TRUE));
           }
           else{
             $failures[$dao->id] = $dao->image_url;
           }
         }
-        else{     
+        else{
             $failures[$dao->id] = $dao->image_url;
         }
       }
@@ -368,8 +408,116 @@ AND image_URL IS NOT NULL
     return TRUE;
   }
 
+  static function changeSavedSearch(CRM_Queue_TaskContext $ctx) {
+    $membershipStatuses = array_flip(CRM_Member_PseudoConstant::membershipStatus());
+
+    $dao = new CRM_Contact_DAO_SavedSearch();
+    $dao->find();
+    while ($dao->fetch()) {
+      $formValues = CRM_Contact_BAO_SavedSearch::getFormValues($dao->id);
+      if (!empty($formValues['mapper'])) {
+        foreach ($formValues['mapper'] as $key => $value) {
+          foreach ($value as $k => $v) {
+            if ($v[0] == 'Membership' && in_array($v[1], array('membership_status', 'membership_status_id'))) {
+              $value = $formValues['value'][$key][$k];
+              $op = $formValues['operator'][$key][$k];
+              if ($op == 'IN') {
+                $value = trim($value);
+                $value = str_replace('(', '', $value);
+                $value = str_replace(')', '', $value);
+
+                $v = explode(',', $value);
+                $value = array();
+                foreach ($v as $k1 => $v2) {
+                  if (is_numeric($v2)) {
+                    break 2;
+                  }
+                  $value[$k1] = $membershipStatuses[$v2];
+                }
+                $formValues['value'][$key][$k] = "(" . implode(',', $value) . ")";
+              }
+              elseif (in_array($op, array('=', '!='))) {
+                if (is_numeric($value)) {
+                  break;
+                }
+                $formValues['value'][$key][$k] = $membershipStatuses[$value];
+              }
+            }
+          }
+        }
+        $dao->form_values = serialize($formValues);
+        $dao->save();
+      }
+    }
+
+    return TRUE;
+  }
+
+  /**
+   * For WordPress/Joomla(?) sites which upgraded to 4.4.6, find back-end image_URLs
+   * (e.g. "http://example.com/wp-admin/admin.php?page=CiviCRM&amp;q=civicrm/contact/imagefile&amp;photo=123.jpg")
+   * and convert them to front-end URLs
+   * (e.g. "http://example.com/?page=CiviCRM&amp;q=civicrm/contact/imagefile&amp;photo=123.jpg").
+   *
+   * @param CRM_Queue_TaskContext $ctx
+   * @param $startId
+   * @param $endId
+   * @return bool
+   */
+  static function cleanupBackendImageUrls(CRM_Queue_TaskContext $ctx, $startId, $endId) {
+    $dao = self::findContactImageUrls($startId, $endId);
+    while ($dao->fetch()) {
+      $imageUrl = str_replace('&amp;', '&', $dao->image_url);
+      if (preg_match(":civicrm/contact/imagefile.*photo=:", $imageUrl)) {
+        // looks like one of ours
+        $imageUrlParts = parse_url($imageUrl);
+        parse_str($imageUrlParts['query'], $imageUrlQuery);
+        self::setContactImageUrl($dao->id,
+          CRM_Utils_System::url('civicrm/contact/imagefile', 'photo='.$imageUrlQuery['photo'], TRUE, NULL, TRUE, TRUE));
+      }
+    }
+    return TRUE;
+  }
+
+  /**
+   * @param int $startId
+   * @param int $endId
+   * @return CRM_Core_DAO columns include "id" and "image_URL"
+   */
+  public static function findContactImageUrls($startId, $endId) {
+    $sql = "
+SELECT id, image_url
+FROM civicrm_contact
+WHERE 1
+AND id BETWEEN %1 AND %2
+AND image_URL IS NOT NULL
+";
+
+    $params = array(
+      1 => array($startId, 'Integer'),
+      2 => array($endId, 'Integer'),
+    );
+    $dao = CRM_Core_DAO::executeQuery($sql, $params, TRUE, NULL, FALSE, FALSE);
+    return $dao;
+  }
+
+  /**
+   * @param int $cid
+   * @param string $newImageUrl
+   */
+  public static function setContactImageUrl($cid, $newImageUrl) {
+    $sql = 'UPDATE civicrm_contact SET image_url=%1 WHERE id=%2';
+    $params = array(
+      1 => array($newImageUrl, 'String'),
+      2 => array($cid, 'Integer'),
+    );
+    $updatedao = CRM_Core_DAO::executeQuery($sql, $params);
+  }
+
   /**
    * Update activity contacts CRM-12274
+   *
+   * @param CRM_Queue_TaskContext $ctx
    *
    * @return bool TRUE for success
    */
@@ -478,6 +626,8 @@ WHERE       source_contact_id IS NOT NULL";
   /**
    * Migrate word-replacements from $config to civicrm_word_replacement
    *
+   * @param CRM_Queue_TaskContext $ctx
+   *
    * @return bool TRUE for success
    * @see http://issues.civicrm.org/jira/browse/CRM-13187
    */
@@ -506,6 +656,9 @@ CREATE TABLE IF NOT EXISTS `civicrm_word_replacement` (
    * and bad configurations, we change the constraint name from "UI_find"
    * (the original name in 4.4.0) to "UI_domain_find" (the new name in
    * 4.4.1).
+   *
+   * @param CRM_Queue_TaskContext $ctx
+   * @param $rev
    *
    * @return bool TRUE for success
    * @see http://issues.civicrm.org/jira/browse/CRM-13655
@@ -629,13 +782,13 @@ CREATE TABLE IF NOT EXISTS `civicrm_word_replacement` (
     CRM_Core_BAO_WordReplacement::rebuild();
   }
 
-  
+
   /***
    * CRM-13998 missing alter statements for civicrm_report_instance
    ***/
   public function updateReportInstanceTable() {
 
-    // add civicrm_report_instance.name 
+    // add civicrm_report_instance.name
 
     $sql = "SELECT count(*) FROM information_schema.columns "
       . "WHERE table_schema = database() AND table_name = 'civicrm_report_instance' AND COLUMN_NAME = 'name' ";
@@ -647,7 +800,7 @@ CREATE TABLE IF NOT EXISTS `civicrm_word_replacement` (
       $res = CRM_Core_DAO::executeQuery($sql);
     }
 
-    // add civicrm_report_instance args 
+    // add civicrm_report_instance args
 
     $sql = "SELECT count(*) FROM information_schema.columns WHERE table_schema = database() AND table_name = 'civicrm_report_instance' AND COLUMN_NAME = 'args' ";
 
@@ -667,7 +820,7 @@ CREATE TABLE IF NOT EXISTS `civicrm_word_replacement` (
    * @return bool TRUE if $params is valid
    */
   static function isValidWordReplacement($params) {
-    $result = strlen($params['find_word']) <= self::MAX_WORD_REPLACEMENT_SIZE && strlen($params['replace_word']) > self::MAX_WORD_REPLACEMENT_SIZE;
+    $result = strlen($params['find_word']) <= self::MAX_WORD_REPLACEMENT_SIZE && strlen($params['replace_word']) <= self::MAX_WORD_REPLACEMENT_SIZE;
     if (!$result) {
       CRM_Core_Error::debug_var('invalidWordReplacement', $params);
     }

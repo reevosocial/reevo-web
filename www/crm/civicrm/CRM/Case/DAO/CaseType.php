@@ -160,12 +160,13 @@ class CRM_Case_DAO_CaseType extends CRM_Core_DAO
         'id' => array(
           'name' => 'id',
           'type' => CRM_Utils_Type::T_INT,
+          'title' => ts('Case Type ID') ,
           'required' => true,
         ) ,
         'name' => array(
           'name' => 'name',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Name') ,
+          'title' => ts('Case Type Name') ,
           'required' => true,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
@@ -173,7 +174,7 @@ class CRM_Case_DAO_CaseType extends CRM_Core_DAO
         'title' => array(
           'name' => 'title',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Title') ,
+          'title' => ts('Case Type Title') ,
           'required' => true,
           'maxlength' => 64,
           'size' => CRM_Utils_Type::BIG,
@@ -181,29 +182,31 @@ class CRM_Case_DAO_CaseType extends CRM_Core_DAO
         'description' => array(
           'name' => 'description',
           'type' => CRM_Utils_Type::T_STRING,
-          'title' => ts('Description') ,
+          'title' => ts('Case Type Description') ,
           'maxlength' => 255,
           'size' => CRM_Utils_Type::HUGE,
         ) ,
         'is_active' => array(
           'name' => 'is_active',
           'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => ts('Case Type Is Active') ,
         ) ,
         'is_reserved' => array(
           'name' => 'is_reserved',
           'type' => CRM_Utils_Type::T_BOOLEAN,
+          'title' => ts('Case Type Is Reserved') ,
         ) ,
         'weight' => array(
           'name' => 'weight',
           'type' => CRM_Utils_Type::T_INT,
-          'title' => ts('Weight') ,
+          'title' => ts('Case Type Weight') ,
           'required' => true,
           'default' => '1',
         ) ,
         'definition' => array(
           'name' => 'definition',
           'type' => CRM_Utils_Type::T_BLOB,
-          'title' => ts('Definition') ,
+          'title' => ts('Case Type Definition') ,
         ) ,
       );
     }

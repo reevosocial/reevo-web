@@ -1,9 +1,9 @@
 <?php
 /*
  +--------------------------------------------------------------------+
- | CiviCRM version 4.4                                                |
+ | CiviCRM version 4.5                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2013                                |
+ | Copyright CiviCRM LLC (c) 2004-2014                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -28,7 +28,7 @@
 /**
  *
  * @package CRM
- * @copyright CiviCRM LLC (c) 2004-2013
+ * @copyright CiviCRM LLC (c) 2004-2014
  *
  */
 
@@ -64,8 +64,7 @@ class CRM_Campaign_Page_AJAX {
       }
     }
 
-    if (isset($_POST['field']) &&
-      CRM_Utils_Array::value($voterId, $_POST['field']) &&
+    if (isset($_POST['field']) && !empty($_POST['field'][$voterId]) &&
       is_array($_POST['field'][$voterId])
     ) {
       foreach ($_POST['field'][$voterId] as $fieldKey => $value) {
@@ -93,8 +92,7 @@ class CRM_Campaign_Page_AJAX {
     $errors = CRM_Core_BAO_CustomField::validateCustomData($params);
     if (is_array($errors) && !empty($errors)) {
       $result['errors'] = $errors;
-      echo json_encode($result);
-      CRM_Utils_System::civiExit();
+      CRM_Utils_JSON::output($result);
     }
 
     //process the response/interview data.
@@ -103,9 +101,7 @@ class CRM_Campaign_Page_AJAX {
       $result['status'] = 'success';
     }
 
-    echo json_encode($result);
-
-    CRM_Utils_System::civiExit();
+    CRM_Utils_JSON::output($result);
   }
 
   static function loadOptionGroupDetails() {
@@ -145,8 +141,7 @@ class CRM_Campaign_Page_AJAX {
       'result' => $opValues,
     );
 
-    echo json_encode($result);
-    CRM_Utils_System::civiExit();
+    CRM_Utils_JSON::output($result);
   }
 
   function voterList() {
@@ -155,7 +150,7 @@ class CRM_Campaign_Page_AJAX {
 
     $params = $searchRows = array();
     foreach ($searchParams as $param) {
-      if (CRM_Utils_Array::value($param, $_POST)) {
+      if (!empty($_POST[$param])) {
         $params[$param] = $_POST[$param];
       }
     }
@@ -182,7 +177,7 @@ class CRM_Campaign_Page_AJAX {
     $interviewerId = $surveyTypeId = $surveyId = NULL;
     $searchVoterFor = $params['campaign_search_voter_for'];
     if ($searchVoterFor == 'reserve') {
-      if (CRM_Utils_Array::value('campaign_survey_id', $params)) {
+      if (!empty($params['campaign_survey_id'])) {
         $survey = new CRM_Campaign_DAO_Survey();
         $survey->id = $surveyId = $params['campaign_survey_id'];
         $survey->selectAdd('campaign_id, activity_type_id');
@@ -258,7 +253,7 @@ class CRM_Campaign_Page_AJAX {
     );
     foreach ($dataTableParams as $pName => $pValues) {
       $$pName = $pValues['default'];
-      if (CRM_Utils_Array::value($pValues['name'], $_POST)) {
+      if (!empty($_POST[$pValues['name']])) {
         $$pName = CRM_Utils_Type::escape($_POST[$pValues['name']], $pValues['type']);
         if ($pName == 'sort')$$pName = $selectorCols[$$pName];
       }
@@ -352,6 +347,7 @@ class CRM_Campaign_Page_AJAX {
 
     $iFilteredTotal = $iTotal;
 
+    header('Content-Type: application/json');
     echo CRM_Utils_JSON::encodeDataTableSelector($searchRows, $sEcho, $iTotal, $iFilteredTotal, $selectorElements);
     CRM_Utils_System::civiExit();
   }
@@ -375,7 +371,7 @@ class CRM_Campaign_Page_AJAX {
     elseif ($operation == 'reserve') {
       $activityId = NULL;
       $createActivity = TRUE;
-      if (CRM_Utils_Array::value('activity_id', $_POST)) {
+      if (!empty($_POST['activity_id'])) {
         $activityId = CRM_Utils_Type::escape($_POST['activity_id'], 'Integer');
         if ($activityId) {
           $createActivity = FALSE;
@@ -481,8 +477,7 @@ class CRM_Campaign_Page_AJAX {
       }
     }
 
-    echo json_encode(array('status' => $status));
-    CRM_Utils_System::civiExit();
+    CRM_Utils_JSON::output(array('status' => $status));
   }
 
   function allActiveCampaigns() {
@@ -513,9 +508,7 @@ class CRM_Campaign_Page_AJAX {
       'campaigns' => $options,
     );
 
-    echo json_encode($results);
-
-    CRM_Utils_System::civiExit();
+    CRM_Utils_JSON::output($results);
   }
 
   function campaignGroups() {
@@ -550,9 +543,7 @@ class CRM_Campaign_Page_AJAX {
       'groups' => $groups,
     );
 
-    echo json_encode($results);
-
-    CRM_Utils_System::civiExit();
+    CRM_Utils_JSON::output($results);
   }
 
   /**
@@ -565,7 +556,7 @@ class CRM_Campaign_Page_AJAX {
 
     $params = $searchRows = array();
     foreach ($searchParams as $param) {
-      if (CRM_Utils_Array::value($param, $_POST)) {
+      if (!empty($_POST[$param])) {
         $params[$param] = $_POST[$param];
       }
     }
@@ -616,7 +607,7 @@ class CRM_Campaign_Page_AJAX {
     );
     foreach ($dataTableParams as $pName => $pValues) {
       $$pName = $pValues['default'];
-      if (CRM_Utils_Array::value($pValues['name'], $_POST)) {
+      if (!empty($_POST[$pValues['name']])) {
         $$pName = CRM_Utils_Type::escape($_POST[$pValues['name']], $pValues['type']);
         if ($pName == 'sort') {
           $$pName = $selectorCols[$$pName];
@@ -647,6 +638,7 @@ class CRM_Campaign_Page_AJAX {
 
     $iFilteredTotal = $iTotal;
 
+    header('Content-Type: application/json');
     echo CRM_Utils_JSON::encodeDataTableSelector($searchRows, $sEcho, $iTotal, $iFilteredTotal, $selectorElements);
     CRM_Utils_System::civiExit();
   }
@@ -661,7 +653,7 @@ class CRM_Campaign_Page_AJAX {
 
     $params = $searchRows = array();
     foreach ($searchParams as $param) {
-      if (CRM_Utils_Array::value($param, $_POST)) {
+      if (!empty($_POST[$param])) {
         $params[$param] = $_POST[$param];
       }
     }
@@ -714,7 +706,7 @@ class CRM_Campaign_Page_AJAX {
     );
     foreach ($dataTableParams as $pName => $pValues) {
       $$pName = $pValues['default'];
-      if (CRM_Utils_Array::value($pValues['name'], $_POST)) {
+      if (!empty($_POST[$pValues['name']])) {
         $$pName = CRM_Utils_Type::escape($_POST[$pValues['name']], $pValues['type']);
         if ($pName == 'sort') {
           $$pName = $selectorCols[$$pName];
@@ -745,6 +737,7 @@ class CRM_Campaign_Page_AJAX {
 
     $iFilteredTotal = $iTotal;
 
+    header('Content-Type: application/json');
     echo CRM_Utils_JSON::encodeDataTableSelector($searchRows, $sEcho, $iTotal, $iFilteredTotal, $selectorElements);
     CRM_Utils_System::civiExit();
   }
@@ -759,7 +752,7 @@ class CRM_Campaign_Page_AJAX {
 
     $params = $searchRows = array();
     foreach ($searchParams as $param) {
-      if (CRM_Utils_Array::value($param, $_POST)) {
+      if (!empty($_POST[$param])) {
         $params[$param] = $_POST[$param];
       }
     }
@@ -807,7 +800,7 @@ class CRM_Campaign_Page_AJAX {
     );
     foreach ($dataTableParams as $pName => $pValues) {
       $$pName = $pValues['default'];
-      if (CRM_Utils_Array::value($pValues['name'], $_POST)) {
+      if (!empty($_POST[$pValues['name']])) {
         $$pName = CRM_Utils_Type::escape($_POST[$pValues['name']], $pValues['type']);
         if ($pName == 'sort') {
           $$pName = $selectorCols[$$pName];
@@ -838,6 +831,7 @@ class CRM_Campaign_Page_AJAX {
 
     $iFilteredTotal = $iTotal;
 
+    header('Content-Type: application/json');
     echo CRM_Utils_JSON::encodeDataTableSelector($searchRows, $sEcho, $iTotal, $iFilteredTotal, $selectorElements);
     CRM_Utils_System::civiExit();
   }
