@@ -47,4 +47,4 @@ rm $HOME/tmp/*
 echo ""
 echo "ETAPA 2: Vamos a sincronizar algunos directorios con archivos..."
 sleep 2s
-rsync -P -r -a -v -e "ssh -l reevo" --delete beta.reevo.org:/srv/reevo.org/var/elgg/ /srv/reevo-web/files/red/
+rsync -P -r -a -v -e "ssh -l reevo" --delete beta.reevo.org:/srv/reevo-web/files/red/ /srv/reevo-web/files/red/
