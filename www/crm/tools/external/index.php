@@ -1,8 +1,9 @@
 <?php
 // error_reporting(E_ALL);
 // ini_set('display_errors', True);
-// echo "Hola";
-require_once "../../civicrm.settings.php";
+
+require_once '/srv/reevo-web/www/blog/wp-load.php'; 
+require_once "/srv/reevo-web/www/crm/civicrm.settings.php";
 require_once 'CRM/Core/Config.php';
 $config = CRM_Core_Config::singleton( );
 require_once 'api/api.php';
@@ -43,6 +44,8 @@ require_once 'api/api.php';
 
 $email_exists = civicrm_api3('email', 'get', array('email' => $email));
 
+//print_r($email_exists);
+
 if ($email_exists['count'] == 0) {
 	echo "<h3>El usuario se ha creado</h3>";
 
@@ -50,18 +53,18 @@ if ($email_exists['count'] == 0) {
 		 'contact_type' 	=> 'Individual',
 		 'first_name' 		=> $first_name,
 		 'last_name' 		=> $last_name,
-		 'image_URL'		=> $image_URL
+		 'email' 			=> $email
 		 );
 
 	$contact = civicrm_api3('Contact','Create',$data);
-	
+
 //  Attach email to the contact
-	$data = array(
-		  'contact_id'		=> $contact['id'],
-		  'email' 			=> $email,
-		  'is_primary' 		=> 1,
-		);
-	$new_email = civicrm_api3('email', 'create', $data);
+// 	$data = array(
+// 		  'contact_id'		=> $contact['id'],
+// 		  'email' 			=> $email,
+// 		  'is_primary' 		=> 1,
+// 		);
+// 	$new_email = civicrm_api3('email', 'create', $data);
 
 
 // 	Attach the adrress information to the contact
@@ -90,7 +93,6 @@ if ($email_exists['count'] == 0) {
 			$new_grupos_agregar = civicrm_api3('group_contact', 'create', $data);
 		}	
 	}
-
 //	Tag the contact with certain tags
 	if (!empty($tags_agregar)) {
 		foreach($tags_agregar as $value) {
@@ -107,7 +109,6 @@ if ($email_exists['count'] == 0) {
 	if (!empty($add_note)) {
 		$note = civicrm_api('Note','Create',array('entity_id' => $contact['id'], 'note' => $add_note, 'subject' => $add_note_title, 'contact_id' => $yo, 'version' =>3, 'json' => '1'));
 	}	
-	
 
 
 } else {
