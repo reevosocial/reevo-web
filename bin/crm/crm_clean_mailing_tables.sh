@@ -6,7 +6,7 @@
 # ES: Este archivos es parte de: reevo-web (http://git.reevo.org/reevo/reevo-web)
 # EN: This file is part of: reevo-web (http://git.reevo.org/reevo/reevo-web)
 # ----
-
+cd /srv/reevo-web/bin/crm
 source ../database_auth.sh
 
 echo "use reevo_crm;
