@@ -28,16 +28,16 @@ require_once 'api/api.php';
 	if ($_GET['url']) { $url 												= $_GET['url'];}
 	if ($_GET['yo']) { $yo = $_GET['yo'];} else {$yo = 1;}
 
- echo "<h2>$email</h2>";
- echo	"$email</br>
- $first_name</br>
- $last_name</br>
- $image_URL</br>
- $street_name</br>
- $street_number</br>
- $street_address</br>
- $country_id</br>
- $url</br></br>";
+//  echo "<h2>$email</h2>";
+//  echo	"$email</br>
+//  $first_name</br>
+//  $last_name</br>
+//  $image_URL</br>
+//  $street_name</br>
+//  $street_number</br>
+//  $street_address</br>
+//  $country_id</br>
+//  $url</br></br>";
 
 
 // Checks if email is already in database
@@ -47,7 +47,6 @@ $email_exists = civicrm_api3('email', 'get', array('email' => $email));
 //print_r($email_exists);
 
 if ($email_exists['count'] == 0) {
-	echo "<h3>El usuario se ha creado</h3>";
 
 	$data = array(
 		 'contact_type' 	=> 'Individual',
@@ -110,16 +109,18 @@ if ($email_exists['count'] == 0) {
 		$note = civicrm_api('Note','Create',array('entity_id' => $contact['id'], 'note' => $add_note, 'subject' => $add_note_title, 'contact_id' => $yo, 'version' =>3, 'json' => '1'));
 	}	
 
+	error_log('CRM EXTERNAL: Se ha creado el usuario con ID: '.$contact['id']);
 
 } else {
 	
 	// THE EMAIL EXISTS IN DATABASE ****************
-	echo "<h3>El usuario se ha actualizado</h3>";
+	error_log('CRM EXTERNAL: Intento actualizar el usuario con ID: '.$contact['id']);
 
-	echo $url;
 	// Get the id of existing user
-	$contact_id = $email_exists['values'][$email_exists[id]]['contact_id'];
-
+	
+	$contact_id = array_values($email_exists['values'])[0]['contact_id'];
+	
+	
 	// Obtiene los datos anteriores
 	$data = array(
 		 'contact_type' 	=> 'Individual',
@@ -199,7 +200,7 @@ if ($email_exists['count'] == 0) {
 	if (!empty($tags_agregar)) {
 		foreach($tags_agregar as $value) {
 			$data = array(
-			  'contact_id' 		=> $contact['id'],
+			  'contact_id' 		=> $contact_id,
 			  'tag_id' 		=> $value,
 			);
 
@@ -211,6 +212,8 @@ if ($email_exists['count'] == 0) {
 	if (!empty($add_note)) {
 		$note = civicrm_api('Note','Create',array('entity_id' => $contact_id, 'note' => $add_note, 'subject' => $add_note_title, 'contact_id' => $yo, 'version' =>3, 'json' => '1'));
 	}	
+
+	error_log('CRM EXTERNAL: Actualicé con exito el usuario con ID: '.$contact_id);
 	
 }
 
