@@ -8,25 +8,25 @@
  */
 
 /**
- * Get an ElggSite entity (default is current site)
+ * Get an \ElggSite entity (default is current site)
  *
  * @param int $site_guid Optional. Site GUID.
  *
- * @return ElggSite
+ * @return \ElggSite
  * @since 1.8.0
  */
 function elgg_get_site_entity($site_guid = 0) {
 	global $CONFIG;
 
 	$result = false;
-
+	
 	if ($site_guid == 0) {
 		$site = $CONFIG->site;
 	} else {
 		$site = get_entity($site_guid);
 	}
-
-	if ($site instanceof ElggSite) {
+	
+	if ($site instanceof \ElggSite) {
 		$result = $site;
 	}
 
@@ -86,4 +86,6 @@ function _elgg_sites_test($hook, $type, $value, $params) {
 	return $value;
 }
 
-elgg_register_plugin_hook_handler('unit_test', 'system', '_elgg_sites_test');
+return function(\Elgg\EventsService $events, \Elgg\HooksRegistrationService $hooks) {
+	$hooks->registerHandler('unit_test', 'system', '_elgg_sites_test');
+};

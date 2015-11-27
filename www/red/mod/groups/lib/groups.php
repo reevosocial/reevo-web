@@ -36,7 +36,20 @@ function groups_handle_all_page() {
 				'limit' => 40,
 				'full_view' => false,
 				'no_results' => elgg_echo('discussion:none'),
+				'distinct' => false,
+				'preload_containers' => true,
 			));
+			break;
+		case 'featured':
+			$content = elgg_list_entities_from_metadata(array(
+				'type' => 'group',
+				'metadata_name' => 'featured_group',
+				'metadata_value' => 'yes',
+				'full_view' => false,
+			));
+			if (!$content) {
+				$content = elgg_echo('groups:nofeatured');
+			}
 			break;
 		case 'newest':
 		default:
@@ -44,6 +57,7 @@ function groups_handle_all_page() {
 				'type' => 'group',
 				'full_view' => false,
 				'no_results' => elgg_echo('groups:none'),
+				'distinct' => false,
 			));
 			break;
 	}
@@ -120,6 +134,7 @@ function groups_handle_owned_page() {
 		'order_by' => 'ge.name ASC',
 		'full_view' => false,
 		'no_results' => elgg_echo('groups:none'),
+		'distinct' => false,
 	));
 
 	$params = array(
@@ -223,14 +238,24 @@ function groups_handle_edit_page($page, $guid = 0) {
 function groups_handle_invitations_page() {
 	elgg_gatekeeper();
 
-	$user = elgg_get_page_owner_entity();
+	$username = get_input('username');
+	if ($username) {
+		$user = get_user_by_username($username);
+		elgg_set_page_owner_guid($user->guid);
+	} else {
+		$user = elgg_get_logged_in_user_entity();
+		elgg_set_page_owner_guid($user->guid);
+	}
+
+	if (!$user || !$user->canEdit()) {
+		register_error(elgg_echo('noaccess'));
+		forward('');
+	}
 
 	$title = elgg_echo('groups:invitations');
 	elgg_push_breadcrumb($title);
 
-	// @todo temporary workaround for exts #287.
-	$invitations = groups_get_invited_groups(elgg_get_logged_in_user_guid());
-	$content = elgg_view('groups/invitationrequests', array('invitations' => $invitations));
+	$content = elgg_view('groups/invitationrequests');
 
 	$params = array(
 		'content' => $content,
@@ -372,7 +397,7 @@ function groups_handle_members_page($guid) {
 		'relationship_guid' => $group->guid,
 		'inverse_relationship' => true,
 		'type' => 'user',
-		'limit' => (int)get_input('limit', 20, false),
+		'limit' => (int)get_input('limit', max(20, elgg_get_config('default_limit')), false),
 		'joins' => array("JOIN {$db_prefix}users_entity u ON e.guid=u.guid"),
 		'order_by' => 'u.name ASC',
 	));

@@ -72,14 +72,14 @@ Examples
 	 * Initialize the plugin
 	 */
 	function my_plugin_init() {
-		// Register a plugin hook handler for the owner_block menu
+		// Register a plugin hook handler for the owner_block menu 
 		elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'my_owner_block_menu_handler');
 	}
 
 	/**
 	 * Change the URL of the "Albums" menu item in the owner_block menu
 	 */
-	function my_owner_block_menu_handler($hook, $type, $menu, $return) {
+	function my_owner_block_menu_handler($hook, $type, $menu, $params) {
 		$owner = $params['entity'];
 
 		// Owner can be either user or a group, so we
@@ -114,7 +114,7 @@ Examples
 	 * Initialize the plugin
 	 */
 	function my_plugin_init() {
-		// Register a plugin hook handler for the entity menu
+		// Register a plugin hook handler for the entity menu 
 		elgg_register_plugin_hook_handler('register', 'menu:entity', 'my_entity_menu_handler');
 	}
 
@@ -127,7 +127,7 @@ Examples
 
 		// We want to modify only the ElggBlog objects, so we
 		// return immediately if the entity is something else
-		if (!$entity intanceof ElggBlog) {
+		if (!$entity instanceof ElggBlog) {
 			return $menu;
 		}
 
@@ -158,7 +158,7 @@ where you want to menu to be displayed.
 
 __ http://reference.elgg.org/views_8php.html#ac2d475d3efbbec30603537013ac34e22
 
-**Example:** Display a menu called "my_menu" that displays it's menu items
+**Example:** Display a menu called "my_menu" that displays it's menu items 
 in alphapetical order:
 
 .. code-block:: php

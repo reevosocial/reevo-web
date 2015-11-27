@@ -21,23 +21,33 @@ Advice
 Basic instructions
 ==================
 
-#. **Back up your database, data directory and code**
+#. **Back up your database, data directory, and code**
 #. Download the new version of Elgg from http://elgg.org
 #. Update the files
     * If doing a patch upgrade (1.9.x), overwrite your existing files with the new version of Elgg
     * If doing a minor upgrade (1.x), replace the existing core files completely
-#. Merge any new changes from ``htaccess_dist`` into ``.htaccess``
+#. Merge any new changes to the rewrite rules
+    * For Apache from ``install/config/htaccess.dist`` into ``.htaccess``
+    * For Nginx from ``install/config/nginx.dist`` into your server configuration (usually inside ``/etc/nginx/sites-enabled``)
 #. Merge any new changes from ``settings.example.php`` into ``settings.php``
 #. Visit http://your-elgg-site.com/upgrade.php
 
 .. note::
 
    Any modifications should have been written within plugins, so that they are not lost on overwriting.
-   If this is not the case, take care to maintain your modifications.
+   If this is not the case, take care to maintain your modifications. 
 
-.. note::
+From 1.10 to 1.11
+========================
 
-   If you modified the default .htaccess, be sure to port your modifications over to the new one.
+Breaking changes
+----------------
+In versions 1.9 and 1.10, names and values for metadata and annotations were not correctly trimmed
+for whitespace. Elgg 1.11 correctly trims these strings and updates the database to correct
+existing strings. If your plugin uses metadata or annotations with leading or trailing whitespace,
+you will need to update the plugin to trim the names and values. This is especially important if
+you are using custom SQL clauses or have hard-coded metastring IDs, since the update might change
+metastring IDs.
 
 From 1.8 to 1.9
 ===============

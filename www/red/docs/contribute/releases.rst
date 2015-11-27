@@ -16,11 +16,11 @@ Requirements
 
 * SSH access to elgg.org
 * Commit access to http://github.com/Elgg/Elgg
-* Author access to http://blog.elgg.org
+* Admin access to https://community.elgg.org/
 * Access to `Twitter account`_
 * Access to `G+ page`_
 * Node.js and NPM installed
-* Sphinx installed (``easy_install sphinx``)
+* Sphinx installed (``easy_install sphinx && easy_install sphinx-intl``)
 * Transifex client installed (``easy_install transifex-client``)
 * Transifex account with access to Elgg project
 
@@ -44,6 +44,7 @@ Install the prerequisites:
 
    npm install elgg-conventional-changelog
    easy_install sphinx
+   easy_install sphinx-intl
    easy_install transifex-client
 
 Run the ``release.php`` script. For example, to release 1.9.1:
@@ -54,6 +55,14 @@ Run the ``release.php`` script. For example, to release 1.9.1:
    php .scripts/release.php 1.9.1
 
 This creates a ``release-1.9.1`` branch in your local repo.
+
+Next, manually browse to the ``/admin/settings/basic`` page and verify it loads. If it does not, a language file from Transifex may have a PHP syntax error. Fix the error and amend your commit with the new file:
+
+.. code:: sh
+
+    # only necessary if you fixed a language file
+    git add .
+    git commit --amend
 
 Next, submit a PR via Github:
 
@@ -118,7 +127,7 @@ Update homepage, download, and previous download pages
 
 This should be the very last thing you do.
 
-* Sign in at http://blog.elgg.org/pg/login and compose a blog on with HTML version of CHANGELOG.md.
+* Sign in at https://community.elgg.org/ and compose a blog on with HTML version of CHANGELOG.md.
 * Add tags “release” and “elgg1.x” where x is whatever branch is being released.
 * Tweet from the elgg `Twitter account`_
 * Post from the `G+ page`_

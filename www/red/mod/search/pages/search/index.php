@@ -20,9 +20,9 @@ $query = stripslashes(get_input('q', get_input('tag', '')));
 $display_query = _elgg_get_display_query($query);
 
 // check that we have an actual query
-if (!$query) {
+if (empty($query) && $query != "0") {
 	$title = sprintf(elgg_echo('search:results'), "\"$display_query\"");
-
+	
 	$body = elgg_echo('search:no_query');
 	$layout = elgg_view_layout('one_sidebar', array(
 		'title' => elgg_echo('search:search_error'),
@@ -35,7 +35,7 @@ if (!$query) {
 
 // get limit and offset.  override if on search dashboard, where only 2
 // of each most recent entity types will be shown.
-$limit = ($search_type == 'all') ? 2 : get_input('limit', 10);
+$limit = ($search_type == 'all') ? 2 : get_input('limit', elgg_get_config('default_limit'));
 $offset = ($search_type == 'all') ? 0 : get_input('offset', 0);
 
 $entity_type = get_input('entity_type', ELGG_ENTITIES_ANY_VALUE);

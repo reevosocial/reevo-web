@@ -20,10 +20,11 @@ $preview_button = '';
 if ($vars['guid']) {
 	// add a delete button if editing
 	$delete_url = "action/blog/delete?guid={$vars['guid']}";
-	$delete_link = elgg_view('output/confirmlink', array(
+	$delete_link = elgg_view('output/url', array(
 		'href' => $delete_url,
 		'text' => elgg_echo('delete'),
-		'class' => 'elgg-button elgg-button-delete float-alt'
+		'class' => 'elgg-button elgg-button-delete float-alt',
+		'confirm' => true,
 	));
 }
 
@@ -32,7 +33,7 @@ if (!$vars['guid'] || ($blog && $blog->status != 'published')) {
 	$preview_button = elgg_view('input/submit', array(
 		'value' => elgg_echo('preview'),
 		'name' => 'preview',
-		'class' => 'mls',
+		'class' => 'elgg-button-submit mls',
 	));
 }
 
@@ -101,7 +102,10 @@ $access_label = elgg_echo('access');
 $access_input = elgg_view('input/access', array(
 	'name' => 'access_id',
 	'id' => 'blog_access_id',
-	'value' => $vars['access_id']
+	'value' => $vars['access_id'],
+	'entity' => $vars['entity'],
+	'entity_type' => 'object',
+	'entity_subtype' => 'blog',
 ));
 
 $categories_input = elgg_view('input/categories', $vars);

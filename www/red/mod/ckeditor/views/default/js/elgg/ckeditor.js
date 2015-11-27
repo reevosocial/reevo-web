@@ -3,6 +3,8 @@ define(function(require) {
 	var $ = require('jquery'); require('jquery.ckeditor');
 	var CKEDITOR = require('ckeditor');
 
+	CKEDITOR.plugins.addExternal('blockimagepaste', elgg.get_site_url() + 'mod/ckeditor/views/default/js/elgg/ckeditor/blockimagepaste.js', '');
+	
 	var elggCKEditor = {
 
 		/**
@@ -13,9 +15,9 @@ define(function(require) {
 		 */
 		toggleEditor: function(event) {
 			event.preventDefault();
-
+	
 			var target = $(this).attr('href');
-
+	
 			if (!$(target).data('ckeditorInstance')) {
 				$(target).ckeditor(elggCKEditor.init, elggCKEditor.config);
 				$(this).html(elgg.echo('ckeditor:html'));
@@ -30,14 +32,16 @@ define(function(require) {
 		 *
 		 * @return void
 		 */
-		init: function() {
+		init: function(textarea) {
+			// show the toggle-editor link which is hidden by default, so it will only show up if the editor is correctly loaded
+			$('.ckeditor-toggle-editor[href="#' + textarea.id + '"]').show();
 		},
 
 		/**
 		 * CKEditor has decided using width and height as attributes on images isn't
 		 * kosher and puts that in the style. This adds those back as attributes.
 		 * This is from this patch: http://dev.ckeditor.com/attachment/ticket/5024/5024_5.patch
-		 *
+		 * 
 		 * @param {Object} event
 		 * @return void
 		 */

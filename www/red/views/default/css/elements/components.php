@@ -178,7 +178,7 @@
 .elgg-river-comments-tab {
 	display: block;
 	background-color: #EEE;
-	color: #4690D6;
+	color: #aaa;
 	margin-top: 5px;
 	width: auto;
 	float: right;
@@ -209,7 +209,7 @@
 }
 .elgg-river-more {
 	background-color: #EEE;
-	border-radius: 5px;
+	border-radius: 5px;	
 	padding: 2px 4px;
 	font-size: 85%;
 	margin-bottom: 2px;
@@ -219,7 +219,7 @@
 .elgg-river-item form {
 	background-color: #EEE;
 	padding: 4px;
-	border-radius: 5px;
+	border-radius: 5px;	
 	height: 30px;
 }
 .elgg-river-item input[type=text] {
@@ -241,6 +241,22 @@
 }
 .elgg-river-item .elgg-form-comment-save {
 	height: auto;
+}
+
+/* Comment highlighting that automatically fades away */
+.elgg-comments .elgg-state-highlight {
+	-webkit-animation: comment-highlight 5s; /* Chrome, Safari, Opera */
+	animation: comment-highlight 5s;
+}
+/* Chrome, Safari, Opera */
+@-webkit-keyframes comment-highlight {
+	from {background: #dff2ff;}
+	to {background: white;}
+}
+/* Standard syntax */
+@keyframes comment-highlight {
+	from {background: #dff2ff;}
+	to {background: white;}
 }
 
 /* ***************************************
@@ -267,7 +283,4 @@
 }
 .elgg-tags li.elgg-tag:last-child:after {
 	content: "";
-}
-.elgg-tagcloud {
-	text-align: justify;
 }

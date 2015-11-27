@@ -251,7 +251,6 @@ elgg.inherit = function(Child, Parent) {
  *
  * @param {String} url The url to normalize
  * @return {String} The extended url
- * @private
  */
 elgg.normalize_url = function(url) {
 	url = url || '';
@@ -435,7 +434,7 @@ elgg.parse_url = function(url, component, expand) {
 	// It was modified to fix mailto: and javascript: support.
 	expand = expand || false;
 	component = component || false;
-
+	
 	var re_str =
 			// scheme (and user@ testing)
 			'^(?:(?![^:@]+:[^:@/]*@)([^:/?#.]+):)?(?://)?'
@@ -510,6 +509,7 @@ elgg.parse_str = function(string) {
 		re = /([^&=]+)=?([^&]*)/g,
 		re2 = /\[\]$/;
 
+	// assignment intentional
 	while (result = re.exec(string)) {
 		key = decodeURIComponent(result[1].replace(/\+/g, ' '));
 		value = decodeURIComponent(result[2].replace(/\+/g, ' '));
@@ -524,7 +524,7 @@ elgg.parse_str = function(string) {
 			params[key] = value;
 		}
 	}
-
+	
 	return params;
 };
 

@@ -1,4 +1,5 @@
 <?php
+namespace Elgg;
 
 /**
  * Simplecache handler
@@ -7,14 +8,14 @@
  *
  * @package Elgg.Core
  */
-class Elgg_CacheHandler {
+class CacheHandler {
 
 	protected $config;
 
 	/**
 	 * Constructor
 	 *
-	 * @param stdClass $config Elgg config object
+	 * @param \stdClass $config Elgg config object
 	 */
 	public function __construct($config) {
 		$this->config = $config;
@@ -75,7 +76,7 @@ class Elgg_CacheHandler {
 			$this->send403();
 		}
 
-		$cache_timestamp = (int)elgg_get_config('lastcache');
+		$cache_timestamp = (int)_elgg_services()->config->get('lastcache');
 
 		if ($cache_timestamp == $ts) {
 			$this->sendCacheHeaders($etag);
@@ -137,28 +138,32 @@ class Elgg_CacheHandler {
 			return;
 		}
 
-		$dblink = mysql_connect($this->config->dbhost, $this->config->dbuser, $this->config->dbpass, true);
-		if (!$dblink) {
-			$this->send403('Cache error: unable to connect to database server');
-		}
+		$db_config = new Database\Config($this->config);
+		$db = new Database($db_config, new Logger(new PluginHooksService()));
 
-		if (!mysql_select_db($this->config->dbname, $dblink)) {
-			$this->send403('Cache error: unable to connect to Elgg database');
-		}
-
-		$query = "SELECT `name`, `value` FROM {$this->config->dbprefix}datalists
-				WHERE `name` IN ('dataroot', 'simplecache_enabled')";
-
-		$result = mysql_query($query, $dblink);
-		if ($result) {
-			while ($row = mysql_fetch_object($result)) {
-				$this->config->{$row->name} = $row->value;
+		try {
+			$rows = $db->getData("
+				SELECT `name`, `value`
+				FROM {$db->getTablePrefix()}datalists
+				WHERE `name` IN ('dataroot', 'simplecache_enabled')
+			");
+			if (!$rows) {
+				$this->send403('Cache error: unable to get the data root');
 			}
-			mysql_free_result($result);
+		} catch (\DatabaseException $e) {
+			if (0 === strpos($e->getMessage(), "Elgg couldn't connect")) {
+				$this->send403('Cache error: unable to connect to database server');
+			} else {
+				$this->send403('Cache error: unable to connect to Elgg database');
+			}
+			exit; // unnecessary, but helps PhpStorm understand
 		}
-		mysql_close($dblink);
 
-		if (!$result || !isset($this->config->dataroot)) {
+		foreach ($rows as $row) {
+			$this->config->{$row->name} = $row->value;
+		}
+
+		if (empty($this->config->dataroot)) {
 			$this->send403('Cache error: unable to get the data root');
 		}
 	}
@@ -211,7 +216,7 @@ class Elgg_CacheHandler {
 			'viewtype' => $viewtype,
 			'view_content' => $content,
 		);
-		return elgg_trigger_plugin_hook('simplecache:generate', $hook_type, $hook_params, $content);
+		return _elgg_services()->hooks->trigger('simplecache:generate', $hook_type, $hook_params, $content);
 	}
 
 	/**
@@ -229,7 +234,7 @@ class Elgg_CacheHandler {
 		}
 
 		// disable error reporting so we don't cache problems
-		elgg_set_config('debug', null);
+		_elgg_services()->config->set('debug', null);
 
 		// @todo elgg_view() checks if the page set is done (isset($CONFIG->pagesetupdone)) and
 		// triggers an event if it's not. Calling elgg_view() here breaks submenus
@@ -237,7 +242,7 @@ class Elgg_CacheHandler {
 		// contexts can be correctly set (since this is called before page_handler()).
 		// To avoid this, lie about $CONFIG->pagehandlerdone to force
 		// the trigger correctly when the first view is actually being output.
-		elgg_set_config('pagesetupdone', true);
+		_elgg_services()->config->set('pagesetupdone', true);
 
 		return elgg_view($view);
 	}
@@ -263,3 +268,4 @@ class Elgg_CacheHandler {
 		exit;
 	}
 }
+

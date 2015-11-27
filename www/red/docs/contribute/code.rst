@@ -282,6 +282,18 @@ Use self-documenting variable names.  ``$group_guids`` is better than ``$array``
 
 Avoid double-negatives. Prefer ``$enable = true`` to ``$disable = false``.
 
+Interface names
+^^^^^^^^^^^^^^^
+
+Use the pattern `Elgg\{Namespace}\{Name}`.
+
+Do not include an `I` prefix or an `Interface` suffix.
+
+We do not include any prefix or suffix so that we're encouraged to:
+
+ * name implementation classes more descriptively (the "default" name is taken).
+ * type-hint on interfaces, because that is the shortest, easiest thing to do.
+
 Functions
 ^^^^^^^^^
 
@@ -432,9 +444,6 @@ Naming
 
 * All other function names must begin with ``_elgg_``.
 
-* The names of all classes and interfaces must use underscores as namespace
-  separators and be within the Elgg namespace. (``Elgg_Cache_LRUCache``)
-
 * Name globals and constants in ``ALL_CAPS`` (``ACCESS_FRIENDS``, ``$CONFIG``).
 
 Miscellaneous
@@ -442,7 +451,8 @@ Miscellaneous
 
 For PHP requirements, see ``composer.json``.
 
-Do not use PHP shortcut tags (``<?`` or ``<?=`` or ``<%``).
+Do not use PHP shortcut tags ``<?`` or ``<%``.
+It is OK to use ``<?=`` since it is always enabled as of PHP 5.4.
 
 When creating strings with variables:
 
@@ -605,22 +615,18 @@ Function expressions should end with a semi-colon.
 Deprecating APIs
 ================
 
-Occasionally, functions and classes must be deprecated in favor of newer replacements.
-Since 3rd party plugin authors rely on a consistent API,
-backward compatibility must be maintained,
-but will not be maintained indefinitely as
-plugin authors are expected to properly update their plugins.
-In order to maintain backward compatibility,
-deprecated APIs will follow these guidelines:
+Occasionally functions and classes must be deprecated in favor of newer
+replacements. Since 3rd party plugin authors rely on a consistent API,
+backward compatibility must be maintained, but will not be maintained
+indefinitely as plugin authors are expected to properly update their plugins.
+In order to maintain backward compatibility, deprecated APIs will follow
+these guidelines:
 
-* The first minor version (1.7) with a deprecated API must include a wrapper
-  function/class (or otherwise appropriate means) to maintain backward compatibility,
-  including any bugs in the original function/class.
-  This compatibility layer uses ``elgg_deprecated_notice('...', '1.7')``
+* Minor version (1.x) that deprecates an API must include a wrapper
+  function/class (or otherwise appropriate means) to maintain backward
+  compatibility, including any bugs in the original function/class.
+  This compatibility layer uses ``elgg_deprecated_notice('...', '1.11')``
   to log that the function is deprecated.
-
-* The following minor versions (1.8+) maintain the backward compatibility layer,
-  but ``elgg_deprecated_notice()`` will produce a visible warning.
 
 * The next major revision (2.0) removes the compatibility layer.
   Any use of the deprecated API should be corrected before this.
