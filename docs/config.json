@@ -1,0 +1,17 @@
+{
+	"title": "Reevo - Documentación técnica de la plataforma web",
+	"docs_path": "docs",
+	"image": "img/app.png",
+	"theme": "blue",
+	"template":"default",
+	"toggle_code": true,
+	"date_modified": true,
+	"clean_urls": true,
+	"float": false,
+	"piwik_analytics": "webstats.reevo.org",
+	"piwik_analytics_id": "4",
+	"links": {
+                "Código fuente": "http://git.reevo.org/",
+                "Contacto": "http://reevo.org/contacto"
+	}
+}
