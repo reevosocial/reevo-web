@@ -3,7 +3,9 @@
  * Main activity stream list page
  */
 
-$options = array();
+$options = array(
+	'distinct' => false
+);
 
 $page_type = preg_replace('[\W]', '', get_input('page_type', 'all'));
 $type = preg_replace('[\W]', '', get_input('type', 'all'));
@@ -34,6 +36,7 @@ switch ($page_type) {
 			register_error(elgg_echo('river:subject:invalid_subject'));
 			forward('');
 		}
+		elgg_set_page_owner_guid($subject->guid);
 		$title = elgg_echo('river:owner', array(htmlspecialchars($subject->name, ENT_QUOTES, 'UTF-8', false)));
 		$page_filter = 'subject';
 		$options['subject_guid'] = $subject->guid;

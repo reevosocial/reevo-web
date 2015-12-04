@@ -16,6 +16,9 @@ $content = elgg_list_entities(array(
 	'full_view' => false,
 	'view_toggle_type' => false,
 	'no_results' => elgg_echo('bookmarks:none'),
+	'preload_owners' => true,
+	'preload_containers' => true,
+	'distinct' => false,
 ));
 
 $title = elgg_echo('bookmarks:everyone');

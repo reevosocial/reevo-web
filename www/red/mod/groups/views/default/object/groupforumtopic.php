@@ -9,11 +9,18 @@ $full = elgg_extract('full_view', $vars, FALSE);
 $topic = elgg_extract('entity', $vars, FALSE);
 
 if (!$topic) {
-	return true;
+	return;
 }
 
 $poster = $topic->getOwnerEntity();
-$group = $topic->getContainerEntity();
+if (!$poster) {
+	elgg_log("User {$topic->owner_guid} could not be loaded, and is needed to display entity {$topic->guid}", 'WARNING');
+	if ($full) {
+		forward('', '404');
+	}
+	return;
+}
+
 $excerpt = elgg_get_excerpt($topic->description);
 
 $poster_icon = elgg_view_entity_icon($poster, 'tiny');
@@ -35,6 +42,7 @@ $num_replies = elgg_get_entities(array(
 	'subtype' => 'discussion_reply',
 	'container_guid' => $topic->getGUID(),
 	'count' => true,
+	'distinct' => false,
 ));
 
 if ($num_replies != 0) {
@@ -43,6 +51,7 @@ if ($num_replies != 0) {
 		'subtype' => 'discussion_reply',
 		'container_guid' => $topic->getGUID(),
 		'limit' => 1,
+		'distinct' => false,
 	));
 	if (isset($last_reply[0])) {
 		$last_reply = $last_reply[0];

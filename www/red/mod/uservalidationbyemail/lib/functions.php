@@ -14,11 +14,9 @@
  * @return string
  */
 function uservalidationbyemail_generate_code($user_guid, $email_address) {
-
+	// Note: binding to site URL for multisite.
 	$site_url = elgg_get_site_url();
-
-	// Note I bind to site URL, this is important on multisite!
-	return md5($user_guid . $email_address . $site_url . get_site_secret());
+	return elgg_build_hmac([(int)$user_guid, $email_address, $site_url])->getToken();
 }
 
 /**
@@ -32,7 +30,7 @@ function uservalidationbyemail_generate_code($user_guid, $email_address) {
 function uservalidationbyemail_request_validation($user_guid, $admin_requested = 'deprecated') {
 
 	if ($admin_requested != 'deprecated') {
-		elgg_deprecatednotice('Second param $admin_requested no more used in uservalidationbyemail_request_validation function', 1.9);
+		elgg_deprecated_notice('Second param $admin_requested no more used in uservalidationbyemail_request_validation function', 1.9);
 	}
 
 	$site = elgg_get_site_entity();
@@ -81,12 +79,14 @@ function uservalidationbyemail_request_validation($user_guid, $admin_requested =
  */
 function uservalidationbyemail_validate_email($user_guid, $code) {
 	$user = get_entity($user_guid);
+	$site_url = elgg_get_site_url();
 
-	if ($code == uservalidationbyemail_generate_code($user_guid, $user->email)) {
-		return elgg_set_user_validation_status($user_guid, true, 'email');
+	$matches = elgg_build_hmac([(int)$user_guid, $user->email, $site_url])->matchesToken($code);
+	if (!$matches) {
+		return false;
 	}
 
-	return false;
+	return elgg_set_user_validation_status($user_guid, true, 'email');
 }
 
 /**

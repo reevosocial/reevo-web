@@ -44,11 +44,18 @@ $data = array(
 		'checked' => elgg_get_plugin_setting('screen_log', 'developers') == 1,
 		'readonly' => false,
 	),
-
+	
 	'show_strings' => array(
 		'type' => 'checkbox',
 		'value' => 1,
 		'checked' => elgg_get_plugin_setting('show_strings', 'developers') == 1,
+		'readonly' => false,
+	),
+
+	'show_modules' => array(
+		'type' => 'checkbox',
+		'value' => 1,
+		'checked' => elgg_get_plugin_setting('show_modules', 'developers') == 1,
 		'readonly' => false,
 	),
 
@@ -63,6 +70,13 @@ $data = array(
 		'type' => 'checkbox',
 		'value' => 1,
 		'checked' => elgg_get_plugin_setting('log_events', 'developers') == 1,
+		'readonly' => false,
+	),
+
+	'show_gear' => array(
+		'type' => 'checkbox',
+		'value' => 1,
+		'checked' => elgg_get_plugin_setting('show_gear', 'developers') == 1,
 		'readonly' => false,
 	),
 );

@@ -1,19 +1,34 @@
 <?php
+namespace Elgg\Amd;
 
 /**
  * Control configuration of RequireJS
  *
- * @access private
- *
  * @package    Elgg.Core
  * @subpackage JavaScript
+ * 
+ * @access private
  */
-class Elgg_Amd_Config {
+class Config {
 	private $baseUrl = '';
 	private $paths = array();
 	private $shim = array();
 	private $dependencies = array();
 
+	/**
+	 * @var \Elgg\PluginHooksService
+	 */
+	private $hooks;
+	
+	/**
+	 * Constructor
+	 *
+	 * @param \Elgg\PluginHooksService $hooks The hooks service
+	 */
+	public function __construct(\Elgg\PluginHooksService $hooks) {
+		$this->hooks = $hooks;
+	}
+	
 	/**
 	 * Set the base URL for the site
 	 *
@@ -54,10 +69,18 @@ class Elgg_Amd_Config {
 	public function removePath($name, $path = null) {
 		if (!$path) {
 			unset($this->paths[$name]);
-		}
+		} else {
+			if (preg_match("/\.js$/", $path)) {
+				$path = preg_replace("/\.js$/", '', $path);
+			}
 
-		$key = array_search($path, $this->paths[$name]);
-		unset($this->paths[$name][$key]);
+			$key = array_search($path, $this->paths[$name]);
+			unset($this->paths[$name][$key]);
+
+			if (empty($this->paths[$name])) {
+				unset($this->paths[$name]);
+			}
+		}
 	}
 
 	/**
@@ -74,7 +97,7 @@ class Elgg_Amd_Config {
 		$exports = elgg_extract('exports', $config);
 
 		if (empty($deps) && empty($exports)) {
-			throw new InvalidParameterException("Shimmed modules must have deps or exports");
+			throw new \InvalidParameterException("Shimmed modules must have deps or exports");
 		}
 
 		$this->shim[$name] = array();
@@ -180,13 +203,13 @@ class Elgg_Amd_Config {
 	/**
 	 * Removes all config for a module
 	 *
-	 * @param type $name The module name
+	 * @param string $name The module name
 	 * @return bool
 	 */
 	public function removeModule($name) {
-		_elgg_services()->amdConfig->removeDependency($name);
-		_elgg_services()->amdConfig->removeShim($name);
-		_elgg_services()->amdConfig->removePath($name);
+		$this->removeDependency($name);
+		$this->removeShim($name);
+		$this->removePath($name);
 	}
 
 	/**
@@ -200,7 +223,7 @@ class Elgg_Amd_Config {
 			return true;
 		}
 
-		if (isset($this->shims[$name])) {
+		if (isset($this->shim[$name])) {
 			return true;
 		}
 
@@ -217,11 +240,18 @@ class Elgg_Amd_Config {
 	 * @return array
 	 */
 	public function getConfig() {
-		return array(
+		$defaults = array(
 			'baseUrl' => $this->baseUrl,
 			'paths' => $this->paths,
 			'shim' => $this->shim,
 			'deps' => $this->getDependencies(),
+			'waitSeconds' => 20,
 		);
+		
+		$params = array(
+			'defaults' => $defaults
+		);
+		
+		return  $this->hooks->trigger('config', 'amd', $params, $defaults);
 	}
 }

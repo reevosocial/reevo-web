@@ -14,7 +14,6 @@ if (!$bookmark) {
 
 $owner = $bookmark->getOwnerEntity();
 $owner_icon = elgg_view_entity_icon($owner, 'tiny');
-$container = $bookmark->getContainerEntity();
 $categories = elgg_view('output/categories', $vars);
 
 $link = elgg_view('output/url', array('href' => $bookmark->address));
@@ -122,6 +121,6 @@ HTML;
 	);
 	$params = $params + $vars;
 	$body = elgg_view('object/elements/summary', $params);
-
+	
 	echo elgg_view_image_block($owner_icon, $body);
 }

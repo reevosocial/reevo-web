@@ -39,6 +39,9 @@ return array(
 	'actionnotfound' => "The action file for %s was not found.",
 	'actionloggedout' => "Sorry, you cannot perform this action while logged out.",
 	'actionunauthorized' => 'You are unauthorized to perform this action',
+	
+	'ajax:error' => 'Unexpected error while performing an AJAX call. Maybe the connection to the server is lost.',
+	'ajax:not_is_xhr' => 'You cannot access AJAX views directly',
 
 	'PluginException:MisconfiguredPlugin' => "%s (guid: %s) is a misconfigured plugin. It has been disabled. Please search the Elgg wiki for possible causes (http://learn.elgg.org/).",
 	'PluginException:CannotStart' => '%s (guid: %s) cannot start and has been deactivated.  Reason: %s',
@@ -81,9 +84,12 @@ return array(
 	'ElggPlugin:Dependencies:Priority:Before' => 'Before %s',
 	'ElggPlugin:Dependencies:Priority:Uninstalled' => '%s is not installed',
 	'ElggPlugin:Dependencies:Suggests:Unsatisfied' => 'Missing',
-
+	
 	'ElggPlugin:Dependencies:ActiveDependent' => 'There are other plugins that list %s as a dependency.  You must disable the following plugins before disabling this one: %s',
 
+	'ElggMenuBuilder:Trees:NoParents' => 'Menu items found without parents to link them to',
+	'ElggMenuBuilder:Trees:OrphanedChild' => 'Menu item [%s] found with a missing parent[%s]',
+	'ElggMenuBuilder:Trees:DuplicateChild' => 'Duplicate registration found for menu item [%s]',
 
 	'RegistrationException:EmptyPassword' => 'The password fields cannot be empty',
 	'RegistrationException:PasswordMismatch' => 'Passwords must match',
@@ -107,6 +113,10 @@ return array(
 
 	'error:default:title' => 'Oops...',
 	'error:default:content' => 'Oops... something went wrong.',
+	'error:400:title' => 'Bad request',
+	'error:400:content' => 'Sorry. The request is invalid or incomplete.',
+	'error:403:title' => 'Forbidden',
+	'error:403:content' => 'Sorry. You are not allowed to access the requested page.',
 	'error:404:title' => 'Page not found',
 	'error:404:content' => 'Sorry. We could not find the page that you requested.',
 
@@ -148,6 +158,8 @@ return array(
 	'access:read' => "Read access",
 	'access:write' => "Write access",
 	'access:admin_only' => "Administrators only",
+	'access:missing_name' => "Missing access level name",
+	'access:comments:change' => "This discussion is currently visible to a limited audience. Be thoughtful about who you share it with.",
 
 /**
  * Dashboard and widgets
@@ -158,6 +170,7 @@ return array(
 
 	'widgets:add' => 'Add widgets',
 	'widgets:add:description' => "Click on any widget button below to add it to the page.",
+	'widgets:panel:close' => "Close widgets panel",
 	'widgets:position:fixed' => '(Fixed position on page)',
 	'widget:unavailable' => 'You have already added this widget',
 	'widget:numbertodisplay' => 'Number of items to display',
@@ -448,6 +461,7 @@ return array(
 	'admin:configuration:success' => "Your settings have been saved.",
 	'admin:configuration:fail' => "Your settings could not be saved.",
 	'admin:configuration:dataroot:relative_path' => 'Cannot set "%s" as the dataroot because it is not an absolute path.',
+	'admin:configuration:default_limit' => 'The number of items per page must be at least 1.',
 
 	'admin:unknown_section' => 'Invalid Admin Section.',
 
@@ -512,6 +526,8 @@ return array(
 	'admin:widget:banned_users:help' => 'Lists the banned users',
 	'admin:widget:content_stats' => 'Content statistics',
 	'admin:widget:content_stats:help' => 'Keep track of the content created by your users',
+	'admin:widget:cron_status' => 'Cron status',
+	'admin:widget:cron_status:help' => 'Shows the status of the last time cron jobs finished',
 	'widget:content_stats:type' => 'Content type',
 	'widget:content_stats:number' => 'Number',
 
@@ -701,6 +717,7 @@ These changes will only affect new users on the site.',
 	'admin:robots.txt:instructions' => "Edit this site's robots.txt file below",
 	'admin:robots.txt:plugins' => "Plugins are adding the following to the robots.txt file",
 	'admin:robots.txt:subdir' => "The robots.txt tool will not work because Elgg is installed in a sub-directory",
+	'admin:robots.txt:physical' => "The robots.txt tool will not work because a physical robots.txt is present",
 
 	'admin:maintenance_mode:default_message' => 'This site is down for maintenance',
 	'admin:maintenance_mode:instructions' => 'Maintenance mode should be used for upgrades and other large changes to the site.
@@ -714,7 +731,7 @@ These changes will only affect new users on the site.',
 /**
  * User settings
  */
-
+		
 	'usersettings:description' => "The user settings panel allows you to control all your personal settings, from user management to how plugins behave. Choose an option below to get started.",
 
 	'usersettings:statistics' => "Your statistics",
@@ -741,13 +758,14 @@ These changes will only affect new users on the site.',
 /**
  * Activity river
  */
-
+		
 	'river:all' => 'All Site Activity',
 	'river:mine' => 'My Activity',
 	'river:owner' => 'Activity of %s',
 	'river:friends' => 'Friends Activity',
 	'river:select' => 'Show %s',
 	'river:comments:more' => '+%u more',
+	'river:comments:all' => 'View all %u comments',
 	'river:generic_comment' => 'commented on %s %s',
 
 	'friends:widget:description' => "Displays some of your friends.",
@@ -767,7 +785,7 @@ These changes will only affect new users on the site.',
 	'icon:size:medium' => "Medium",
 	'icon:size:large' => "Large",
 	'icon:size:master' => "Extra Large",
-
+		
 /**
  * Generic action words
  */
@@ -852,11 +870,11 @@ These changes will only affect new users on the site.',
 
 	'active' => 'Active',
 	'total' => 'Total',
-
+	
 	'ok' => 'OK',
 	'any' => 'Any',
 	'error' => 'Error',
-
+	
 	'other' => 'Other',
 	'options' => 'Options',
 	'advanced' => 'Advanced',
@@ -869,7 +887,7 @@ These changes will only affect new users on the site.',
 	'content:latest:blurb' => 'Alternatively, click here to view the latest content from across the site.',
 
 	'link:text' => 'view link',
-
+	
 /**
  * Generic questions
  */
@@ -897,7 +915,7 @@ These changes will only affect new users on the site.',
 	'sort:popular' => 'Popular',
 	'sort:alpha' => 'Alphabetical',
 	'sort:priority' => 'Priority',
-
+		
 /**
  * Generic data words
  */
@@ -915,7 +933,6 @@ These changes will only affect new users on the site.',
 	'relationships' => "Relationships",
 	'metadata' => "Metadata",
 	'tagcloud' => "Tag cloud",
-	'tagcloud:allsitetags' => "All site tags",
 
 	'on' => 'On',
 	'off' => 'Off',
@@ -923,7 +940,7 @@ These changes will only affect new users on the site.',
 /**
  * Entity actions
  */
-
+		
 	'edit:this' => 'Edit this',
 	'delete:this' => 'Delete this',
 	'comment:this' => 'Comment on this',
@@ -966,7 +983,7 @@ Once you have logged in, we highly recommend that you change your password.
 /**
  * Import / export
  */
-
+		
 	'importsuccess' => "Import of data was successful",
 	'importfail' => "OpenDD import of data failed.",
 
@@ -982,7 +999,7 @@ Once you have logged in, we highly recommend that you change your password.
 	'friendlytime:days' => "%s days ago",
 	'friendlytime:days:singular' => "yesterday",
 	'friendlytime:date_format' => 'j F Y @ g:ia',
-
+	
 	'friendlytime:future:minutes' => "in %s minutes",
 	'friendlytime:future:minutes:singular' => "in a minute",
 	'friendlytime:future:hours' => "in %s hours",
@@ -1010,7 +1027,7 @@ Once you have logged in, we highly recommend that you change your password.
 	'date:weekday:4' => 'Thursday',
 	'date:weekday:5' => 'Friday',
 	'date:weekday:6' => 'Saturday',
-
+	
 	'interval:minute' => 'Every minute',
 	'interval:fiveminute' => 'Every five minutes',
 	'interval:fifteenmin' => 'Every fifteen minutes',
@@ -1053,6 +1070,7 @@ Once you have logged in, we highly recommend that you change your password.
 	'installation:view' => "Enter the view which will be used as the default for your site or leave this blank for the default view (if in doubt, leave as default):",
 
 	'installation:siteemail' => "Site email address (used when sending system emails):",
+	'installation:default_limit' => "Default number of items per page",
 
 	'admin:site:access:warning' => "This is the privacy setting suggested to users when they create new content. Changing it does not change access to content.",
 	'installation:allow_user_default_access:description' => "Enable this to allow users to set their own suggested privacy setting that overrides the system suggestion.",
@@ -1065,12 +1083,13 @@ Once you have logged in, we highly recommend that you change your password.
 	'installation:minify_js:label' => "Compress JavaScript (recommended)",
 	'installation:minify_css:label' => "Compress CSS (recommended)",
 
-	'installation:htaccess:needs_upgrade' => "You must update your .htaccess file so that the path is injected into the GET parameter __elgg_uri (you can use htaccess_dist as a guide).",
+	'installation:htaccess:needs_upgrade' => "You must update your .htaccess file so that the path is injected into the GET parameter __elgg_uri (you can use install/config/htaccess.dist as a guide).",
 	'installation:htaccess:localhost:connectionfailed' => "Elgg cannot connect to itself to test rewrite rules properly. Check that curl is working and there are no IP restrictions preventing localhost connections.",
-
+	
 	'installation:systemcache:description' => "The system cache decreases the loading time of Elgg by caching data to files.",
 	'installation:systemcache:label' => "Use system cache (recommended)",
 
+	'admin:legend:system' => 'System',
 	'admin:legend:caching' => 'Caching',
 	'admin:legend:content_access' => 'Content Access',
 	'admin:legend:site_access' => 'Site Access',
@@ -1120,6 +1139,7 @@ Once you have logged in, we highly recommend that you change your password.
 	// Strings specific for the comments upgrade
 	'admin:upgrades:comments' => 'Comments upgrade',
 	'upgrade:comment:create_failed' => 'Failed to convert comment id %s to an entity.',
+	'admin:upgrades:commentaccess' => 'Comments Access Upgrade',
 
 	// Strings specific for the datadir upgrade
 	'admin:upgrades:datadirs' => 'Data directory upgrade',
@@ -1138,12 +1158,12 @@ Once you have logged in, we highly recommend that you change your password.
 /**
  * Emails
  */
-
+		
 	'email:from' => 'From',
 	'email:to' => 'To',
 	'email:subject' => 'Subject',
 	'email:body' => 'Body',
-
+	
 	'email:settings' => "Email settings",
 	'email:address:label' => "Email address",
 
@@ -1206,7 +1226,8 @@ If you requested this, click on the link below. Otherwise ignore this email.
 	'generic_comment:updated' => "The comment was successfully updated.",
 	'generic_comment:deleted' => "The comment was successfully deleted.",
 	'generic_comment:blank' => "Sorry, you need to actually put something in your comment before we can save it.",
-	'generic_comment:notfound' => "Sorry, we could not find the specified item.",
+	'generic_comment:notfound' => "Sorry, we could not find the specified comment.",
+	'generic_comment:notfound_fallback' => "Sorry, we could not find the specified comment, but we've forwarded you to the page where it was left.",
 	'generic_comment:notdeleted' => "Sorry, we could not delete this comment.",
 	'generic_comment:failure' => "An unexpected error occurred when saving the comment.",
 	'generic_comment:none' => 'No comments',
@@ -1234,13 +1255,15 @@ Please do not reply to this email.",
 /**
  * Entities
  */
-
+	
 	'byline' => 'By %s',
 	'entity:default:strapline' => 'Created %s by %s',
 	'entity:default:missingsupport:popup' => 'This entity cannot be displayed correctly. This may be because it requires support provided by a plugin that is no longer installed.',
 
 	'entity:delete:success' => 'Entity %s has been deleted',
 	'entity:delete:fail' => 'Entity %s could not be deleted',
+	
+	'entity:can_delete:invaliduser' => 'Can not check canDelete for user_guid [%s] as the user does not exist.',
 
 /**
  * Action gatekeeper
@@ -1249,7 +1272,7 @@ Please do not reply to this email.",
 	'actiongatekeeper:missingfields' => 'Form is missing __token or __ts fields',
 	'actiongatekeeper:tokeninvalid' => "The page you were using had expired. Please try again.",
 	'actiongatekeeper:timeerror' => 'The page you were using has expired. Please refresh and try again.',
-	'actiongatekeeper:pluginprevents' => 'A extension has prevented this form from being submitted.',
+	'actiongatekeeper:pluginprevents' => 'Sorry. Your form could not be submitted for an unknown reason.',
 	'actiongatekeeper:uploadexceeded' => 'The size of file(s) uploaded exceeded the limit set by your site administrator',
 	'actiongatekeeper:crosssitelogin' => "Sorry, logging in from a different domain is not permitted. Please try again.",
 
@@ -1264,7 +1287,6 @@ Please do not reply to this email.",
  */
 
 	'tag_names:tags' => 'Tags',
-	'tags:site_cloud' => 'Site Tag Cloud',
 
 /**
  * Javascript
@@ -1313,6 +1335,7 @@ Please do not reply to this email.",
 	"es" => "Spanish",
 	"et" => "Estonian",
 	"eu" => "Basque",
+	"eu_es" => "Basque (Spain)",
 	"fa" => "Persian",
 	"fi" => "Finnish",
 	"fj" => "Fiji",
@@ -1377,11 +1400,12 @@ Please do not reply to this email.",
 	"pl" => "Polish",
 	"ps" => "Pashto / Pushto",
 	"pt" => "Portuguese",
-	"pt_br" => 'Brazilian Portuguese',
+	"pt_br" => "Portuguese (Brazil)",
 	"qu" => "Quechua",
 	"rm" => "Rhaeto-Romance",
 	"rn" => "Kirundi",
 	"ro" => "Romanian",
+	"ro_ro" => "Romanian (Romania)",
 	"ru" => "Russian",
 	"rw" => "Kinyarwanda",
 	"sa" => "Sanskrit",
@@ -1396,6 +1420,7 @@ Please do not reply to this email.",
 	"so" => "Somali",
 	"sq" => "Albanian",
 	"sr" => "Serbian",
+	"sr_latin" => "Serbian (Latin)",
 	"ss" => "Siswati",
 	"st" => "Sesotho",
 	"su" => "Sundanese",
@@ -1427,5 +1452,6 @@ Please do not reply to this email.",
 	"yo" => "Yoruba",
 	"za" => "Zuang",
 	"zh" => "Chinese",
+	"zh_hans" => "Chinese Simplified",
 	"zu" => "Zulu",
 );

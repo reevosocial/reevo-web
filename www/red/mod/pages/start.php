@@ -69,6 +69,8 @@ function pages_init() {
 		'tags' => 'tags',
 		'parent_guid' => 'parent',
 		'access_id' => 'access',
+
+		// TODO change to "access" when input/write_access is removed
 		'write_access_id' => 'write_access',
 	));
 
@@ -78,6 +80,8 @@ function pages_init() {
 	elgg_register_plugin_hook_handler('permissions_check', 'object', 'pages_write_permission_check');
 	elgg_register_plugin_hook_handler('container_permissions_check', 'object', 'pages_container_permission_check');
 
+	elgg_register_plugin_hook_handler('access:collections:write', 'user', 'pages_write_access_options_hook');
+
 	// icon url override
 	elgg_register_plugin_hook_handler('entity:icon:url', 'object', 'pages_icon_url_override');
 
@@ -86,6 +90,9 @@ function pages_init() {
 
 	// register ecml views to parse
 	elgg_register_plugin_hook_handler('get_views', 'ecml', 'pages_ecml_views_hook');
+	
+	// prevent public write access
+	elgg_register_plugin_hook_handler('view_vars', 'input/access', 'pages_write_access_vars');
 }
 
 /**
@@ -109,7 +116,7 @@ function pages_init() {
 function pages_page_handler($page) {
 
 	elgg_load_library('elgg:pages');
-
+	
 	if (!isset($page[0])) {
 		$page[0] = 'all';
 	}
@@ -160,7 +167,7 @@ function pages_page_handler($page) {
 
 /**
  * Override the page url
- *
+ * 
  * @param string $hook
  * @param string $type
  * @param string $url
@@ -239,6 +246,7 @@ function pages_entity_menu_setup($hook, $type, $return, $params) {
 		return $return;
 	}
 
+	elgg_load_library('elgg:pages');
 	$entity = $params['entity'];
 	$handler = elgg_extract('handler', $params, false);
 	if ($handler != 'pages') {
@@ -246,7 +254,9 @@ function pages_entity_menu_setup($hook, $type, $return, $params) {
 	}
 
 	// remove delete if not owner or admin
-	if (!elgg_is_admin_logged_in() && elgg_get_logged_in_user_guid() != $entity->getOwnerGuid()) {
+	if (!elgg_is_admin_logged_in() 
+		&& elgg_get_logged_in_user_guid() != $entity->getOwnerGuid() 
+		&& ! pages_can_delete_page($entity)) {
 		foreach ($return as $index => $item) {
 			if ($item->getName() == 'delete') {
 				unset($return[$index]);
@@ -267,12 +277,12 @@ function pages_entity_menu_setup($hook, $type, $return, $params) {
 
 /**
  * Prepare a notification message about a new page
- *
+ * 
  * @param string                          $hook         Hook name
  * @param string                          $type         Hook type
- * @param Elgg_Notifications_Notification $notification The notification to prepare
+ * @param Elgg\Notifications\Notification $notification The notification to prepare
  * @param array                           $params       Hook parameters
- * @return Elgg_Notifications_Notification
+ * @return Elgg\Notifications\Notification
  */
 function pages_prepare_notification($hook, $type, $notification, $params) {
 	$entity = $params['event']->getObject();
@@ -284,7 +294,7 @@ function pages_prepare_notification($hook, $type, $notification, $params) {
 	$descr = $entity->description;
 	$title = $entity->title;
 
-	$notification->subject = elgg_echo('pages:notify:subject', array($title), $language);
+	$notification->subject = elgg_echo('pages:notify:subject', array($title), $language); 
 	$notification->body = elgg_echo('pages:notify:body', array(
 		$owner->name,
 		$title,
@@ -397,4 +407,62 @@ function pages_ecml_views_hook($hook, $entity_type, $return_value, $params) {
  */
 function pages_is_page($value) {
 	return ($value instanceof ElggObject) && in_array($value->getSubtype(), array('page', 'page_top'));
+}
+
+/**
+ * Return options for the write_access_id input
+ *
+ * @param string $hook
+ * @param string $type
+ * @param array  $return_value
+ * @param array  $params
+ *
+ * @return array
+ */
+function pages_write_access_options_hook($hook, $type, $return_value, $params) {
+	if (empty($params['input_params']['entity_subtype'])
+			|| !in_array($params['input_params']['entity_subtype'], array('page', 'page_top'))) {
+		return null;
+	}
+
+	if ($params['input_params']['purpose'] === 'write') {
+		unset($return_value[ACCESS_PUBLIC]);
+		return $return_value;
+	}
+}
+
+
+/**
+ * Called on view_vars, input/access hook
+ * Prevent ACCESS_PUBLIC from ending up as a write access option
+ * 
+ * @param string $hook
+ * @param string $type
+ * @param array $return
+ * @param array $params
+ * @return array
+ */
+function pages_write_access_vars($hook, $type, $return, $params) {
+	
+	if ($return['name'] != 'write_access_id') {
+		return $return;
+	}
+	
+	if ($return['purpose'] != 'write') {
+		return $return;
+	}
+	
+	if ($return['value'] != ACCESS_PUBLIC && $return['value'] != ACCESS_DEFAULT) {
+		return $return;
+	}
+	
+	$default_access = get_default_access();
+	
+	if ($return['value'] == ACCESS_PUBLIC || $default_access == ACCESS_PUBLIC) {
+		// is the value public, or default which resolves to public?
+		// if so we'll set it to logged in, the next most permissible write access level
+		$return['value'] = ACCESS_LOGGED_IN;
+	}
+	
+	return $return;
 }
