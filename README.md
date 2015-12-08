@@ -9,7 +9,7 @@ La Plataforma Web busca ingegrar diversas herramientas libres. Este repositorio 
 	* CiviCRM: 4.5.8
 * equipo: Redmine 4.5 [OUTDATED]
 * mapa: Ushahidi 2.7.1 [OUTDATED]
-* red: Elgg 1.9.8
+* red: Elgg 1.12.4
 * wiki: MediaWiki 1.20.0 [OUTDATED]
 * admin
 	* phpMyAdmin: 4.3.3
