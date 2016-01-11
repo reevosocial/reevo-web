@@ -10,7 +10,7 @@
 /**
  * Return the object specific details of a object by a row.
  *
- * @param int $guid The guid to retreive
+ * @param int $guid The guid to retrieve
  *
  * @return bool
  * @access private
@@ -23,7 +23,7 @@ function get_object_entity_as_row($guid) {
 }
 
 /**
- * Runs unit tests for ElggObject
+ * Runs unit tests for \ElggObject
  *
  * @param string $hook   unit_test
  * @param string $type   system
@@ -39,4 +39,6 @@ function _elgg_objects_test($hook, $type, $value, $params) {
 	return $value;
 }
 
-elgg_register_plugin_hook_handler('unit_test', 'system', '_elgg_objects_test');
+return function(\Elgg\EventsService $events, \Elgg\HooksRegistrationService $hooks) {
+	$hooks->registerHandler('unit_test', 'system', '_elgg_objects_test');
+};

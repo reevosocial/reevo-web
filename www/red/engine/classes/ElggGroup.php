@@ -5,11 +5,11 @@
  *
  * @package    Elgg.Core
  * @subpackage Groups
- *
+ * 
  * @property string $name        A short name that captures the purpose of the group
  * @property string $description A longer body of content that gives more details about the group
  */
-class ElggGroup extends ElggEntity
+class ElggGroup extends \ElggEntity
 	implements Friendable {
 
 	const CONTENT_ACCESS_MODE_UNRESTRICTED = 'unrestricted';
@@ -24,9 +24,23 @@ class ElggGroup extends ElggEntity
 		parent::initializeAttributes();
 
 		$this->attributes['type'] = "group";
-		$this->attributes['name'] = null;
-		$this->attributes['description'] = null;
+		$this->attributes += self::getExternalAttributes();
 		$this->tables_split = 2;
+	}
+
+	/**
+	 * Get default values for attributes stored in a separate table
+	 *
+	 * @return array
+	 * @access private
+	 *
+	 * @see \Elgg\Database\EntityTable::getEntities
+	 */
+	final public static function getExternalAttributes() {
+		return [
+			'name' => null,
+			'description' => null,
+		];
 	}
 
 	/**
@@ -35,7 +49,7 @@ class ElggGroup extends ElggEntity
 	 * Plugin developers should only use the constructor to create a new entity.
 	 * To retrieve entities, use get_entity() and the elgg_get_entities* functions.
 	 *
-	 * @param stdClass $row Database row result. Default is null to create a new group.
+	 * @param \stdClass $row Database row result. Default is null to create a new group.
 	 *
 	 * @throws IOException|InvalidParameterException if there was a problem creating the group.
 	 */
@@ -47,15 +61,15 @@ class ElggGroup extends ElggEntity
 
 		if (!empty($row)) {
 			// Is $guid is a entity table DB row
-			if ($row instanceof stdClass) {
+			if ($row instanceof \stdClass) {
 				// Load the rest
 				if (!$this->load($row)) {
 					$msg = "Failed to load new " . get_class() . " for GUID:" . $row->guid;
-					throw new IOException($msg);
+					throw new \IOException($msg);
 				}
-			} else if ($row instanceof ElggGroup) {
-				// $row is an ElggGroup so this is a copy constructor
-				elgg_deprecated_notice('This type of usage of the ElggGroup constructor was deprecated. Please use the clone method.', 1.7);
+			} else if ($row instanceof \ElggGroup) {
+				// $row is an \ElggGroup so this is a copy constructor
+				elgg_deprecated_notice('This type of usage of the \ElggGroup constructor was deprecated. Please use the clone method.', 1.7);
 				foreach ($row->attributes as $key => $value) {
 					$this->attributes[$key] = $value;
 				}
@@ -63,10 +77,10 @@ class ElggGroup extends ElggEntity
 				// $row is a GUID so load entity
 				elgg_deprecated_notice('Passing a GUID to constructor is deprecated. Use get_entity()', 1.9);
 				if (!$this->load($row)) {
-					throw new IOException("Failed to load new " . get_class() . " from GUID:" . $row);
+					throw new \IOException("Failed to load new " . get_class() . " from GUID:" . $row);
 				}
 			} else {
-				throw new InvalidParameterException("Unrecognized value passed to constuctor.");
+				throw new \InvalidParameterException("Unrecognized value passed to constuctor.");
 			}
 		}
 	}
@@ -77,7 +91,7 @@ class ElggGroup extends ElggEntity
 	public function getDisplayName() {
 		return $this->name;
 	}
-
+	
 	/**
 	 * {@inheritdoc}
 	 */
@@ -86,13 +100,13 @@ class ElggGroup extends ElggEntity
 	}
 
 	/**
-	 * Add an ElggObject to this group.
+	 * Add an \ElggObject to this group.
 	 *
-	 * @param ElggObject $object The object.
+	 * @param \ElggObject $object The object.
 	 *
 	 * @return bool
 	 */
-	public function addObjectToGroup(ElggObject $object) {
+	public function addObjectToGroup(\ElggObject $object) {
 		$object->container_guid = $this->guid;
 		return $object->save();
 	}
@@ -101,13 +115,13 @@ class ElggGroup extends ElggEntity
 	 * Remove an object from this containing group and sets the container to be
 	 * object's owner
 	 *
-	 * @param ElggObject $object The object.
+	 * @param \ElggObject $object The object.
 	 *
 	 * @return bool
 	 */
 	public function removeObjectFromGroup($object) {
 		if (is_numeric($object)) {
-			elgg_deprecated_notice('ElggGroup::removeObjectFromGroup() takes an ElggObject not a guid.', 1.9);
+			elgg_deprecated_notice('\ElggGroup::removeObjectFromGroup() takes an \ElggObject not a guid.', 1.9);
 			$object = get_entity($object);
 			if (!elgg_instanceof($object, 'object')) {
 				return false;
@@ -119,9 +133,9 @@ class ElggGroup extends ElggEntity
 	}
 
 	/**
-	 * Wrapper around ElggEntity::__get()
+	 * Wrapper around \ElggEntity::__get()
 	 *
-	 * @see ElggEntity::__get()
+	 * @see \ElggEntity::__get()
 	 *
 	 * @param string $name Name
 	 * @return mixed
@@ -136,7 +150,7 @@ class ElggGroup extends ElggEntity
 	}
 
 	/**
-	 * Wrapper around ElggEntity::get()
+	 * Wrapper around \ElggEntity::get()
 	 *
 	 * @param string $name Name
 	 * @return mixed
@@ -165,15 +179,15 @@ class ElggGroup extends ElggEntity
 	/**
 	 * For compatibility with Friendable.
 	 *
-	 * Join a group when you friend ElggGroup.
+	 * Join a group when you friend \ElggGroup.
 	 *
 	 * @param int $friend_guid The GUID of the user joining the group.
 	 *
 	 * @return bool
-	 * @deprecated 1.9 Use ElggGroup::join()
+	 * @deprecated 1.9 Use \ElggGroup::join()
 	 */
 	public function addFriend($friend_guid) {
-		elgg_deprecated_notice("ElggGroup::addFriend() is deprecated. Use ElggGroup::join()", 1.9);
+		elgg_deprecated_notice("\ElggGroup::addFriend() is deprecated. Use \ElggGroup::join()", 1.9);
 		$user = get_user($friend_guid);
 		return $user ? $this->join($user) : false;
 	}
@@ -181,15 +195,15 @@ class ElggGroup extends ElggEntity
 	/**
 	 * For compatibility with Friendable
 	 *
-	 * Leave group when you unfriend ElggGroup.
+	 * Leave group when you unfriend \ElggGroup.
 	 *
 	 * @param int $friend_guid The GUID of the user leaving.
 	 *
 	 * @return bool
-	 * @deprecated 1.9 Use ElggGroup::leave()
+	 * @deprecated 1.9 Use \ElggGroup::leave()
 	 */
 	public function removeFriend($friend_guid) {
-		elgg_deprecated_notice("ElggGroup::removeFriend() is deprecated. Use ElggGroup::leave()", 1.9);
+		elgg_deprecated_notice("\ElggGroup::removeFriend() is deprecated. Use \ElggGroup::leave()", 1.9);
 		$user = get_user($friend_guid);
 		return $user ? $this->leave($user) : false;
 	}
@@ -200,10 +214,10 @@ class ElggGroup extends ElggEntity
 	 * Friending a group adds you as a member
 	 *
 	 * @return bool
-	 * @deprecated 1.9 Use ElggGroup::isMember()
+	 * @deprecated 1.9 Use \ElggGroup::isMember()
 	 */
 	public function isFriend() {
-		elgg_deprecated_notice("ElggGroup::isFriend() is deprecated. Use ElggGroup::isMember()", 1.9);
+		elgg_deprecated_notice("\ElggGroup::isFriend() is deprecated. Use \ElggGroup::isMember()", 1.9);
 		return $this->isMember();
 	}
 
@@ -213,10 +227,10 @@ class ElggGroup extends ElggEntity
 	 * @param int $user_guid The GUID of a user to check.
 	 *
 	 * @return bool
-	 * @deprecated 1.9 Use ElggGroup::isMember()
+	 * @deprecated 1.9 Use \ElggGroup::isMember()
 	 */
 	public function isFriendsWith($user_guid) {
-		elgg_deprecated_notice("ElggGroup::isFriendsWith() is deprecated. Use ElggGroup::isMember()", 1.9);
+		elgg_deprecated_notice("\ElggGroup::isFriendsWith() is deprecated. Use \ElggGroup::isMember()", 1.9);
 		$user = get_user($user_guid);
 		return $user ? $this->isMember($user) : false;
 	}
@@ -227,10 +241,10 @@ class ElggGroup extends ElggEntity
 	 * @param int $user_guid The GUID of a user to check.
 	 *
 	 * @return bool
-	 * @deprecated 1.9 Use ElggGroup::isMember()
+	 * @deprecated 1.9 Use \ElggGroup::isMember()
 	 */
 	public function isFriendOf($user_guid) {
-		elgg_deprecated_notice("ElggGroup::isFriendOf() is deprecated. Use ElggGroup::isMember()", 1.9);
+		elgg_deprecated_notice("\ElggGroup::isFriendOf() is deprecated. Use \ElggGroup::isMember()", 1.9);
 		$user = get_user($user_guid);
 		return $user ? $this->isMember($user) : false;
 	}
@@ -243,10 +257,10 @@ class ElggGroup extends ElggEntity
 	 * @param int    $offset  Offset
 	 *
 	 * @return bool
-	 * @deprecated 1.9 Use ElggGroup::getMembers()
+	 * @deprecated 1.9 Use \ElggGroup::getMembers()
 	 */
 	public function getFriends($subtype = "", $limit = 10, $offset = 0) {
-		elgg_deprecated_notice("ElggGroup::getFriends() is deprecated. Use ElggGroup::getMembers()", 1.9);
+		elgg_deprecated_notice("\ElggGroup::getFriends() is deprecated. Use \ElggGroup::getMembers()", 1.9);
 		return get_group_members($this->getGUID(), $limit, $offset);
 	}
 
@@ -258,10 +272,10 @@ class ElggGroup extends ElggEntity
 	 * @param int    $offset  Offset
 	 *
 	 * @return bool
-	 * @deprecated 1.9 Use ElggGroup::getMembers()
+	 * @deprecated 1.9 Use \ElggGroup::getMembers()
 	 */
 	public function getFriendsOf($subtype = "", $limit = 10, $offset = 0) {
-		elgg_deprecated_notice("ElggGroup::getFriendsOf() is deprecated. Use ElggGroup::getMembers()", 1.9);
+		elgg_deprecated_notice("\ElggGroup::getFriendsOf() is deprecated. Use \ElggGroup::getMembers()", 1.9);
 		return get_group_members($this->getGUID(), $limit, $offset);
 	}
 
@@ -276,7 +290,7 @@ class ElggGroup extends ElggEntity
 	 * @deprecated 1.9 Use elgg_get_entities()
 	 */
 	public function getObjects($subtype = "", $limit = 10, $offset = 0) {
-		elgg_deprecated_notice("ElggGroup::getObjects() is deprecated. Use elgg_get_entities()", 1.9);
+		elgg_deprecated_notice("\ElggGroup::getObjects() is deprecated. Use elgg_get_entities()", 1.9);
 		return get_objects_in_group($this->getGUID(), $subtype, 0, 0, "", $limit, $offset, false);
 	}
 
@@ -291,7 +305,7 @@ class ElggGroup extends ElggEntity
 	 * @deprecated 1.9 Use elgg_get_entities()
 	 */
 	public function getFriendsObjects($subtype = "", $limit = 10, $offset = 0) {
-		elgg_deprecated_notice("ElggGroup::getFriendsObjects() is deprecated. Use elgg_get_entities()", 1.9);
+		elgg_deprecated_notice("\ElggGroup::getFriendsObjects() is deprecated. Use elgg_get_entities()", 1.9);
 		return get_objects_in_group($this->getGUID(), $subtype, 0, 0, "", $limit, $offset, false);
 	}
 
@@ -304,7 +318,7 @@ class ElggGroup extends ElggEntity
 	 * @deprecated 1.9 Use elgg_get_entities()
 	 */
 	public function countObjects($subtype = "") {
-		elgg_deprecated_notice("ElggGroup::countObjects() is deprecated. Use elgg_get_entities()", 1.9);
+		elgg_deprecated_notice("\ElggGroup::countObjects() is deprecated. Use elgg_get_entities()", 1.9);
 		return get_objects_in_group($this->getGUID(), $subtype, 0, 0, "", 10, 0, true);
 	}
 
@@ -327,7 +341,7 @@ class ElggGroup extends ElggEntity
 	 */
 	public function getMembers($options = array(), $offset = 0, $count = false) {
 		if (!is_array($options)) {
-			elgg_deprecated_notice('ElggGroup::getMembers() takes an options array.', 1.9);
+			elgg_deprecated_notice('\ElggGroup::getMembers() takes an options array.', 1.9);
 			$options = array(
 				'relationship' => 'member',
 				'relationship_guid' => $this->getGUID(),
@@ -403,13 +417,13 @@ class ElggGroup extends ElggEntity
 	/**
 	 * Is the given user a member of this group?
 	 *
-	 * @param ElggUser $user The user. Default is logged in user.
+	 * @param \ElggUser $user The user. Default is logged in user.
 	 *
 	 * @return bool
 	 */
-	public function isMember(ElggUser $user = null) {
+	public function isMember(\ElggUser $user = null) {
 		if ($user == null) {
-			$user = elgg_get_logged_in_user_entity();
+			$user = _elgg_services()->session->getLoggedInUser();
 		}
 		if (!$user) {
 			return false;
@@ -421,52 +435,52 @@ class ElggGroup extends ElggEntity
 			'user' => $user,
 			'group' => $this,
 		);
-		return elgg_trigger_plugin_hook('is_member', 'group', $params, $result);
+		return _elgg_services()->hooks->trigger('is_member', 'group', $params, $result);
 	}
 
 	/**
 	 * Join a user to this group.
 	 *
-	 * @param ElggUser $user User joining the group.
+	 * @param \ElggUser $user User joining the group.
 	 *
 	 * @return bool Whether joining was successful.
 	 */
-	public function join(ElggUser $user) {
+	public function join(\ElggUser $user) {
 		$result = add_entity_relationship($user->guid, 'member', $this->guid);
-
+	
 		if ($result) {
 			$params = array('group' => $this, 'user' => $user);
-			elgg_trigger_event('join', 'group', $params);
+			_elgg_services()->events->trigger('join', 'group', $params);
 		}
-
+	
 		return $result;
 	}
 
 	/**
 	 * Remove a user from the group.
 	 *
-	 * @param ElggUser $user User to remove from the group.
+	 * @param \ElggUser $user User to remove from the group.
 	 *
 	 * @return bool Whether the user was removed from the group.
 	 */
-	public function leave(ElggUser $user) {
+	public function leave(\ElggUser $user) {
 		// event needs to be triggered while user is still member of group to have access to group acl
 		$params = array('group' => $this, 'user' => $user);
-		elgg_trigger_event('leave', 'group', $params);
+		_elgg_services()->events->trigger('leave', 'group', $params);
 
 		return remove_entity_relationship($user->guid, 'member', $this->guid);
 	}
 
 	/**
-	 * Load the ElggGroup data from the database
+	 * Load the \ElggGroup data from the database
 	 *
-	 * @param mixed $guid GUID of an ElggGroup entity or database row from entity table
+	 * @param mixed $guid GUID of an \ElggGroup entity or database row from entity table
 	 *
 	 * @return bool
 	 */
 	protected function load($guid) {
-		$attr_loader = new Elgg_AttributeLoader(get_class(), 'group', $this->attributes);
-		$attr_loader->requires_access_control = !($this instanceof ElggPlugin);
+		$attr_loader = new \Elgg\AttributeLoader(get_class(), 'group', $this->attributes);
+		$attr_loader->requires_access_control = !($this instanceof \ElggPlugin);
 		$attr_loader->secondary_loader = 'get_group_entity_as_row';
 
 		$attrs = $attr_loader->getRequiredAttributes($guid);
@@ -487,28 +501,34 @@ class ElggGroup extends ElggEntity
 	 */
 	protected function update() {
 		global $CONFIG;
-
+		
 		if (!parent::update()) {
 			return false;
 		}
-
+		
 		$guid = (int)$this->guid;
 		$name = sanitize_string($this->name);
 		$description = sanitize_string($this->description);
-
+		
 		$query = "UPDATE {$CONFIG->dbprefix}groups_entity set"
 			. " name='$name', description='$description' where guid=$guid";
 
 		return $this->getDatabase()->updateData($query) !== false;
 	}
-
+	
 	/**
 	 * {@inheritdoc}
 	 */
 	protected function create() {
 		global $CONFIG;
-
+		
 		$guid = parent::create();
+		if (!$guid) {
+			// @todo this probably means permission to create entity was denied
+			// Is returning false the correct thing to do
+			return false;
+		}
+		
 		$name = sanitize_string($this->name);
 		$description = sanitize_string($this->description);
 
@@ -520,7 +540,7 @@ class ElggGroup extends ElggEntity
 			// TODO(evan): Throw an exception here?
 			return false;
 		}
-
+		
 		return $guid;
 	}
 
@@ -554,7 +574,7 @@ class ElggGroup extends ElggEntity
 	/**
 	 * Can a user comment on this group?
 	 *
-	 * @see ElggEntity::canComment()
+	 * @see \ElggEntity::canComment()
 	 *
 	 * @param int $user_guid User guid (default is logged in user)
 	 * @return bool

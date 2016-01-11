@@ -45,8 +45,8 @@ if ($is_new_group
 	forward(REFERER);
 }
 
-$group = new ElggGroup($group_guid); // load if present, if not create a new group
-if ($group_guid && !$group->canEdit()) {
+$group = $group_guid ? get_entity($group_guid) : new ElggGroup();
+if (elgg_instanceof($group, "group") && !$group->canEdit()) {
 	register_error(elgg_echo("groups:cantedit"));
 	forward(REFERER);
 }
@@ -66,6 +66,14 @@ if (sizeof($input) > 0) {
 					WHERE id = $group->group_acl";
 				update_data($query);
 			}
+		}
+
+		if ($value === '') {
+			// The group profile displays all profile fields that have a value.
+			// We don't want to display fields with empty string value, so we
+			// remove the metadata completely.
+			$group->deleteMetadata($shortname);
+			continue;
 		}
 
 		$group->$shortname = $value;
@@ -108,7 +116,13 @@ if (!$is_new_group && $new_owner_guid && $new_owner_guid != $old_owner_guid) {
 	// verify new owner is member and old owner/admin is logged in
 	if ($group->isMember(get_user($new_owner_guid)) && ($old_owner_guid == $user->guid || $user->isAdmin())) {
 		$group->owner_guid = $new_owner_guid;
-		$group->container_guid = $new_owner_guid;
+		if ($group->container_guid == $old_owner_guid) {
+			// Even though this action defaults container_guid to the logged in user guid,
+			// the group may have initially been created with a custom script that assigned
+			// a different container entity. We want to make sure we preserve the original
+			// container if it the group is not contained by the original owner.
+			$group->container_guid = $new_owner_guid;
+		}
 
 		$metadata = elgg_get_metadata(array(
 			'guid' => $group_guid,
@@ -133,7 +147,10 @@ $must_move_icons = ($owner_has_changed && $old_icontime);
 
 if ($is_new_group) {
 	// if new group, we need to save so group acl gets set in event handler
-	$group->save();
+	if (!$group->save()) {
+		register_error(elgg_echo("groups:save_error"));
+		forward(REFERER);
+	}
 }
 
 // Invisible group support
@@ -156,7 +173,10 @@ if (elgg_get_plugin_setting('hidden_groups', 'groups') == 'yes') {
 	$group->access_id = $visibility;
 }
 
-$group->save();
+if (!$group->save()) {
+	register_error(elgg_echo("groups:save_error"));
+	forward(REFERER);
+}
 
 // group saved so clear sticky form
 elgg_clear_sticky_form('groups');
@@ -192,7 +212,7 @@ if ($has_uploaded_icon) {
 	$filehandler->close();
 	$filename = $filehandler->getFilenameOnFilestore();
 
-	$sizes = array('tiny', 'small', 'medium', 'large');
+	$sizes = array('tiny', 'small', 'medium', 'large', 'master');
 
 	$thumbs = array();
 	foreach ($sizes as $size) {

@@ -1,12 +1,12 @@
 <?php
 /**
- * Test ElggEntity
+ * Test \ElggEntity
  *
  */
-class ElggCoreEntityTest extends ElggCoreUnitTest {
+class ElggCoreEntityTest extends \ElggCoreUnitTest {
 
 	/**
-	 * @var ElggEntity
+	 * @var \ElggEntity
 	 */
 	protected $entity;
 
@@ -14,8 +14,8 @@ class ElggCoreEntityTest extends ElggCoreUnitTest {
 	 * Called before each test method.
 	 */
 	public function setUp() {
-		// use ElggObject since ElggEntity is an abstract class
-		$this->entity = new ElggObject();
+		// use \ElggObject since \ElggEntity is an abstract class
+		$this->entity = new \ElggObject();
 		$this->entity->subtype = 'elgg_entity_test_subtype';
 		$this->entity->save();
 	}
@@ -65,7 +65,7 @@ class ElggCoreEntityTest extends ElggCoreUnitTest {
 
 	public function testSubtypeAddRemove() {
 		$test_subtype = 'test_1389988642';
-		$object = new ElggObject();
+		$object = new \ElggObject();
 		$object->subtype = $test_subtype;
 		$object->save();
 
@@ -77,13 +77,13 @@ class ElggCoreEntityTest extends ElggCoreUnitTest {
 		$this->assertFalse(get_subtype_id('object', $test_subtype));
 	}
 
-	public function testElggEnityGetAndSetAnnotations() {
+	public function testElggEntityGetAndSetAnnotations() {
 		$this->assertIdentical($this->entity->getAnnotations(array('annotation_name' => 'non_existent')), array());
 
 		// save entity and check for annotation
 		$this->entity->annotate('non_existent', 'foo');
 		$annotations = $this->entity->getAnnotations(array('annotation_name' => 'non_existent'));
-		$this->assertIsA($annotations[0], 'ElggAnnotation');
+		$this->assertIsA($annotations[0], '\ElggAnnotation');
 		$this->assertIdentical($annotations[0]->name, 'non_existent');
 		$this->assertEqual($this->entity->countAnnotations('non_existent'), 1);
 
@@ -151,10 +151,10 @@ class ElggCoreEntityTest extends ElggCoreUnitTest {
 	public function testElggEntityRecursiveDisableAndEnable() {
 		global $CONFIG;
 
-		$obj1 = new ElggObject();
+		$obj1 = new \ElggObject();
 		$obj1->container_guid = $this->entity->getGUID();
 		$obj1->save();
-		$obj2 = new ElggObject();
+		$obj2 = new \ElggObject();
 		$obj2->container_guid = $this->entity->getGUID();
 		$obj2->save();
 
@@ -205,7 +205,7 @@ class ElggCoreEntityTest extends ElggCoreUnitTest {
 	}
 
 	public function testElggEntityMultipleMetadata() {
-		foreach (array($this->entity, new ElggObject()) as $obj) {
+		foreach (array($this->entity, new \ElggObject()) as $obj) {
 			$md = array('brett', 'bryan', 'brad');
 			$name = 'test_md_' . rand();
 
@@ -216,7 +216,7 @@ class ElggCoreEntityTest extends ElggCoreUnitTest {
 	}
 
 	public function testElggEntitySingleElementArrayMetadata() {
-		foreach (array($this->entity, new ElggObject()) as $obj) {
+		foreach (array($this->entity, new \ElggObject()) as $obj) {
 			$md = array('test');
 			$name = 'test_md_' . rand();
 
@@ -227,7 +227,7 @@ class ElggCoreEntityTest extends ElggCoreUnitTest {
 	}
 
 	public function testElggEntityAppendMetadata() {
-		foreach (array($this->entity, new ElggObject()) as $obj) {
+		foreach (array($this->entity, new \ElggObject()) as $obj) {
 			$md = 'test';
 			$name = 'test_md_' . rand();
 
@@ -239,7 +239,7 @@ class ElggCoreEntityTest extends ElggCoreUnitTest {
 	}
 
 	public function testElggEntitySingleElementArrayAppendMetadata() {
-		foreach (array($this->entity, new ElggObject()) as $obj) {
+		foreach (array($this->entity, new \ElggObject()) as $obj) {
 			$md = 'test';
 			$name = 'test_md_' . rand();
 
@@ -251,7 +251,7 @@ class ElggCoreEntityTest extends ElggCoreUnitTest {
 	}
 
 	public function testElggEntityArrayAppendMetadata() {
-		foreach (array($this->entity, new ElggObject()) as $obj) {
+		foreach (array($this->entity, new \ElggObject()) as $obj) {
 			$md = array('brett', 'bryan', 'brad');
 			$md2 = array('test1', 'test2', 'test3');
 			$name = 'test_md_' . rand();
@@ -261,5 +261,98 @@ class ElggCoreEntityTest extends ElggCoreUnitTest {
 
 			$this->assertEqual(array_merge($md, $md2), $obj->$name);
 		}
+	}
+
+	public function testElggEntityGetIconURL() {
+
+		elgg_register_plugin_hook_handler('entity:icon:url', 'object', function ($hook, $type, $url, $params) {
+			$size = (string) elgg_extract('size', $params);
+			return "$size.jpg";
+		}, 99999);
+
+		$obj = new \ElggObject();
+		$obj->save();
+
+		// Test default size
+		$this->assertEqual($obj->getIconURL(), elgg_normalize_url('medium.jpg'));
+		// Test size
+		$this->assertEqual($obj->getIconURL('small'), elgg_normalize_url('small.jpg'));
+		// Test mixed params
+		$this->assertEqual($obj->getIconURL('small'), $obj->getIconURL(array('size' => 'small')));
+		// Test bad param
+		$this->assertEqual($obj->getIconURL(new \stdClass), elgg_normalize_url('medium.jpg'));
+	}
+
+	public function testCanAnnotateDefault() {
+		$object = new \ElggObject();
+		$object->subtype = 'test_1389988642';
+		$object->save();
+
+		$this->assertTrue($object->canAnnotate());
+
+		$user = elgg_get_logged_in_user_entity();
+		elgg_get_session()->removeLoggedInUser();
+		$this->assertFalse($object->canAnnotate());
+
+		elgg_get_session()->setLoggedInUser($user);
+		$object->delete();
+	}
+
+	public function testCanAnnotateCallsSpecificThenGenericHook() {
+		$object = new \ElggObject();
+		$object->subtype = 'test_1389988642';
+		$object->save();
+
+		elgg_register_plugin_hook_handler('permissions_check:annotate:foo', 'object', 'Elgg\Values::getFalse');
+		$this->assertFalse($object->canAnnotate(0, 'foo'));
+
+		// overrides
+		elgg_register_plugin_hook_handler('permissions_check:annotate', 'object', 'Elgg\Values::getTrue');
+		$this->assertTrue($object->canAnnotate());
+
+		elgg_unregister_plugin_hook_handler('permissions_check:annotate:foo', 'object', 'Elgg\Values::getFalse');
+		elgg_unregister_plugin_hook_handler('permissions_check:annotate', 'object', 'Elgg\Values::getTrue');
+
+		$object->delete();
+	}
+
+	public function testCanAnnotateHookParams() {
+		$object = new \ElggObject();
+		$object->subtype = 'test_1389988642';
+		$object->save();
+
+		$call_params = [];
+		$handler = function ($h, $t, $v, $p) use (&$call_params) {
+			$call_params[] = $p;
+		};
+		elgg_register_plugin_hook_handler('permissions_check:annotate:foo', 'object', $handler);
+		elgg_register_plugin_hook_handler('permissions_check:annotate', 'object', $handler);
+
+		$object->canAnnotate(0, 'foo');
+
+		$this->assertSame($call_params[0]['user']->guid, elgg_get_logged_in_user_guid());
+		$this->assertSame($call_params[1]['user']->guid, elgg_get_logged_in_user_guid());
+		$this->assertSame($call_params[0]['entity'], $object);
+		$this->assertSame($call_params[1]['entity'], $object);
+		$this->assertEqual($call_params[0]['annotation_name'], 'foo');
+		$this->assertEqual($call_params[1]['annotation_name'], 'foo');
+
+		elgg_unregister_plugin_hook_handler('permissions_check:annotate:foo', 'object', $handler);
+		elgg_unregister_plugin_hook_handler('permissions_check:annotate', 'object', $handler);
+
+		$object->delete();
+	}
+
+	public function testCanAnnotateDoesntCallSpecificThenGenericHookForEmptyString() {
+		$object = new \ElggObject();
+		$object->subtype = 'test_1389988642';
+		$object->save();
+
+		elgg_register_plugin_hook_handler('permissions_check:annotate:', 'object', 'Elgg\Values::getFalse');
+		$this->assertTrue($object->canAnnotate());
+
+		elgg_unregister_plugin_hook_handler('permissions_check:annotate:', 'object', 'Elgg\Values::getFalse');
+
+		$object->delete();
 	}
 }

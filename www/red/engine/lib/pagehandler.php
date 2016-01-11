@@ -65,7 +65,7 @@ function elgg_gatekeeper() {
 
 /**
  * Alias of elgg_gatekeeper()
- *
+ * 
  * Used at the top of a page to mark it as logged in users only.
  *
  * @return void
@@ -124,7 +124,7 @@ function elgg_group_gatekeeper($forward = true, $group_guid = null) {
 	}
 
 	// this handles non-groups and invisible groups
-	$visibility = Elgg_GroupItemVisibility::factory($group_guid);
+	$visibility = \Elgg\GroupItemVisibility::factory($group_guid);
 
 	if (!$visibility->shouldHideItems) {
 		return true;
@@ -195,7 +195,7 @@ function elgg_entity_gatekeeper($guid, $type = null, $subtype = null) {
 			// user is logged in but still does not have access to it
 			register_error(elgg_echo('limited_access'));
 			forward();
-		}
+		}		
 	}
 
 	if ($type) {
@@ -207,8 +207,22 @@ function elgg_entity_gatekeeper($guid, $type = null, $subtype = null) {
 }
 
 /**
- * Front page handler
+ * Require that the current request be an XHR. If not, execution of the current function
+ * will end and a 400 response page will be sent.
  *
+ * @return void
+ * @since 1.12.0
+ */
+function elgg_ajax_gatekeeper() {
+	if (!elgg_is_xhr()) {
+		register_error(_elgg_services()->translator->translate('ajax:not_is_xhr'));
+		forward(null, '400');
+	}
+}
+
+/**
+ * Front page handler
+ * 
  * @return bool
  */
 function elgg_front_page_handler() {
@@ -255,13 +269,13 @@ function elgg_error_page_handler($hook, $type, $result, $params) {
 			// use default if there is no title for this error type
 			$title = elgg_echo("error:default:title");
 		}
-
+		
 		$content = elgg_view("errors/$type", $params);
 	} else {
 		$title = elgg_echo("error:default:title");
 		$content = elgg_view("errors/default", $params);
 	}
-
+	
 	$httpCodes = array(
 		'400' => 'Bad Request',
 		'401' => 'Unauthorized',
@@ -271,7 +285,7 @@ function elgg_error_page_handler($hook, $type, $result, $params) {
 		'500' => 'Internal Server Error',
 		'503' => 'Service Unavailable',
 	);
-
+	
 	if (isset($httpCodes[$type])) {
 		header("HTTP/1.1 $type {$httpCodes[$type]}");
 	}
@@ -293,7 +307,11 @@ function elgg_error_page_handler($hook, $type, $result, $params) {
 function _elgg_page_handler_init() {
 	elgg_register_page_handler('', 'elgg_front_page_handler');
 	// Registered at 600 so that plugins can register at the default 500 and get to run first
+	elgg_register_plugin_hook_handler('forward', '400', 'elgg_error_page_handler', 600);
+	elgg_register_plugin_hook_handler('forward', '403', 'elgg_error_page_handler', 600);
 	elgg_register_plugin_hook_handler('forward', '404', 'elgg_error_page_handler', 600);
 }
 
-elgg_register_event_handler('init', 'system', '_elgg_page_handler_init');
+return function(\Elgg\EventsService $events, \Elgg\HooksRegistrationService $hooks) {
+	$events->registerHandler('init', 'system', '_elgg_page_handler_init');
+};

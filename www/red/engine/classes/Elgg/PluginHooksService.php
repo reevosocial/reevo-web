@@ -1,17 +1,19 @@
 <?php
+namespace Elgg;
+use Elgg\Debug\Inspector;
 
 /**
  * WARNING: API IN FLUX. DO NOT USE DIRECTLY.
- *
+ * 
  * Use the elgg_* versions instead.
- *
+ * 
  * @access private
- *
+ * 
  * @package    Elgg.Core
  * @subpackage Hooks
  * @since      1.9.0
  */
-class Elgg_PluginHooksService extends Elgg_HooksRegistrationService {
+class PluginHooksService extends \Elgg\HooksRegistrationService {
 
 	/**
 	 * Triggers a plugin hook
@@ -21,12 +23,13 @@ class Elgg_PluginHooksService extends Elgg_HooksRegistrationService {
 	 */
 	public function trigger($hook, $type, $params = null, $returnvalue = null) {
 		$hooks = $this->getOrderedHandlers($hook, $type);
-
+		
 		foreach ($hooks as $callback) {
 			if (!is_callable($callback)) {
 				if ($this->logger) {
+					$inspector = new Inspector();
 					$this->logger->warn("handler for plugin hook [$hook, $type] is not callable: "
-										. $this->describeCallable($callback));
+										. $inspector->describeCallable($callback));
 				}
 				continue;
 			}
@@ -37,7 +40,7 @@ class Elgg_PluginHooksService extends Elgg_HooksRegistrationService {
 				$returnvalue = $temp_return_value;
 			}
 		}
-
+	
 		return $returnvalue;
 	}
 }

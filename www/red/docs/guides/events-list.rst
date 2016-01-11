@@ -32,12 +32,19 @@ System events
     might not be shown until after the process is completed. This means that any long-running
     processes will still delay the page load.
 
+**regenerate_site_secret:before, system**
+    Return false to cancel regenerating the site secret. You should also provide a message
+    to the user.
+
+**regenerate_site_secret:after, system**
+    Triggered after the site secret has been regenerated.
+
 **log, systemlog**
 	Called for all triggered events. Used internally by ``system_log_default_logger()`` to populate
 	the ``system_log`` table.
 
 **upgrade, system**
-	Triggered after a system upgrade has finished. All upgrade scripts have run, but the caches
+	Triggered after a system upgrade has finished. All upgrade scripts have run, but the caches 
 	are not cleared.
 
 **upgrade, upgrade**
@@ -53,6 +60,9 @@ System events
 
 **init:cookie, <name>**
     Return false to override setting a cookie.
+
+**cache:flush, system**
+    Reset internal and external caches, by default including system_cache, simplecache, and memcache. One might use it to reset others such as APC, OPCache, or WinCache.
 
 User events
 ===========
@@ -95,11 +105,14 @@ User events
 Relationship events
 ===================
 
-**create, <relationship>**
+**create, relationship**
     Triggered after a relationship has been created. Returning false deletes
     the relationship that was just created.
 
-**delete, <relationship>**
+.. note:: This event was broken in Elgg 1.9 - 1.12.3, returning false would *not*
+   delete the relationship.  This is working as of 1.12.4
+
+**delete, relationship**
     Triggered before a relationship is deleted. Return false to prevent it
     from being deleted.
 
@@ -116,7 +129,10 @@ Entity events
     Triggered for user, group, object, and site entities after creation. Return false to delete entity.
 
 **update, <entity type>**
-	Triggered before an update for the user, group, object, and site entities. Return false to prevent update.
+    Triggered before an update for the user, group, object, and site entities. Return false to prevent update.
+
+**update:after, <entity type>**
+    Triggered after an update for the user, group, object, and site entities.
 
 **delete, <entity type>**
     Triggered before entity deletion. Return false to prevent deletion.

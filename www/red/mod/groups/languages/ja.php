@@ -66,7 +66,7 @@ return array(
 	'groups:featured_error' => '不正なグループです。',
 	'groups:nofeatured' => 'クローズアップされたグループはありません',
 	'groups:joinrequest' => '参加希望',
-	'groups:join' => '参加',
+	'groups:join' => 'グループに参加',
 	'groups:leave' => '脱退',
 	'groups:invite' => '友達を招待',
 	'groups:invite:title' => 'このグループに友達を招待する',
@@ -173,6 +173,7 @@ return array(
 	'discussion:reply:edit' => '返答を編集',
 	'discussion:reply:deleted' => '返答を削除しました。',
 	'discussion:reply:error:notfound' => '議論の返答は見つかりませんでした。',
+	'discussion:reply:error:notfound_fallback' => "申し訳ありません。お探しの返答は見つかりませんでした。オリジナルの会議の議論にご案内します。",
 	'discussion:reply:error:notdeleted' => '返答を削除することができませんでした。',
 
 	'discussion:search:title' => '議題「 %s 」に返答する',

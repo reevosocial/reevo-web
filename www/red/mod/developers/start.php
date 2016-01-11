@@ -21,7 +21,6 @@ function developers_init() {
 
 	$action_base = elgg_get_plugins_path() . 'developers/actions/developers';
 	elgg_register_action('developers/settings', "$action_base/settings.php", 'admin');
-	elgg_register_action('developers/inspect', "$action_base/inspect.php", 'admin');
 
 	elgg_define_js('jquery.jstree', array(
 		'src' => '/mod/developers/vendors/jsTree/jquery.jstree.js',
@@ -34,38 +33,57 @@ function developers_init() {
 }
 
 function developers_process_settings() {
-	if (elgg_get_plugin_setting('display_errors', 'developers') == 1) {
-		ini_set('display_errors', 1);
-	} else {
-		ini_set('display_errors', 0);
-	}
+	$settings = elgg_get_plugin_from_id('developers')->getAllSettings();
 
-	if (elgg_get_plugin_setting('screen_log', 'developers') == 1) {
+	ini_set('display_errors', (int)!empty($settings['display_errors']));
+
+	if (!empty($settings['screen_log'])) {
 		$cache = new ElggLogCache();
 		elgg_set_config('log_cache', $cache);
 		elgg_register_plugin_hook_handler('debug', 'log', array($cache, 'insertDump'));
-		elgg_extend_view('page/elements/foot', 'developers/log');
+		elgg_register_plugin_hook_handler('view_vars', 'page/elements/html', function($hook, $type, $vars, $params) {
+			$vars['body'] .= elgg_view('developers/log');
+			return $vars;
+		});
 	}
 
-	if (elgg_get_plugin_setting('show_strings', 'developers') == 1) {
+	if (!empty($settings['show_strings'])) {
 		// first and last in case a plugin registers a translation in an init method
 		elgg_register_event_handler('init', 'system', 'developers_clear_strings', 1000);
 		elgg_register_event_handler('init', 'system', 'developers_clear_strings', 1);
 	}
 
-	if (elgg_get_plugin_setting('wrap_views', 'developers') == 1) {
+	if (!empty($settings['show_modules'])) {
+		elgg_require_js('elgg/dev/amd_monitor');
+	}
+
+	if (!empty($settings['wrap_views'])) {
 		elgg_register_plugin_hook_handler('view', 'all', 'developers_wrap_views');
 	}
 
-	if (elgg_get_plugin_setting('log_events', 'developers') == 1) {
+	if (!empty($settings['log_events'])) {
 		elgg_register_event_handler('all', 'all', 'developers_log_events', 1);
 		elgg_register_plugin_hook_handler('all', 'all', 'developers_log_events', 1);
+	}
+
+	if (!empty($settings['show_gear']) && elgg_is_admin_logged_in() && !elgg_in_context('admin')) {
+		elgg_require_js('elgg/dev/gear');
+		elgg_load_js('lightbox');
+		elgg_load_css('lightbox');
+		elgg_register_ajax_view('developers/gear_popup');
+
+		// TODO use ::class in 2.0
+		$handler = ['Elgg\DevelopersPlugin\Hooks', 'alterMenuSectionVars'];
+		elgg_register_plugin_hook_handler('view_vars', 'navigation/menu/elements/section', $handler);
+
+		$handler = ['Elgg\DevelopersPlugin\Hooks', 'alterMenuSections'];
+		elgg_register_plugin_hook_handler('view', 'navigation/menu/elements/section', $handler);
 	}
 }
 
 function developers_setup_menu() {
 	if (elgg_in_context('admin')) {
-		elgg_register_admin_menu_item('develop', 'inspect', 'develop_tools');
+		elgg_register_admin_menu_item('develop', 'inspect');
 		elgg_register_admin_menu_item('develop', 'sandbox', 'develop_tools');
 		elgg_register_admin_menu_item('develop', 'unit_tests', 'develop_tools');
 
@@ -77,6 +95,18 @@ function developers_setup_menu() {
 			'priority' => 10,
 			'section' => 'develop'
 		));
+		
+		$inspect_options = developers_get_inspect_options();
+		foreach ($inspect_options as $key => $value) {
+			elgg_register_menu_item('page', array(
+				'name' => 'dev_inspect_' . elgg_get_friendly_title($key),
+				'href' => "admin/develop_tools/inspect?inspect_type={$key}",
+				'text' => $value,
+				'context' => 'admin',
+				'section' => 'develop',
+				'parent_name' => 'inspect'
+			));
+		}
 	}
 }
 
@@ -93,13 +123,13 @@ function developers_clear_strings() {
 
 /**
  * Post-process a view to add wrapper comments to it
- *
+ * 
  * 1. Only process views served with the 'default' viewtype.
  * 2. Does not wrap views that begin with js/ or css/ as they are not HTML.
  * 3. Does not wrap views that are images (start with icon/). Is this still true?
  * 4. Does not wrap input and output views (why?).
  * 5. Does not wrap html head or the primary page shells
- *
+ * 
  * @warning this will break views in the default viewtype that return non-HTML data
  * that do not match the above restrictions.
  */
@@ -151,7 +181,7 @@ function developers_log_events($name, $type) {
 	// 1 => call_user_func_array
 	// 2 => hook class trigger
 	$stack = debug_backtrace();
-	if (isset($stack[2]['class']) && $stack[2]['class'] == 'Elgg_EventsService') {
+	if (isset($stack[2]['class']) && $stack[2]['class'] == 'Elgg\EventsService') {
 		$event_type = 'Event';
 	} else {
 		$event_type = 'Plugin hook';
@@ -207,7 +237,7 @@ function developers_theme_sandbox_controller($page) {
 		'navigation',
 		'typography',
 	);
-
+	
 	foreach ($pages as $page_name) {
 		elgg_register_menu_item('theme_sandbox', array(
 			'name' => $page_name,
@@ -215,6 +245,8 @@ function developers_theme_sandbox_controller($page) {
 			'href' => "theme_sandbox/$page_name",
 		));
 	}
+
+	elgg_require_js('elgg/dev/theme_sandbox');
 
 	$title = elgg_echo("theme_sandbox:{$page[0]}");
 	$body =  elgg_view("theme_sandbox/{$page[0]}");
@@ -226,4 +258,29 @@ function developers_theme_sandbox_controller($page) {
 
 	echo elgg_view_page("Theme Sandbox : $title", $layout, 'theme_sandbox');
 	return true;
+}
+
+/**
+ * Get the available inspect options
+ * 
+ * @return array
+ */
+function developers_get_inspect_options() {
+	$options = array(
+		'Actions' => elgg_echo('developers:inspect:actions'),
+		'Events' => elgg_echo('developers:inspect:events'),
+		'Menus' => elgg_echo('developers:inspect:menus'),
+		'Plugin Hooks' => elgg_echo('developers:inspect:pluginhooks'),
+		'Simple Cache' => elgg_echo('developers:inspect:simplecache'),
+		'Views' => elgg_echo('developers:inspect:views'),
+		'Widgets' => elgg_echo('developers:inspect:widgets'),
+	);
+	
+	if (elgg_is_active_plugin('web_services')) {
+		$options['Web Services'] = elgg_echo('developers:inspect:webservices');
+	}
+	
+	ksort($options);
+	
+	return $options;
 }

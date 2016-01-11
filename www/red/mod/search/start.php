@@ -29,21 +29,9 @@ function search_init() {
 	// get server min and max allowed chars for ft searching
 	$CONFIG->search_info = array();
 
-	$result = false;
-	try {
-		$result = get_data_row('SELECT @@ft_min_word_len as min, @@ft_max_word_len as max');
-	} catch (DatabaseException $e) {
-		// some servers don't have these values set which leads to exception
-		// we ignore the exception
-	}
-	if ($result) {
-		$CONFIG->search_info['min_chars'] = $result->min;
-		$CONFIG->search_info['max_chars'] = $result->max;
-	} else {
-		// defaults from MySQL on Ubuntu Linux
-		$CONFIG->search_info['min_chars'] = 4;
-		$CONFIG->search_info['max_chars'] = 90;
-	}
+	$ft_min_max = search_get_ft_min_max();
+	$CONFIG->search_info['min_chars'] = $ft_min_max->min;
+	$CONFIG->search_info['max_chars'] = $ft_min_max->max;
 
 	// add in CSS for search elements
 	elgg_extend_view('css/elgg', 'search/css');
@@ -272,10 +260,10 @@ function search_highlight_words($words, $string) {
 	foreach ($words as $word) {
 		// remove any boolean mode operators
 		$word = preg_replace("/([\-\+~])([\w]+)/i", '$2', $word);
-
+		
 		// escape the delimiter and any other regexp special chars
 		$word = preg_quote($word, '/');
-
+		
 		$search = "/($word)/i";
 
 		// @todo
@@ -315,8 +303,9 @@ function search_remove_ignored_words($query, $format = 'array') {
 	// don't worry about "s or boolean operators
 	//$query = str_replace(array('"', '-', '+', '~'), '', stripslashes(strip_tags($query)));
 	$query = stripslashes(strip_tags($query));
-
-	$words = explode(' ', $query);
+	$query = trim($query);
+	
+	$words = preg_split('/\s+/', $query);
 
 	$min_chars = $CONFIG->search_info['min_chars'];
 	// if > ft_min_word we're not running in literal mode.
@@ -404,7 +393,7 @@ function search_get_where_sql($table, $fields, $params, $use_fulltext = TRUE) {
 			$fields[$i] = "$table.$field";
 		}
 	}
-
+	
 	$where = '';
 
 	// if query is shorter than the min for fts words
@@ -424,12 +413,12 @@ function search_get_where_sql($table, $fields, $params, $use_fulltext = TRUE) {
 		if (!$use_fulltext) {
 			$query = '+' . str_replace(' ', ' +', $query);
 		}
-
+		
 		// if using advanced, boolean operators, or paired "s, switch into boolean mode
 		$booleans_used = preg_match("/([\-\+~])([\w]+)/i", $query);
 		$advanced_search = (isset($params['advanced_search']) && $params['advanced_search']);
-		$quotes_used = (elgg_substr_count($query, '"') >= 2);
-
+		$quotes_used = (elgg_substr_count($query, '"') >= 2); 
+		
 		if (!$use_fulltext || $booleans_used || $advanced_search || $quotes_used) {
 			$options = 'IN BOOLEAN MODE';
 		} else {
@@ -437,7 +426,7 @@ function search_get_where_sql($table, $fields, $params, $use_fulltext = TRUE) {
 			//$options = 'IN NATURAL LANGUAGE MODE';
 			$options = '';
 		}
-
+		
 		// if short query, use query expansion.
 		// @todo doesn't seem to be working well.
 //		if (elgg_strlen($query) < 5) {
@@ -522,4 +511,38 @@ Disallow: /search/
 TEXT;
 
 	return $text;
+}
+
+/**
+ * Returns minimum and maximum lengths of words for MySQL search
+ * This function looks for stored config values, and, if none set,
+ * queries the DB and saves them
+ * @return stdClass An object with min and max properties
+ */
+function search_get_ft_min_max() {
+
+	$min = (int) elgg_get_config('search_ft_min_word_len');
+	$max = (int) elgg_get_config('search_ft_max_word_len');
+
+	if (!$min || !$max) {
+		// defaults from MySQL on Ubuntu Linux
+		$min = 4;
+		$max = 90;
+		try {
+			$result = get_data_row('SELECT @@ft_min_word_len as min, @@ft_max_word_len as max');
+			$min = $result->min;
+			$max = $result->max;
+		} catch (DatabaseException $e) {
+			// some servers don't have these values set which leads to exception
+			// we ignore the exception
+		}
+		elgg_save_config('search_ft_min_word_len', $min);
+		elgg_save_config('search_ft_max_word_len', $max);
+	}
+
+	$ft = new stdClass();
+	$ft->min = $min;
+	$ft->max = $max;
+
+	return $ft;
 }

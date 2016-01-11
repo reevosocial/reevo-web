@@ -10,7 +10,7 @@
 
 /**
  * Handle a request for an action
- *
+ * 
  * @param array $segments URL segments that make up action name
  *
  * @return void
@@ -66,7 +66,7 @@ function action($action, $forwarder = "") {
  *
  * @tip You don't need to include engine/start.php in your action files.
  *
- * @internal Actions are saved in $CONFIG->actions as an array in the form:
+ * @note Internal: Actions are saved in $CONFIG->actions as an array in the form:
  * <code>
  * array(
  * 	'file' => '/location/to/file.php',
@@ -98,6 +98,17 @@ function elgg_unregister_action($action) {
 }
 
 /**
+ * Get an HMAC token builder/validator object
+ *
+ * @param mixed $data HMAC data string or serializable data
+ * @return \Elgg\Security\Hmac
+ * @since 1.11
+ */
+function elgg_build_hmac($data) {
+	return _elgg_services()->crypto->getHmac($data);
+}
+
+/**
  * Validate an action token.
  *
  * Calls to actions will automatically validate tokens. If tokens are not
@@ -126,7 +137,7 @@ function validate_action_token($visible_errors = true, $token = null, $ts = null
  * This function verifies form input for security features (like a generated token),
  * and forwards if they are invalid.
  *
- * @param string $action The action being performed
+ * @param string $action The action being performed 
  *
  * @return mixed True if valid or redirects.
  * @access private
@@ -169,13 +180,7 @@ function generate_action_token($timestamp) {
  * @todo Move to better file.
  */
 function init_site_secret() {
-	$secret = 'z' . _elgg_services()->crypto->getRandomString(31);
-
-	if (datalist_set('__site_secret__', $secret)) {
-		return $secret;
-	}
-
-	return false;
+	return _elgg_services()->siteSecret->init();
 }
 
 /**
@@ -188,12 +193,7 @@ function init_site_secret() {
  * @todo Move to better file.
  */
 function get_site_secret() {
-	$secret = datalist_get('__site_secret__');
-	if (!$secret) {
-		$secret = init_site_secret();
-	}
-
-	return $secret;
+	return _elgg_services()->siteSecret->get();
 }
 
 /**
@@ -203,17 +203,7 @@ function get_site_secret() {
  * @access private
  */
 function _elgg_get_site_secret_strength() {
-	$secret = get_site_secret();
-	if ($secret[0] !== 'z') {
-		$rand_max = getrandmax();
-		if ($rand_max < pow(2, 16)) {
-			return 'weak';
-		}
-		if ($rand_max < pow(2, 32)) {
-			return 'moderate';
-		}
-	}
-	return 'strong';
+	return _elgg_services()->siteSecret->getStrength();
 }
 
 /**
@@ -254,7 +244,7 @@ function elgg_is_xhr() {
  * }
  * </pre>
  * where "system_messages" is all message registers at the point of forwarding
- *
+ * 
  * @internal registered for the 'forward', 'all' plugin hook
  *
  * @param string $hook
@@ -316,4 +306,6 @@ function actions_init() {
 	elgg_register_plugin_hook_handler('forward', 'all', 'ajax_forward_hook');
 }
 
-elgg_register_event_handler('init', 'system', 'actions_init');
+return function(\Elgg\EventsService $events, \Elgg\HooksRegistrationService $hooks) {
+	$events->registerHandler('init', 'system', 'actions_init');
+};

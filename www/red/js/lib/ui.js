@@ -22,7 +22,10 @@ elgg.ui.init = function () {
 
 	$('.elgg-menu-page .elgg-menu-parent').live('click', elgg.ui.toggleMenu);
 
-	$('.elgg-requires-confirmation').live('click', elgg.ui.requiresConfirmation);
+    $('*[data-confirm], .elgg-requires-confirmation').live('click', elgg.ui.requiresConfirmation);
+    if ($('.elgg-requires-confirmation').length > 0) {
+        elgg.deprecated_notice('Use of .elgg-requires-confirmation is deprecated by data-confirm', '1.10');
+    }
 
 	$('.elgg-autofocus').focus();
 	if ($('.elgg-autofocus').length > 0) {
@@ -30,6 +33,10 @@ elgg.ui.init = function () {
 	}
 
 	elgg.ui.initAccessInputs();
+
+	// Allow element to be highlighted using CSS if its id is found from the URL
+	var elementId = elgg.getSelectorFromUrlFragment(document.URL);
+	$(elementId).addClass('elgg-state-highlight');
 };
 
 /**
@@ -37,17 +44,35 @@ elgg.ui.init = function () {
  *
  * Use rel="toggle" on the toggler element
  * Set the href to target the item you want to toggle (<a rel="toggle" href="#id-of-target">)
+ * or use data-toggle-selector="your_jquery_selector" to have an advanced selection method
+ * 
+ * By default elements perform a slideToggle. 
+ * If you want a normal toggle (hide/show) you can add data-toggle-slide="0" on the elements to prevent a slide.
  *
  * @param {Object} event
  * @return void
  */
 elgg.ui.toggles = function(event) {
 	event.preventDefault();
+	var $this = $(this),
+		target = $this.data().toggleSelector;
+	
+	if (!target) {
+		// @todo we can switch to elgg.getSelectorFromUrlFragment() in 1.x if
+		// we also extend it to support href=".some-class"
+		target = $this.attr('href');
+	}
 
-	// @todo might want to switch this to elgg.getSelectorFromUrlFragment().
-	var target = $(this).toggleClass('elgg-state-active').attr('href');
+	$this.toggleClass('elgg-state-active');
 
-	$(target).slideToggle('medium');
+	$(target).each(function(index, elem) {
+		var $elem = $(elem);
+		if ($elem.data().toggleSlide != false) {
+			$elem.slideToggle('medium');
+		} else {
+			$elem.toggle();
+		}
+	});
 };
 
 /**
@@ -169,6 +194,34 @@ elgg.ui.toggleMenu = function(event) {
  * @return void
  */
 elgg.ui.initHoverMenu = function(parent) {
+
+	/**
+	 * For a menu clicked, load the menu into all matching placeholders
+	 *
+	 * @param {String} mac Machine authorization code for the menu clicked
+	 */
+	function loadMenu(mac) {
+		var $all_placeholders = $(".elgg-menu-hover[rel='" + mac + "']");
+
+		// find the <ul> that contains data for this menu
+		var $ul = $all_placeholders.filter('[data-elgg-menu-data]');
+
+		if (!$ul.length) {
+			return;
+		}
+
+		elgg.get('ajax/view/navigation/menu/user_hover/contents', {
+			data: $ul.data('elggMenuData'),
+			success: function(data) {
+				if (data) {
+					// replace all existing placeholders with new menu
+					$all_placeholders.removeClass('elgg-ajax-loader')
+						.html($(data).children());
+				}
+			}
+		});
+	}
+
 	if (!parent) {
 		parent = document;
 	}
@@ -184,6 +237,12 @@ elgg.ui.initHoverMenu = function(parent) {
 
 	// avatar contextual menu
 	$(".elgg-avatar > .elgg-icon-hover-menu").live('click', function(e) {
+		var $placeholder = $(this).parent().find(".elgg-menu-hover.elgg-ajax-loader");
+
+		if ($placeholder.length) {
+			loadMenu($placeholder.attr("rel"));
+		}
+
 		// check if we've attached the menu to this element already
 		var $hovermenu = $(this).data('hovermenu') || null;
 
@@ -267,7 +326,7 @@ elgg.ui.loginHandler = function(hook, type, params, options) {
  * @requires jqueryui.datepicker
  */
 elgg.ui.initDatePicker = function() {
-	var loadDatePicker = function() {
+	function loadDatePicker() {
 		$('.elgg-input-date').datepicker({
 			// ISO-8601
 			dateFormat: 'yy-mm-dd',
@@ -281,13 +340,22 @@ elgg.ui.initDatePicker = function() {
 					var id = $(this).attr('id');
 					$('input[name="' + id + '"]').val(timestamp);
 				}
-			}
+			},
+			nextText: '&#xBB;',
+			prevText: '&#xAB;',
+			changeMonth: true,
+			changeYear: true
 		});
-	};
+	}
 
-	if ($('.elgg-input-date').length && elgg.get_language() == 'en') {
+	if (!$('.elgg-input-date').length) {
+		return;
+	}
+
+	if (elgg.get_language() == 'en') {
 		loadDatePicker();
-	} else if ($('.elgg-input-date').length) {
+	} else {
+		// load language first
 		elgg.get({
 			url: elgg.config.wwwroot + 'vendors/jquery/i18n/jquery.ui.datepicker-'+ elgg.get_language() +'.js',
 			dataType: "script",
@@ -384,10 +452,22 @@ elgg.ui.initAccessInputs = function () {
 		}
 		var $select = $(this),
 			acl = $select.data('group-acl'),
-			$note = $('.elgg-input-access-membersonly', this.parentNode);
+			$note = $('.elgg-input-access-membersonly', this.parentNode),
+			commentCount = $select.data('comment-count'),
+			originalValue = $select.data('original-value');
 		if ($note) {
 			updateMembersonlyNote();
 			$select.change(updateMembersonlyNote);
+		}
+                
+		if (commentCount) {
+			$select.change(function(e) {
+				if ($(this).val() != originalValue) {
+					if (!confirm(elgg.echo('access:comments:change', [commentCount]))) {
+						$(this).val(originalValue);
+					}
+				}
+			});
 		}
 	});
 };

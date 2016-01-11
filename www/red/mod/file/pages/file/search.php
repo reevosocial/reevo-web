@@ -17,6 +17,7 @@ if ($page_owner_guid) {
 $owner = elgg_get_page_owner_entity();
 
 elgg_group_gatekeeper();
+elgg_register_title_button();
 
 // Get input
 $md_type = 'simpletype';
@@ -69,7 +70,7 @@ if ($friends && elgg_instanceof($owner, 'user')) {
 	$page_owner_guid = $friend_guids;
 }
 
-$limit = 10;
+$limit = elgg_get_config('default_limit');
 if ($listtype == "gallery") {
 	$limit = 12;
 }
@@ -80,6 +81,7 @@ $params = array(
 	'container_guid' => $page_owner_guid,
 	'limit' => $limit,
 	'full_view' => false,
+	'preload_owners' => true,
 );
 
 if ($file_type) {

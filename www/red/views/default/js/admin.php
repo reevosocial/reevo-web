@@ -50,7 +50,8 @@ elgg.admin.init = function () {
 	$('a.elgg-admin-notice').click(elgg.admin.deleteNotice);
 
 	// disable checkboxes (readonly does not work for them)
-	$('input:checkbox.elgg-state-disabled').live('click', function() {return false;});
+	$('input:checkbox.elgg-state-disabled, label.elgg-state-disabled > input:checkbox')
+			.live('click', function() {return false;});
 
 	// disable simple cache compress settings if simple cache is off
 	$('[name=simplecache_enabled]').click(elgg.admin.simplecacheToggle);
@@ -157,7 +158,7 @@ elgg.admin.moveProfileField = function(e, ui) {
 elgg.admin.deleteNotice = function(e) {
 	e.preventDefault();
 	var $container = $(this).closest('p');
-
+	
 	elgg.action($(this).attr('href'), {
 		success: function(json) {
 			$container.slideUp('medium');

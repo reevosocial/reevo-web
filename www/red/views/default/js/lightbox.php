@@ -4,27 +4,27 @@
  *
  * Usage
  * ---------------
- * Call elgg_load_js('lightbox') and elgg_load_css('lightbox').
+ * Call elgg_load_js('lightbox') and elgg_load_css('lightbox'). 
  * Then apply the class elgg-lightbox to links.
  *
- *
+ * 
  * Advanced Usage
  * -----------------
  * Elgg is distributed with the Colorbox jQuery library. Please go to
  * http://www.jacklmoore.com/colorbox for more information on the options of this lightbox.
- *
+ * 
  * You can change global options by overriding the js/lightbox/settings view.
  *
  * You may apply colorbox options to an individual .elgg-lightbox element
  * by setting the attribute data-colorbox-opts to a JSON settings object. You
  * can also set options in the elgg.ui.lightbox.bind() method, but data
  * attributes will take precedence.
- *
- * To support a hidden div as the source, add "inline: true" as a
+ * 
+ * To support a hidden div as the source, add "inline: true" as a 
  * data-colorbox-opts option. For example, using the output/url view, add:
  *    'data-colorbox-opts' => '{"inline": true}',
- *
- *
+ * 
+ * 
  * Overriding with a different lightbox
  * -------------------------------------
  * In a plugin, override this view and override the registration for the
@@ -88,14 +88,18 @@ elgg.ui.lightbox.bind = function (selector, opts) {
 		var $this = $(this),
 			href = $this.prop('href') || $this.prop('src'),
 			dataOpts = $this.data('colorboxOpts');
-		// Q: why not use "colorbox"? A: https://github.com/jackmoore/colorbox/issues/435
+		// Note: data-colorbox was reserved https://github.com/jackmoore/colorbox/issues/435
 
 		if (!$.isPlainObject(dataOpts)) {
 			dataOpts = {};
 		}
 
+		if (!dataOpts.href && href) {
+			dataOpts.href = href;
+		}
+
 		// merge data- options into opts
-		$.colorbox($.extend({href: href}, opts, dataOpts));
+		$.colorbox($.extend({}, opts, dataOpts));
 		e.preventDefault();
 	});
 };

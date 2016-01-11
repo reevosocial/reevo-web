@@ -13,17 +13,18 @@
  *
  * @param string $string Comma-separated tag string
  *
- * @return array|false An array of strings, or false on failure
+ * @return mixed An array of strings or the original data if input was not a string
  */
 function string_to_tag_array($string) {
-	if (is_string($string)) {
-		$ar = explode(",", $string);
-		$ar = array_map('trim', $ar);
-		$ar = array_filter($ar, 'is_not_null');
-		$ar = array_map('strip_tags', $ar);
-		return $ar;
+	if (!is_string($string)) {
+		return $string;
 	}
-	return false;
+	
+	$ar = explode(",", $string);
+	$ar = array_map('trim', $ar);
+	$ar = array_filter($ar, 'is_not_null');
+	$ar = array_map('strip_tags', $ar);
+	return $ar;	
 }
 
 /**
@@ -37,14 +38,19 @@ function string_to_tag_array($string) {
  *
  * 	tag_names => array() metadata tag names - must be registered tags
  *
- * 	limit => INT number of tags to return
+ * 	limit => INT number of tags to return (default from settings)
  *
  *  types => null|STR entity type (SQL: type = '$type')
  *
- * 	subtypes => null|STR entity subtype (SQL: subtype = '$subtype')
+ * 	subtypes => null|STR entity subtype (SQL: subtype IN ('subtype1', 'subtype2))
+ *              Use ELGG_ENTITIES_NO_VALUE to match the default subtype.
+ *              Use ELGG_ENTITIES_ANY_VALUE to match any subtype.
  *
  * 	type_subtype_pairs => null|ARR (array('type' => 'subtype'))
- *  (SQL: type = '$type' AND subtype = '$subtype') pairs
+ *                        array(
+ *                            'object' => array('blog', 'file'), // All objects with subtype of 'blog' or 'file'
+ *                            'user' => ELGG_ENTITY_ANY_VALUE, // All users irrespective of subtype
+ *                        );
  *
  * 	owner_guids => null|INT entity guid
  *
@@ -74,7 +80,7 @@ function elgg_get_tags(array $options = array()) {
 	$defaults = array(
 		'threshold' => 1,
 		'tag_names' => array(),
-		'limit' => 10,
+		'limit' => elgg_get_config('default_limit'),
 
 		'types' => ELGG_ENTITIES_ANY_VALUE,
 		'subtypes' => ELGG_ENTITIES_ANY_VALUE,
@@ -235,40 +241,13 @@ function elgg_get_registered_tag_metadata_names() {
 }
 
 /**
- * Page hander for sitewide tag cloud
- *
- * @param array $page Page array
- *
- * @return bool
- * @access private
- */
-function _elgg_tagcloud_page_handler($page) {
-
-	$title = elgg_echo('tags:site_cloud');
-	$options = array(
-		'threshold' => 0,
-		'limit' => 100,
-		'tag_name' => 'tags',
-	);
-	$tags = elgg_view_tagcloud($options);
-	$content = $tags;
-	$body = elgg_view_layout('one_sidebar', array(
-		'title' => $title,
-		'content' => $content,
-	));
-
-	echo elgg_view_page($title, $body);
-	return true;
-}
-
-/**
  * @access private
  */
 function _elgg_tags_init() {
 	// register the standard tags metadata name
 	elgg_register_tag_metadata_name('tags');
-
-	elgg_register_page_handler('tags', '_elgg_tagcloud_page_handler');
 }
 
-elgg_register_event_handler('init', 'system', '_elgg_tags_init');
+return function(\Elgg\EventsService $events, \Elgg\HooksRegistrationService $hooks) {
+	$events->registerHandler('init', 'system', '_elgg_tags_init');
+};

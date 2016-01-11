@@ -75,29 +75,7 @@ function elgg_get_admins(array $options = array()) {
  * @since 1.8.0
  */
 function elgg_add_admin_notice($id, $message) {
-	if ($id && $message) {
-		if (elgg_admin_notice_exists($id)) {
-			return false;
-		}
-
-		// need to handle when no one is logged in
-		$old_ia = elgg_set_ignore_access(true);
-
-		$admin_notice = new ElggObject();
-		$admin_notice->subtype = 'admin_notice';
-		// admins can see ACCESS_PRIVATE but no one else can.
-		$admin_notice->access_id = ACCESS_PRIVATE;
-		$admin_notice->admin_notice_id = $id;
-		$admin_notice->description = $message;
-
-		$result = $admin_notice->save();
-
-		elgg_set_ignore_access($old_ia);
-
-		return (bool)$result;
-	}
-
-	return false;
+	return _elgg_services()->adminNotices->add($id, $message);
 }
 
 /**
@@ -114,23 +92,7 @@ function elgg_add_admin_notice($id, $message) {
  * @since 1.8.0
  */
 function elgg_delete_admin_notice($id) {
-	if (!$id) {
-		return false;
-	}
-	$result = true;
-	$notices = elgg_get_entities_from_metadata(array(
-		'metadata_name' => 'admin_notice_id',
-		'metadata_value' => $id
-	));
-
-	if ($notices) {
-		// in case a bad plugin adds many, let it remove them all at once.
-		foreach ($notices as $notice) {
-			$result = ($result && $notice->delete());
-		}
-		return $result;
-	}
-	return false;
+	return _elgg_services()->adminNotices->delete($id);
 }
 
 /**
@@ -142,11 +104,7 @@ function elgg_delete_admin_notice($id) {
  * @since 1.8.0
  */
 function elgg_get_admin_notices($limit = 10) {
-	return elgg_get_entities_from_metadata(array(
-		'type' => 'object',
-		'subtype' => 'admin_notice',
-		'limit' => $limit
-	));
+	return _elgg_services()->adminNotices->find($limit);
 }
 
 /**
@@ -158,15 +116,7 @@ function elgg_get_admin_notices($limit = 10) {
  * @since 1.8.0
  */
 function elgg_admin_notice_exists($id) {
-	$old_ia = elgg_set_ignore_access(true);
-	$notice = elgg_get_entities_from_metadata(array(
-		'type' => 'object',
-		'subtype' => 'admin_notice',
-		'metadata_name_value_pair' => array('name' => 'admin_notice_id', 'value' => $id)
-	));
-	elgg_set_ignore_access($old_ia);
-
-	return ($notice) ? true : false;
+	return _elgg_services()->adminNotices->exists($id);
 }
 
 /**
@@ -220,15 +170,15 @@ function elgg_register_admin_menu_item($section, $menu_id, $parent_id = null, $p
 }
 
 /**
- * Add an admin notice when a new ElggUpgrade object is created.
+ * Add an admin notice when a new \ElggUpgrade object is created.
  *
  * @param string     $event
  * @param string     $type
- * @param ElggObject $object
+ * @param \ElggObject $object
  * @access private
  */
 function _elgg_create_notice_of_pending_upgrade($event, $type, $object) {
-	if ($object instanceof ElggUpgrade) {
+	if ($object instanceof \ElggUpgrade) {
 		// Link to the Upgrades section
 		$link = elgg_view('output/url', array(
 			'href' => 'admin/upgrades',
@@ -281,6 +231,7 @@ function _elgg_admin_init() {
 	elgg_register_action('admin/upgrades/upgrade_comments', '', 'admin');
 	elgg_register_action('admin/upgrades/upgrade_datadirs', '', 'admin');
 	elgg_register_action('admin/upgrades/upgrade_discussion_replies', '', 'admin');
+	elgg_register_action('admin/upgrades/upgrade_comments_access', '', 'admin');
 	elgg_register_action('admin/site/regenerate_secret', '', 'admin');
 
 	elgg_register_action('admin/menu/save', '', 'admin');
@@ -377,7 +328,7 @@ function _elgg_admin_init() {
 	}
 
 	// widgets
-	$widgets = array('online_users', 'new_users', 'content_stats', 'banned_users', 'admin_welcome', 'control_panel');
+	$widgets = array('online_users', 'new_users', 'content_stats', 'banned_users', 'admin_welcome', 'control_panel', 'cron_status');
 	foreach ($widgets as $widget) {
 		elgg_register_widget_type(
 				$widget,
@@ -412,6 +363,42 @@ function _elgg_admin_pagesetup() {
 		elgg_load_css('elgg.admin');
 		elgg_unregister_css('elgg');
 
+		$admin = elgg_get_logged_in_user_entity();
+
+		// setup header menu
+		elgg_register_menu_item('admin_header', array(
+			'name' => 'admin_logout',
+			'href' => 'action/logout',
+			'text' => elgg_echo('logout'),
+			'is_trusted' => true,
+			'priority' => 1000,
+		));
+
+		elgg_register_menu_item('admin_header', array(
+			'name' => 'view_site',
+			'href' => elgg_get_site_url(),
+			'text' => elgg_echo('admin:view_site'),
+			'is_trusted' => true,
+			'priority' => 900,
+		));
+
+		elgg_register_menu_item('admin_header', array(
+			'name' => 'admin_profile',
+			'href' => false,
+			'text' => elgg_echo('admin:loggedin', array($admin->name)),
+			'priority' => 800,
+		));
+
+		if (elgg_get_config('elgg_maintenance_mode', null)) {
+			elgg_register_menu_item('admin_header', array(
+				'name' => 'maintenance',
+				'href' => 'admin/administer_utilities/maintenance',
+				'text' => elgg_echo('admin:administer_utilities:maintenance'),
+				'link_class' => 'elgg-maintenance-mode-warning',
+				'priority' => 700,
+			));
+		}
+
 		// setup footer menu
 		elgg_register_menu_item('admin_footer', array(
 			'name' => 'faq',
@@ -434,7 +421,7 @@ function _elgg_admin_pagesetup() {
 		elgg_register_menu_item('admin_footer', array(
 			'name' => 'blog',
 			'text' => elgg_echo('admin:footer:blog'),
-			'href' => 'http://blog.elgg.org/',
+			'href' => 'https://community.elgg.org/blog/all',
 		));
 	}
 }
@@ -489,19 +476,19 @@ function _elgg_admin_add_plugin_settings_menu() {
 function _elgg_admin_sort_page_menu($hook, $type, $return, $params) {
 	$configure_items = $return['configure'];
 	if (is_array($configure_items)) {
-		/* @var ElggMenuItem[] $configure_items */
+		/* @var \ElggMenuItem[] $configure_items */
 		foreach ($configure_items as $menu_item) {
 			if ($menu_item->getName() == 'settings') {
 				$settings = $menu_item;
 			}
 		}
 
-		if (!empty($settings) && $settings instanceof ElggMenuItem) {
+		if (!empty($settings) && $settings instanceof \ElggMenuItem) {
 			// keep the basic and advanced settings at the top
-			/* @var ElggMenuItem $settings */
+			/* @var \ElggMenuItem $settings */
 			$children = $settings->getChildren();
 			$site_settings = array_splice($children, 0, 2);
-			usort($children, array('ElggMenuBuilder', 'compareByText'));
+			usort($children, array('\ElggMenuBuilder', 'compareByText'));
 			array_splice($children, 0, 0, $site_settings);
 			$settings->setChildren($children);
 		}
@@ -817,7 +804,7 @@ function _elgg_admin_maintenance_action_check($hook, $type) {
  *
  * @param string $event
  * @param string $type
- * @param ElggUser $user
+ * @param \ElggUser $user
  *
  * @return null|true
  * @access private
@@ -841,7 +828,7 @@ function _elgg_add_admin_widgets($event, $type, $user) {
 			$guid = elgg_create_widget($user->getGUID(), $handler, 'admin');
 			if ($guid) {
 				$widget = get_entity($guid);
-				/* @var ElggWidget $widget */
+				/* @var \ElggWidget $widget */
 				$widget->move($column, $position);
 			}
 		}
@@ -849,4 +836,6 @@ function _elgg_add_admin_widgets($event, $type, $user) {
 	elgg_set_ignore_access(false);
 }
 
-elgg_register_event_handler('init', 'system', '_elgg_admin_init');
+return function(\Elgg\EventsService $events, \Elgg\HooksRegistrationService $hooks) {
+	$events->registerHandler('init', 'system', '_elgg_admin_init');
+};
