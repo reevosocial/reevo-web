@@ -1,0 +1,42 @@
+[
+    {
+        "value": "Central",
+        "key": 1986
+    },
+    {
+        "value": "Del sur",
+        "key": 1995
+    },
+    {
+        "value": "Ghanzi",
+        "key": 1987
+    },
+    {
+        "value": "Kgalagadi",
+        "key": 1988
+    },
+    {
+        "value": "Kgatleng",
+        "key": 1989
+    },
+    {
+        "value": "Kweneng",
+        "key": 1990
+    },
+    {
+        "value": "Ngamiland",
+        "key": 1991
+    },
+    {
+        "value": "Noreste",
+        "key": 1992
+    },
+    {
+        "value": "Norte-Oeste",
+        "key": 1993
+    },
+    {
+        "value": "Sur-Este",
+        "key": 1994
+    }
+]

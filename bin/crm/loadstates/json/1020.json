@@ -1,0 +1,46 @@
+[
+    {
+        "value": "Antwerpen",
+        "key": 1785
+    },
+    {
+        "value": "Brabant Wallon",
+        "key": 1786
+    },
+    {
+        "value": "Bruselas",
+        "key": 5217
+    },
+    {
+        "value": "Feudal",
+        "key": 1788
+    },
+    {
+        "value": "Hainaut",
+        "key": 1787
+    },
+    {
+        "value": "Limburgo",
+        "key": 1789
+    },
+    {
+        "value": "Luxemburgo",
+        "key": 1790
+    },
+    {
+        "value": "Namur",
+        "key": 1791
+    },
+    {
+        "value": "Oost-Vlaanderen",
+        "key": 1792
+    },
+    {
+        "value": "Vlaams-Brabant",
+        "key": 1793
+    },
+    {
+        "value": "West-Vlaanderen",
+        "key": 1794
+    }
+]

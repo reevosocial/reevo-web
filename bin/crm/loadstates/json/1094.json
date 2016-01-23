@@ -1,0 +1,42 @@
+[
+    {
+        "value": "Artibonite",
+        "key": 10016
+    },
+    {
+        "value": "Centro",
+        "key": 10017
+    },
+    {
+        "value": "Grande-Anse",
+        "key": 3008
+    },
+    {
+        "value": "Nippes",
+        "key": 10018
+    },
+    {
+        "value": "Nord",
+        "key": 10019
+    },
+    {
+        "value": "Nord-Est",
+        "key": 3009
+    },
+    {
+        "value": "Nord-Ouest",
+        "key": 3010
+    },
+    {
+        "value": "Ouest",
+        "key": 3011
+    },
+    {
+        "value": "Sud",
+        "key": 3012
+    },
+    {
+        "value": "Sud-Est",
+        "key": 3013
+    }
+]

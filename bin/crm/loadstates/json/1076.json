@@ -1,0 +1,382 @@
+[
+    {
+        "value": "Ain",
+        "key": 2498
+    },
+    {
+        "value": "Aisne",
+        "key": 2499
+    },
+    {
+        "value": "Allier",
+        "key": 2500
+    },
+    {
+        "value": "Alpes-de-Haute-Provence",
+        "key": 2501
+    },
+    {
+        "value": "Alpes-Maritimes",
+        "key": 2502
+    },
+    {
+        "value": "Ard\u00c3\u00a8che",
+        "key": 2503
+    },
+    {
+        "value": "Ardenas",
+        "key": 2504
+    },
+    {
+        "value": "Ari\u00c3\u00a8ge",
+        "key": 2505
+    },
+    {
+        "value": "Aube",
+        "key": 2506
+    },
+    {
+        "value": "Aude",
+        "key": 2507
+    },
+    {
+        "value": "Aveyron",
+        "key": 2508
+    },
+    {
+        "value": "Bas-Rhin",
+        "key": 2509
+    },
+    {
+        "value": "Bouches-du-Rh\u00c3\u00b4ne",
+        "key": 2510
+    },
+    {
+        "value": "C\u00c3\u00b4te-d'Or",
+        "key": 2518
+    },
+    {
+        "value": "C\u00c3\u00b4tes-d'Armor",
+        "key": 2519
+    },
+    {
+        "value": "Calvados",
+        "key": 2511
+    },
+    {
+        "value": "Cantal",
+        "key": 2512
+    },
+    {
+        "value": "Charente",
+        "key": 2513
+    },
+    {
+        "value": "Charente-Maritime",
+        "key": 2514
+    },
+    {
+        "value": "Cher",
+        "key": 2515
+    },
+    {
+        "value": "Corr\u00c3\u00a8ze",
+        "key": 2516
+    },
+    {
+        "value": "Corse-du-Sud",
+        "key": 2517
+    },
+    {
+        "value": "Creuse",
+        "key": 2520
+    },
+    {
+        "value": "Deux-S\u00c3\u00a8vres",
+        "key": 2521
+    },
+    {
+        "value": "Dordogne",
+        "key": 2522
+    },
+    {
+        "value": "Doubs",
+        "key": 2523
+    },
+    {
+        "value": "Dr\u00c3\u00b4me",
+        "key": 2524
+    },
+    {
+        "value": "Essonne",
+        "key": 2525
+    },
+    {
+        "value": "Eure",
+        "key": 2526
+    },
+    {
+        "value": "Eure-et-Loir",
+        "key": 2527
+    },
+    {
+        "value": "Finist\u00c3\u00a8re",
+        "key": 2528
+    },
+    {
+        "value": "Gard",
+        "key": 2529
+    },
+    {
+        "value": "Gers",
+        "key": 2530
+    },
+    {
+        "value": "Gironda",
+        "key": 2531
+    },
+    {
+        "value": "H\u00c3\u00a9rault",
+        "key": 2542
+    },
+    {
+        "value": "Haut-Rhin",
+        "key": 2532
+    },
+    {
+        "value": "Haute-Corse",
+        "key": 2533
+    },
+    {
+        "value": "Haute-Garonne",
+        "key": 2534
+    },
+    {
+        "value": "Haute-Loire",
+        "key": 2535
+    },
+    {
+        "value": "Haute-Sa\u00c3\u00b4ne",
+        "key": 2536
+    },
+    {
+        "value": "Haute-Vienne",
+        "key": 2538
+    },
+    {
+        "value": "Hautes-Alpes",
+        "key": 2539
+    },
+    {
+        "value": "Hautes-Pyr\u00c3\u00a9n\u00c3\u00a9es",
+        "key": 2540
+    },
+    {
+        "value": "Hauts-de-Seine",
+        "key": 2541
+    },
+    {
+        "value": "Ille-et-Vilaine",
+        "key": 2544
+    },
+    {
+        "value": "Indre",
+        "key": 2543
+    },
+    {
+        "value": "Indre-et-Loire",
+        "key": 2545
+    },
+    {
+        "value": "Is\u00c3\u00a8re",
+        "key": 2546
+    },
+    {
+        "value": "Jura",
+        "key": 10009
+    },
+    {
+        "value": "Landas",
+        "key": 2547
+    },
+    {
+        "value": "Loir-et-Cher",
+        "key": 2548
+    },
+    {
+        "value": "Loira",
+        "key": 2549
+    },
+    {
+        "value": "Loire-Atlantique",
+        "key": 2550
+    },
+    {
+        "value": "Loiret",
+        "key": 2551
+    },
+    {
+        "value": "Lot-et-Garonne",
+        "key": 2553
+    },
+    {
+        "value": "Loz\u00c3\u00a8re",
+        "key": 2554
+    },
+    {
+        "value": "Maine-et-Loire",
+        "key": 2555
+    },
+    {
+        "value": "Mancha",
+        "key": 2556
+    },
+    {
+        "value": "Marne",
+        "key": 2557
+    },
+    {
+        "value": "Mayenne",
+        "key": 2558
+    },
+    {
+        "value": "Meurthe-et-Moselle",
+        "key": 2559
+    },
+    {
+        "value": "Morbihan",
+        "key": 2561
+    },
+    {
+        "value": "Mosa",
+        "key": 2560
+    },
+    {
+        "value": "Mosela",
+        "key": 2562
+    },
+    {
+        "value": "Mucho",
+        "key": 2552
+    },
+    {
+        "value": "Ni\u00c3\u00a8vre",
+        "key": 2563
+    },
+    {
+        "value": "Nord",
+        "key": 2564
+    },
+    {
+        "value": "Oise",
+        "key": 2565
+    },
+    {
+        "value": "Orne",
+        "key": 2566
+    },
+    {
+        "value": "Par\u00eds",
+        "key": 2567
+    },
+    {
+        "value": "Pas-de-Calais",
+        "key": 2568
+    },
+    {
+        "value": "Puy-de-D\u00c3\u00b4me",
+        "key": 2569
+    },
+    {
+        "value": "Pyr\u00c3\u00a9n\u00c3\u00a9es-Atlantiques",
+        "key": 2570
+    },
+    {
+        "value": "Pyr\u00c3\u00a9n\u00c3\u00a9es-Orientales",
+        "key": 2571
+    },
+    {
+        "value": "Rh\u00c3\u00b4ne",
+        "key": 2572
+    },
+    {
+        "value": "Rh\u00f4ne-Alpes",
+        "key": 2537
+    },
+    {
+        "value": "Sa\u00c3\u00b4ne-et-Loire",
+        "key": 2573
+    },
+    {
+        "value": "Saboya",
+        "key": 2575
+    },
+    {
+        "value": "Sarthe",
+        "key": 2574
+    },
+    {
+        "value": "Seine-et-Marne",
+        "key": 2576
+    },
+    {
+        "value": "Seine-Maritime",
+        "key": 2577
+    },
+    {
+        "value": "Seine-Saint-Denis",
+        "key": 2578
+    },
+    {
+        "value": "Somme",
+        "key": 2579
+    },
+    {
+        "value": "Tarn",
+        "key": 2580
+    },
+    {
+        "value": "Tarn-et-Garonne",
+        "key": 2581
+    },
+    {
+        "value": "Territorio de Belfort",
+        "key": 2583
+    },
+    {
+        "value": "Val d'Oise",
+        "key": 2582
+    },
+    {
+        "value": "Val-de-Marne",
+        "key": 2584
+    },
+    {
+        "value": "Var",
+        "key": 2585
+    },
+    {
+        "value": "Vaucluse",
+        "key": 2586
+    },
+    {
+        "value": "Vend\u00c3\u00a9e",
+        "key": 2587
+    },
+    {
+        "value": "Vienne",
+        "key": 2588
+    },
+    {
+        "value": "Vosges",
+        "key": 2589
+    },
+    {
+        "value": "Yonne",
+        "key": 2590
+    },
+    {
+        "value": "Yvelines",
+        "key": 2591
+    }
+]

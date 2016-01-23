@@ -1,0 +1,26 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+
+  <!-- ********* Apuntar a JQuery !!-->
+  <script type="text/javascript" src="jquery-1.11.1.min.js"></script>
+  <!-- ********* Apuntar a JQuery !!-->
+
+  <script type="text/javascript" src="loadstates.js"></script>
+  <script type="text/javascript">
+    $( document ).ready(function() {
+      IniciaCRMLoadStates('pais','estado','1010');
+    });
+  </script>
+
+</head>
+<body>
+  <h2>Pais</h2>
+  <select id="pais">
+    <!-- <select id="pais" onchange="CargaEstados(this);"> -->
+  </select>
+
+  <h2>Provincia</h2>
+  <select id="estado"></select>
+</body>
+</html>

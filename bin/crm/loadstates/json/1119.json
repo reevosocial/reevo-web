@@ -1,0 +1,478 @@
+[
+    {
+        "value": "\u00c4\u2019rg\u00c4\u00bcu novads",
+        "key": 10127
+    },
+    {
+        "value": "\u00c4\u00b6eguma novads",
+        "key": 10130
+    },
+    {
+        "value": "\u00c4\u00b6ekavas novads",
+        "key": 10139
+    },
+    {
+        "value": "\u00c4\u20acda\u00c5\u00beu novads",
+        "key": 10145
+    },
+    {
+        "value": "Akn\u00c4\u00abstes novads",
+        "key": 10098
+    },
+    {
+        "value": "Al\u00c5\u00abksnes novads",
+        "key": 10071
+    },
+    {
+        "value": "Bab\u00c4\u00abtes novads",
+        "key": 10146
+    },
+    {
+        "value": "Bever\u00c4\u00abnas novads",
+        "key": 10171
+    },
+    {
+        "value": "Broc\u00c4\u201cnu novads",
+        "key": 10156
+    },
+    {
+        "value": "C\u00c4\u201csu novads",
+        "key": 10081
+    },
+    {
+        "value": "Daugavpils",
+        "key": 3550
+    },
+    {
+        "value": "Grobi\u00c5\u2020as novads",
+        "key": 10110
+    },
+    {
+        "value": "Ik\u00c5\u00a1\u00c4\u00b7iles novads",
+        "key": 10129
+    },
+    {
+        "value": "Il\u00c5\u00abkstes novads",
+        "key": 10090
+    },
+    {
+        "value": "In\u00c4\u008dukalna novads",
+        "key": 10144
+    },
+    {
+        "value": "J\u00c4\u201ckabpils",
+        "key": 10175
+    },
+    {
+        "value": "J\u00c4\u201ckabpils novads",
+        "key": 10097
+    },
+    {
+        "value": "Jelgava",
+        "key": 3551
+    },
+    {
+        "value": "Jurmala",
+        "key": 3552
+    },
+    {
+        "value": "K\u00c4\u0081rsavas novads",
+        "key": 10120
+    },
+    {
+        "value": "Koc\u00c4\u201cnu novads",
+        "key": 10168
+    },
+    {
+        "value": "Kr\u00c4\u0081slavas novads",
+        "key": 10102
+    },
+    {
+        "value": "Kuld\u00c4\u00abgas novads",
+        "key": 10105
+    },
+    {
+        "value": "L\u00c4\u00abgatnes novads",
+        "key": 10082
+    },
+    {
+        "value": "L\u00c4\u00abv\u00c4\u0081nu novads",
+        "key": 10133
+    },
+    {
+        "value": "Lielv\u00c4\u0081rdes novads",
+        "key": 10131
+    },
+    {
+        "value": "Liepaja",
+        "key": 3553
+    },
+    {
+        "value": "Limba\u00c5\u00beu novads",
+        "key": 10116
+    },
+    {
+        "value": "Lub\u00c4\u0081nas novads",
+        "key": 10125
+    },
+    {
+        "value": "M\u00c4\u201crsraga novads",
+        "key": 10159
+    },
+    {
+        "value": "M\u00c4\u0081lpils novads",
+        "key": 10150
+    },
+    {
+        "value": "M\u00c4\u0081rupes novads",
+        "key": 10151
+    },
+    {
+        "value": "Municipalidad de Aglonas",
+        "key": 10104
+    },
+    {
+        "value": "Municipalidad de Aizkraukles",
+        "key": 10065
+    },
+    {
+        "value": "Municipalidad de Aizputes",
+        "key": 10108
+    },
+    {
+        "value": "Municipalidad de Alojas",
+        "key": 10117
+    },
+    {
+        "value": "Municipalidad de Alsungas",
+        "key": 10107
+    },
+    {
+        "value": "Municipalidad de Amatas",
+        "key": 10083
+    },
+    {
+        "value": "Municipalidad de Apes",
+        "key": 10072
+    },
+    {
+        "value": "Municipalidad de Auces",
+        "key": 10092
+    },
+    {
+        "value": "Municipalidad de Baldones",
+        "key": 10138
+    },
+    {
+        "value": "Municipalidad de Baltinavas",
+        "key": 10075
+    },
+    {
+        "value": "Municipalidad de Balvu",
+        "key": 10073
+    },
+    {
+        "value": "Municipalidad de Bauskas",
+        "key": 10077
+    },
+    {
+        "value": "Municipalidad de Burtnieku",
+        "key": 10172
+    },
+    {
+        "value": "Municipalidad de Carnikavas",
+        "key": 10147
+    },
+    {
+        "value": "Municipalidad de Cesvaines",
+        "key": 10124
+    },
+    {
+        "value": "Municipalidad de Ciblas",
+        "key": 10122
+    },
+    {
+        "value": "Municipalidad de Dagdas",
+        "key": 10103
+    },
+    {
+        "value": "Municipalidad de Daugavpils",
+        "key": 10089
+    },
+    {
+        "value": "Municipalidad de Dobeles",
+        "key": 10091
+    },
+    {
+        "value": "Municipalidad de Dundagas",
+        "key": 10158
+    },
+    {
+        "value": "Municipalidad de Durbes",
+        "key": 10109
+    },
+    {
+        "value": "Municipalidad de Engures",
+        "key": 10163
+    },
+    {
+        "value": "Municipalidad de Garkalnes",
+        "key": 10148
+    },
+    {
+        "value": "Municipalidad de Gulbenes",
+        "key": 10094
+    },
+    {
+        "value": "Municipalidad de Iecavas",
+        "key": 10078
+    },
+    {
+        "value": "Municipalidad de Jaunjelgavas",
+        "key": 10066
+    },
+    {
+        "value": "Municipalidad de Jaunpiebalgas",
+        "key": 10084
+    },
+    {
+        "value": "Municipalidad de Jaunpils",
+        "key": 10164
+    },
+    {
+        "value": "Municipalidad de Jelgavas",
+        "key": 10095
+    },
+    {
+        "value": "Municipalidad de Kandavas",
+        "key": 10162
+    },
+    {
+        "value": "Municipalidad de Kokneses",
+        "key": 10068
+    },
+    {
+        "value": "Municipalidad de Krimuldas",
+        "key": 10149
+    },
+    {
+        "value": "Municipalidad de Krustpils",
+        "key": 10100
+    },
+    {
+        "value": "Municipalidad de Ludzas",
+        "key": 10119
+    },
+    {
+        "value": "Municipalidad de Madonas",
+        "key": 10123
+    },
+    {
+        "value": "Municipalidad de Mazsalacas",
+        "key": 10169
+    },
+    {
+        "value": "Municipalidad de Neretas",
+        "key": 10069
+    },
+    {
+        "value": "Municipalidad de Ogres",
+        "key": 10128
+    },
+    {
+        "value": "Municipalidad de Olaines",
+        "key": 10140
+    },
+    {
+        "value": "Municipalidad de Ozolnieku",
+        "key": 10096
+    },
+    {
+        "value": "Municipalidad de Priekules",
+        "key": 10112
+    },
+    {
+        "value": "Municipalidad de Raunas",
+        "key": 10087
+    },
+    {
+        "value": "Municipalidad de Rojas",
+        "key": 10160
+    },
+    {
+        "value": "Municipalidad de Rucavas",
+        "key": 10114
+    },
+    {
+        "value": "Municipalidad de Salas",
+        "key": 10101
+    },
+    {
+        "value": "Municipalidad de Salaspils",
+        "key": 10141
+    },
+    {
+        "value": "Municipalidad de Saldus",
+        "key": 10155
+    },
+    {
+        "value": "Municipalidad de Saulkrastu",
+        "key": 10142
+    },
+    {
+        "value": "Municipalidad de Siguldas",
+        "key": 10143
+    },
+    {
+        "value": "Municipalidad de Skrundas",
+        "key": 10106
+    },
+    {
+        "value": "Municipalidad de Smiltenes",
+        "key": 10166
+    },
+    {
+        "value": "Municipalidad de Talsu",
+        "key": 10157
+    },
+    {
+        "value": "Municipalidad de Tukuma",
+        "key": 10161
+    },
+    {
+        "value": "Municipalidad de Valkas",
+        "key": 10165
+    },
+    {
+        "value": "Municipalidad de Vecpiebalgas",
+        "key": 10088
+    },
+    {
+        "value": "Municipalidad de Vecumnieku",
+        "key": 10080
+    },
+    {
+        "value": "Municipalidad de Ventspils",
+        "key": 10174
+    },
+    {
+        "value": "Municipalidad de Zilupes",
+        "key": 10121
+    },
+    {
+        "value": "N\u00c4\u00abcas novads",
+        "key": 10113
+    },
+    {
+        "value": "Nauk\u00c5\u00a1\u00c4\u201cnu novads",
+        "key": 10173
+    },
+    {
+        "value": "P\u00c4\u00bcavi\u00c5\u2020u novads",
+        "key": 10067
+    },
+    {
+        "value": "P\u00c4\u0081rgaujas novads",
+        "key": 10086
+    },
+    {
+        "value": "P\u00c4\u0081vilostas novads",
+        "key": 10111
+    },
+    {
+        "value": "Prei\u00c4\u00bcu novads",
+        "key": 10132
+    },
+    {
+        "value": "Prieku\u00c4\u00bcu novads",
+        "key": 10085
+    },
+    {
+        "value": "R\u00c4\u201czeknes novads",
+        "key": 10136
+    },
+    {
+        "value": "R\u00c5\u00abjienas novads",
+        "key": 10170
+    },
+    {
+        "value": "Rezekne",
+        "key": 3554
+    },
+    {
+        "value": "Riebi\u00c5\u2020u novads",
+        "key": 10134
+    },
+    {
+        "value": "Riga",
+        "key": 3555
+    },
+    {
+        "value": "Ropa\u00c5\u00beu novads",
+        "key": 10152
+    },
+    {
+        "value": "Rug\u00c4\u0081ju novads",
+        "key": 10076
+    },
+    {
+        "value": "Rund\u00c4\u0081les novads",
+        "key": 10079
+    },
+    {
+        "value": "S\u00c4\u201cjas novads",
+        "key": 10153
+    },
+    {
+        "value": "Salacgr\u00c4\u00abvas novads",
+        "key": 10118
+    },
+    {
+        "value": "Skr\u00c4\u00abveru novads",
+        "key": 10070
+    },
+    {
+        "value": "Stopi\u00c5\u2020u novads",
+        "key": 10154
+    },
+    {
+        "value": "Stren\u00c4\u008du novads",
+        "key": 10167
+    },
+    {
+        "value": "T\u00c4\u201crvetes novads",
+        "key": 10093
+    },
+    {
+        "value": "Vai\u00c5\u2020odes novads",
+        "key": 10115
+    },
+    {
+        "value": "Valmiera",
+        "key": 10176
+    },
+    {
+        "value": "Varak\u00c4\u00bc\u00c4\u0081nu novads",
+        "key": 10126
+    },
+    {
+        "value": "V\u00c4\u0081rkavas novads",
+        "key": 10135
+    },
+    {
+        "value": "Ventspils",
+        "key": 3556
+    },
+    {
+        "value": "Vi\u00c4\u00bcakas novads",
+        "key": 10074
+    },
+    {
+        "value": "Vi\u00c4\u00bc\u00c4\u0081nu novads",
+        "key": 10137
+    },
+    {
+        "value": "Vies\u00c4\u00abtes novads",
+        "key": 10099
+    }
+]

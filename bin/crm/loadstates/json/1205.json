@@ -1,0 +1,106 @@
+[
+    {
+        "value": "Aargau",
+        "key": 2048
+    },
+    {
+        "value": "Appenzell Rodas Exteriores",
+        "key": 2050
+    },
+    {
+        "value": "Appenzell Rodas Interiores",
+        "key": 2049
+    },
+    {
+        "value": "Basilea-Campi\u00f1a",
+        "key": 2052
+    },
+    {
+        "value": "Basilea-Ciudad",
+        "key": 2053
+    },
+    {
+        "value": "Berna",
+        "key": 2051
+    },
+    {
+        "value": "Friburgo",
+        "key": 2054
+    },
+    {
+        "value": "Ginebra",
+        "key": 2055
+    },
+    {
+        "value": "Glarus",
+        "key": 2056
+    },
+    {
+        "value": "Graubunden",
+        "key": 2057
+    },
+    {
+        "value": "Jura",
+        "key": 2058
+    },
+    {
+        "value": "Luzern",
+        "key": 2059
+    },
+    {
+        "value": "Neuchatel",
+        "key": 2060
+    },
+    {
+        "value": "Nidwalden",
+        "key": 2061
+    },
+    {
+        "value": "Obwalden",
+        "key": 2062
+    },
+    {
+        "value": "Sankt Gallen",
+        "key": 2063
+    },
+    {
+        "value": "Schaffhausen",
+        "key": 2064
+    },
+    {
+        "value": "Schwyz",
+        "key": 2066
+    },
+    {
+        "value": "Solothurn",
+        "key": 2065
+    },
+    {
+        "value": "Thurgau",
+        "key": 2067
+    },
+    {
+        "value": "Ticino",
+        "key": 2068
+    },
+    {
+        "value": "Uri",
+        "key": 2069
+    },
+    {
+        "value": "Valais",
+        "key": 2071
+    },
+    {
+        "value": "Vaud",
+        "key": 2070
+    },
+    {
+        "value": "Zug",
+        "key": 2072
+    },
+    {
+        "value": "Zurich",
+        "key": 2073
+    }
+]

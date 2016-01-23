@@ -1,0 +1,326 @@
+[
+    {
+        "value": "Adana",
+        "key": 4738
+    },
+    {
+        "value": "Afyon",
+        "key": 4740
+    },
+    {
+        "value": "Ag r",
+        "key": 4741
+    },
+    {
+        "value": "Aksaray",
+        "key": 4742
+    },
+    {
+        "value": "Amasya",
+        "key": 4743
+    },
+    {
+        "value": "Ankara",
+        "key": 4744
+    },
+    {
+        "value": "Antalya",
+        "key": 4745
+    },
+    {
+        "value": "Anuncio yaman",
+        "key": 4739
+    },
+    {
+        "value": "Ardahan",
+        "key": 4746
+    },
+    {
+        "value": "Artvin",
+        "key": 4747
+    },
+    {
+        "value": "Aydin",
+        "key": 4748
+    },
+    {
+        "value": "Bal kesir",
+        "key": 4749
+    },
+    {
+        "value": "Bartin",
+        "key": 4750
+    },
+    {
+        "value": "Bayburt",
+        "key": 4752
+    },
+    {
+        "value": "Bilecik",
+        "key": 4753
+    },
+    {
+        "value": "Bingol",
+        "key": 4754
+    },
+    {
+        "value": "Bitlis",
+        "key": 4755
+    },
+    {
+        "value": "Bolsa",
+        "key": 4758
+    },
+    {
+        "value": "Bolu",
+        "key": 4756
+    },
+    {
+        "value": "Burdur",
+        "key": 4757
+    },
+    {
+        "value": "Camioneta",
+        "key": 4815
+    },
+    {
+        "value": "Canakkale",
+        "key": 4759
+    },
+    {
+        "value": "Cankir",
+        "key": 4760
+    },
+    {
+        "value": "Corum",
+        "key": 4761
+    },
+    {
+        "value": "Denizli",
+        "key": 4762
+    },
+    {
+        "value": "Diyarbakir",
+        "key": 4763
+    },
+    {
+        "value": "Duzce",
+        "key": 4764
+    },
+    {
+        "value": "Edirne",
+        "key": 4765
+    },
+    {
+        "value": "Elazig",
+        "key": 4766
+    },
+    {
+        "value": "Erzincan",
+        "key": 4767
+    },
+    {
+        "value": "Erzurum",
+        "key": 4768
+    },
+    {
+        "value": "Eskis'ehir",
+        "key": 4769
+    },
+    {
+        "value": "Estambul",
+        "key": 4778
+    },
+    {
+        "value": "Gaziantep",
+        "key": 4770
+    },
+    {
+        "value": "Giresun",
+        "key": 4771
+    },
+    {
+        "value": "Gms'hane",
+        "key": 4772
+    },
+    {
+        "value": "Hakkari",
+        "key": 4773
+    },
+    {
+        "value": "Hatay",
+        "key": 4774
+    },
+    {
+        "value": "Icel",
+        "key": 4777
+    },
+    {
+        "value": "Igidir",
+        "key": 4775
+    },
+    {
+        "value": "Isparta",
+        "key": 4776
+    },
+    {
+        "value": "Izmir",
+        "key": 4779
+    },
+    {
+        "value": "Kahramanmaras",
+        "key": 4780
+    },
+    {
+        "value": "Karabk",
+        "key": 4781
+    },
+    {
+        "value": "Karaman",
+        "key": 4782
+    },
+    {
+        "value": "Kars",
+        "key": 4783
+    },
+    {
+        "value": "Kastamonu",
+        "key": 4784
+    },
+    {
+        "value": "Kayseri",
+        "key": 4785
+    },
+    {
+        "value": "Kilis",
+        "key": 4789
+    },
+    {
+        "value": "Kirikkale",
+        "key": 4786
+    },
+    {
+        "value": "Kirklareli",
+        "key": 4787
+    },
+    {
+        "value": "Kirs'ehir",
+        "key": 4788
+    },
+    {
+        "value": "Kocaeli",
+        "key": 4790
+    },
+    {
+        "value": "Konya",
+        "key": 4791
+    },
+    {
+        "value": "Ktahya",
+        "key": 4792
+    },
+    {
+        "value": "Malatya",
+        "key": 4793
+    },
+    {
+        "value": "Manisa",
+        "key": 4794
+    },
+    {
+        "value": "Mardin",
+        "key": 4795
+    },
+    {
+        "value": "Mugila",
+        "key": 4796
+    },
+    {
+        "value": "Mus",
+        "key": 4797
+    },
+    {
+        "value": "Nevs'ehir",
+        "key": 4798
+    },
+    {
+        "value": "Nigide",
+        "key": 4799
+    },
+    {
+        "value": "Ordenanza",
+        "key": 4751
+    },
+    {
+        "value": "Ordu",
+        "key": 4800
+    },
+    {
+        "value": "Osmaniye",
+        "key": 4801
+    },
+    {
+        "value": "Rize",
+        "key": 4802
+    },
+    {
+        "value": "S'anliurfa",
+        "key": 4808
+    },
+    {
+        "value": "S'rnak",
+        "key": 4809
+    },
+    {
+        "value": "Sakarya",
+        "key": 4803
+    },
+    {
+        "value": "Samsun",
+        "key": 4804
+    },
+    {
+        "value": "Siirt",
+        "key": 4805
+    },
+    {
+        "value": "Sinop",
+        "key": 4806
+    },
+    {
+        "value": "Sivas",
+        "key": 4807
+    },
+    {
+        "value": "Tekirdag",
+        "key": 4810
+    },
+    {
+        "value": "Tokat",
+        "key": 4811
+    },
+    {
+        "value": "Trabzon",
+        "key": 4812
+    },
+    {
+        "value": "Tunceli",
+        "key": 4813
+    },
+    {
+        "value": "Us'ak",
+        "key": 4814
+    },
+    {
+        "value": "Yalova",
+        "key": 4816
+    },
+    {
+        "value": "Yozgat",
+        "key": 4817
+    },
+    {
+        "value": "Zonguldak",
+        "key": 4818
+    }
+]
