@@ -1,0 +1,442 @@
+[
+    {
+        "value": "Agrigento",
+        "key": 3173
+    },
+    {
+        "value": "Alessandria",
+        "key": 3174
+    },
+    {
+        "value": "Ancona",
+        "key": 3175
+    },
+    {
+        "value": "Aosta",
+        "key": 3176
+    },
+    {
+        "value": "Arezzo",
+        "key": 3177
+    },
+    {
+        "value": "Ascoli Piceno",
+        "key": 3178
+    },
+    {
+        "value": "Asti",
+        "key": 3179
+    },
+    {
+        "value": "Avellino",
+        "key": 3180
+    },
+    {
+        "value": "Bari",
+        "key": 3181
+    },
+    {
+        "value": "Barletta-Andria-Trani",
+        "key": 10010
+    },
+    {
+        "value": "Belluno",
+        "key": 3182
+    },
+    {
+        "value": "Benevento",
+        "key": 3183
+    },
+    {
+        "value": "B\u00e9rgamo",
+        "key": 3184
+    },
+    {
+        "value": "Biella",
+        "key": 3185
+    },
+    {
+        "value": "Bolonia",
+        "key": 3186
+    },
+    {
+        "value": "Bolzano",
+        "key": 3187
+    },
+    {
+        "value": "Brescia",
+        "key": 3188
+    },
+    {
+        "value": "Brindisi",
+        "key": 3189
+    },
+    {
+        "value": "Cagliari",
+        "key": 3190
+    },
+    {
+        "value": "Cagliari",
+        "key": 10000
+    },
+    {
+        "value": "Caltanissetta",
+        "key": 3191
+    },
+    {
+        "value": "Campobasso",
+        "key": 3192
+    },
+    {
+        "value": "Caserta",
+        "key": 3193
+    },
+    {
+        "value": "Catania",
+        "key": 3194
+    },
+    {
+        "value": "Catanzaro",
+        "key": 3195
+    },
+    {
+        "value": "Chieti",
+        "key": 3196
+    },
+    {
+        "value": "Como",
+        "key": 3197
+    },
+    {
+        "value": "Cosenza",
+        "key": 3198
+    },
+    {
+        "value": "Cremona",
+        "key": 3199
+    },
+    {
+        "value": "Crotone",
+        "key": 3200
+    },
+    {
+        "value": "Cuneo",
+        "key": 3201
+    },
+    {
+        "value": "De Pesaro y Urbino",
+        "key": 3237
+    },
+    {
+        "value": "Enna",
+        "key": 3202
+    },
+    {
+        "value": "Fermo",
+        "key": 10011
+    },
+    {
+        "value": "Ferrara",
+        "key": 3203
+    },
+    {
+        "value": "Firenze",
+        "key": 3204
+    },
+    {
+        "value": "Foggia",
+        "key": 3205
+    },
+    {
+        "value": "Forl\u00c3\u00ac-Cesena",
+        "key": 3206
+    },
+    {
+        "value": "Frosinone",
+        "key": 3207
+    },
+    {
+        "value": "Genova",
+        "key": 3208
+    },
+    {
+        "value": "Gorizia",
+        "key": 3209
+    },
+    {
+        "value": "Grosseto",
+        "key": 3210
+    },
+    {
+        "value": "Imperia",
+        "key": 3211
+    },
+    {
+        "value": "Isernia",
+        "key": 3212
+    },
+    {
+        "value": "L'Aquila",
+        "key": 3213
+    },
+    {
+        "value": "La Spezia",
+        "key": 3214
+    },
+    {
+        "value": "Latina",
+        "key": 3215
+    },
+    {
+        "value": "Lecce",
+        "key": 3216
+    },
+    {
+        "value": "Lecco",
+        "key": 3217
+    },
+    {
+        "value": "Livorno",
+        "key": 3218
+    },
+    {
+        "value": "Lodi",
+        "key": 3219
+    },
+    {
+        "value": "Lucca",
+        "key": 3220
+    },
+    {
+        "value": "Macerata",
+        "key": 3221
+    },
+    {
+        "value": "Mantova",
+        "key": 3222
+    },
+    {
+        "value": "Massa-Carrara",
+        "key": 3223
+    },
+    {
+        "value": "Matera",
+        "key": 3224
+    },
+    {
+        "value": "Medio Campidano",
+        "key": 10002
+    },
+    {
+        "value": "Messina",
+        "key": 3225
+    },
+    {
+        "value": "Milano",
+        "key": 3226
+    },
+    {
+        "value": "Modena",
+        "key": 3227
+    },
+    {
+        "value": "Monza e Brianza",
+        "key": 10012
+    },
+    {
+        "value": "Napoli",
+        "key": 3228
+    },
+    {
+        "value": "Novara",
+        "key": 3229
+    },
+    {
+        "value": "Nuoro",
+        "key": 3230
+    },
+    {
+        "value": "Ogliastra",
+        "key": 10003
+    },
+    {
+        "value": "Olbia-Tempio",
+        "key": 10001
+    },
+    {
+        "value": "Oristano",
+        "key": 3231
+    },
+    {
+        "value": "Padova",
+        "key": 3232
+    },
+    {
+        "value": "Palermo",
+        "key": 3233
+    },
+    {
+        "value": "Parma",
+        "key": 3234
+    },
+    {
+        "value": "Pav\u00eda",
+        "key": 3235
+    },
+    {
+        "value": "Perugia",
+        "key": 3236
+    },
+    {
+        "value": "Pescara",
+        "key": 3238
+    },
+    {
+        "value": "Piacenza",
+        "key": 3239
+    },
+    {
+        "value": "Pisa",
+        "key": 3240
+    },
+    {
+        "value": "Pistoia",
+        "key": 3241
+    },
+    {
+        "value": "Pordenone",
+        "key": 3242
+    },
+    {
+        "value": "Potenza",
+        "key": 3243
+    },
+    {
+        "value": "Prato",
+        "key": 3244
+    },
+    {
+        "value": "Provincia de Verbano-Cusio-Ossola",
+        "key": 3270
+    },
+    {
+        "value": "Ragusa",
+        "key": 3245
+    },
+    {
+        "value": "Ravenna",
+        "key": 3246
+    },
+    {
+        "value": "Reggio Calabria",
+        "key": 3247
+    },
+    {
+        "value": "Reggio Emilia",
+        "key": 3248
+    },
+    {
+        "value": "Rieti",
+        "key": 3249
+    },
+    {
+        "value": "Rimini",
+        "key": 3250
+    },
+    {
+        "value": "Roma",
+        "key": 3251
+    },
+    {
+        "value": "Rovigo",
+        "key": 3252
+    },
+    {
+        "value": "Salerno",
+        "key": 3253
+    },
+    {
+        "value": "Sassari",
+        "key": 3254
+    },
+    {
+        "value": "Savona",
+        "key": 3255
+    },
+    {
+        "value": "Siena",
+        "key": 3256
+    },
+    {
+        "value": "Siracusa",
+        "key": 3257
+    },
+    {
+        "value": "Sondrio",
+        "key": 3258
+    },
+    {
+        "value": "Taranto",
+        "key": 3259
+    },
+    {
+        "value": "Teramo",
+        "key": 3260
+    },
+    {
+        "value": "Terni",
+        "key": 3261
+    },
+    {
+        "value": "Torino",
+        "key": 3262
+    },
+    {
+        "value": "Trapani",
+        "key": 3263
+    },
+    {
+        "value": "Trento",
+        "key": 3264
+    },
+    {
+        "value": "Treviso",
+        "key": 3265
+    },
+    {
+        "value": "Trieste",
+        "key": 3266
+    },
+    {
+        "value": "Udine",
+        "key": 3267
+    },
+    {
+        "value": "Varese",
+        "key": 3268
+    },
+    {
+        "value": "Venezia",
+        "key": 3269
+    },
+    {
+        "value": "Vercelli",
+        "key": 3271
+    },
+    {
+        "value": "Verona",
+        "key": 3272
+    },
+    {
+        "value": "Vibo Valentia",
+        "key": 3273
+    },
+    {
+        "value": "Vicenza",
+        "key": 3274
+    },
+    {
+        "value": "Viterbo",
+        "key": 3275
+    }
+]

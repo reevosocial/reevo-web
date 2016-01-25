@@ -1,0 +1,386 @@
+[
+    {
+        "value": "Aberdeen City",
+        "key": 2592
+    },
+    {
+        "value": "Aberdeenshire",
+        "key": 2593
+    },
+    {
+        "value": "Angus",
+        "key": 2594
+    },
+    {
+        "value": "Argyll and Bute",
+        "key": 2597
+    },
+    {
+        "value": "Bedfordshire",
+        "key": 2606
+    },
+    {
+        "value": "Berkshire",
+        "key": 9993
+    },
+    {
+        "value": "Bristol, la ciudad de",
+        "key": 2620
+    },
+    {
+        "value": "Buckinghamshire",
+        "key": 2622
+    },
+    {
+        "value": "Cambridgeshire",
+        "key": 2626
+    },
+    {
+        "value": "Cheshire",
+        "key": 2634
+    },
+    {
+        "value": "Clackmannanshire",
+        "key": 2635
+    },
+    {
+        "value": "Clwyd",
+        "key": 10013
+    },
+    {
+        "value": "Co Antrim",
+        "key": 2595
+    },
+    {
+        "value": "Co Armagh",
+        "key": 2598
+    },
+    {
+        "value": "Co Down",
+        "key": 2652
+    },
+    {
+        "value": "Co Fermanagh",
+        "key": 2670
+    },
+    {
+        "value": "Co Londonderry",
+        "key": 2648
+    },
+    {
+        "value": "Co Tyrone",
+        "key": 9989
+    },
+    {
+        "value": "Condado de Durham",
+        "key": 2657
+    },
+    {
+        "value": "Cornualles",
+        "key": 2639
+    },
+    {
+        "value": "Cumbria",
+        "key": 2643
+    },
+    {
+        "value": "Derbyshire",
+        "key": 2647
+    },
+    {
+        "value": "Devon",
+        "key": 2649
+    },
+    {
+        "value": "Dorset",
+        "key": 2651
+    },
+    {
+        "value": "Dumfries y Galloway",
+        "key": 2654
+    },
+    {
+        "value": "Dundee Ciudad",
+        "key": 2655
+    },
+    {
+        "value": "Dyfed",
+        "key": 10014
+    },
+    {
+        "value": "East Ayrshire",
+        "key": 2659
+    },
+    {
+        "value": "East Dunbartonshire",
+        "key": 2660
+    },
+    {
+        "value": "East Lothian",
+        "key": 2661
+    },
+    {
+        "value": "East Riding de Yorkshire",
+        "key": 2663
+    },
+    {
+        "value": "East Sussex",
+        "key": 2664
+    },
+    {
+        "value": "Edimburgo, Ciudad de",
+        "key": 2665
+    },
+    {
+        "value": "Essex",
+        "key": 2668
+    },
+    {
+        "value": "Falkirk",
+        "key": 2669
+    },
+    {
+        "value": "Glasgow City",
+        "key": 2674
+    },
+    {
+        "value": "Gloucestershire",
+        "key": 2675
+    },
+    {
+        "value": "Greater Manchester",
+        "key": 9988
+    },
+    {
+        "value": "Gwent",
+        "key": 2612
+    },
+    {
+        "value": "Gwynedd",
+        "key": 2678
+    },
+    {
+        "value": "Hampshire",
+        "key": 2682
+    },
+    {
+        "value": "Herefordshire",
+        "key": 2687
+    },
+    {
+        "value": "Hertfordshire",
+        "key": 2688
+    },
+    {
+        "value": "Inverclyde",
+        "key": 2692
+    },
+    {
+        "value": "Isla de Wight",
+        "key": 2694
+    },
+    {
+        "value": "Islas Orcadas",
+        "key": 2749
+    },
+    {
+        "value": "Islas Shetland",
+        "key": 2773
+    },
+    {
+        "value": "Kent",
+        "key": 2699
+    },
+    {
+        "value": "Lancashire",
+        "key": 2705
+    },
+    {
+        "value": "Leicestershire",
+        "key": 2709
+    },
+    {
+        "value": "Lincolnshire",
+        "key": 2712
+    },
+    {
+        "value": "Londres",
+        "key": 9999
+    },
+    {
+        "value": "Merseyside",
+        "key": 9992
+    },
+    {
+        "value": "Mid Glamorgan",
+        "key": 2804
+    },
+    {
+        "value": "Midlothian",
+        "key": 2723
+    },
+    {
+        "value": "Moray",
+        "key": 2726
+    },
+    {
+        "value": "Na h-Eileanan Siar",
+        "key": 2666
+    },
+    {
+        "value": "Norfolk",
+        "key": 2734
+    },
+    {
+        "value": "North Ayrshire",
+        "key": 2735
+    },
+    {
+        "value": "North Lanarkshire",
+        "key": 2738
+    },
+    {
+        "value": "North Yorkshire",
+        "key": 2742
+    },
+    {
+        "value": "Northamptonshire",
+        "key": 2743
+    },
+    {
+        "value": "Northumberland",
+        "key": 2744
+    },
+    {
+        "value": "Nottinghamshire",
+        "key": 2746
+    },
+    {
+        "value": "Oldham",
+        "key": 2747
+    },
+    {
+        "value": "Omagh",
+        "key": 2748
+    },
+    {
+        "value": "Oxfordshire",
+        "key": 2750
+    },
+    {
+        "value": "Perth y Kinross",
+        "key": 2752
+    },
+    {
+        "value": "P\u00edfano",
+        "key": 2671
+    },
+    {
+        "value": "Powys",
+        "key": 2757
+    },
+    {
+        "value": "Renfrewshire",
+        "key": 2662
+    },
+    {
+        "value": "Renfrewshire",
+        "key": 2761
+    },
+    {
+        "value": "Rutland",
+        "key": 2766
+    },
+    {
+        "value": "Scottish Borders",
+        "key": 2770
+    },
+    {
+        "value": "Shropshire",
+        "key": 2774
+    },
+    {
+        "value": "Somerset",
+        "key": 2777
+    },
+    {
+        "value": "South Ayrshire",
+        "key": 2778
+    },
+    {
+        "value": "South Glamorgan",
+        "key": 10015
+    },
+    {
+        "value": "South Gloucestershire",
+        "key": 2779
+    },
+    {
+        "value": "South Lanarkshire",
+        "key": 2780
+    },
+    {
+        "value": "South Yorkshire",
+        "key": 9991
+    },
+    {
+        "value": "Staffordshire",
+        "key": 2785
+    },
+    {
+        "value": "Stirling",
+        "key": 2786
+    },
+    {
+        "value": "Suffolk",
+        "key": 2791
+    },
+    {
+        "value": "Surrey",
+        "key": 2793
+    },
+    {
+        "value": "Tierras altas",
+        "key": 2689
+    },
+    {
+        "value": "Tyne and Wear",
+        "key": 9986
+    },
+    {
+        "value": "Warwickshire",
+        "key": 2811
+    },
+    {
+        "value": "West Dunbartonshire",
+        "key": 2813
+    },
+    {
+        "value": "West Glamorgan",
+        "key": 9998
+    },
+    {
+        "value": "West Lothian",
+        "key": 2814
+    },
+    {
+        "value": "West Midlands",
+        "key": 9994
+    },
+    {
+        "value": "West Sussex",
+        "key": 2815
+    },
+    {
+        "value": "West Yorkshire",
+        "key": 9990
+    },
+    {
+        "value": "Wiltshire",
+        "key": 2818
+    },
+    {
+        "value": "Worcestershire",
+        "key": 2823
+    }
+]

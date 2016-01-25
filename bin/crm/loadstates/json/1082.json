@@ -1,0 +1,66 @@
+[
+    {
+        "value": "Baden-Wuerttemberg",
+        "key": 2240
+    },
+    {
+        "value": "Bayern",
+        "key": 2241
+    },
+    {
+        "value": "Berl\u00edn",
+        "key": 2250
+    },
+    {
+        "value": "Brandenburgo",
+        "key": 2251
+    },
+    {
+        "value": "Bremen",
+        "key": 2242
+    },
+    {
+        "value": "Hamburgo",
+        "key": 2243
+    },
+    {
+        "value": "Hessen",
+        "key": 2244
+    },
+    {
+        "value": "Mecklenburg-Vorpommern",
+        "key": 2252
+    },
+    {
+        "value": "Niedersachsen",
+        "key": 2245
+    },
+    {
+        "value": "Nordrhein-Westfalen",
+        "key": 2246
+    },
+    {
+        "value": "Rheinland-Pfalz",
+        "key": 2247
+    },
+    {
+        "value": "Saarland",
+        "key": 2248
+    },
+    {
+        "value": "Sachsen",
+        "key": 2253
+    },
+    {
+        "value": "Sachsen-Anhalt",
+        "key": 2254
+    },
+    {
+        "value": "Schleswig-Holstein",
+        "key": 2249
+    },
+    {
+        "value": "Turingia",
+        "key": 2255
+    }
+]

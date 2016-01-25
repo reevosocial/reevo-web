@@ -1,0 +1,322 @@
+[
+    {
+        "value": "Abra",
+        "key": 4040
+    },
+    {
+        "value": "Agusan del Norte",
+        "key": 4041
+    },
+    {
+        "value": "Agusan del Sur",
+        "key": 4042
+    },
+    {
+        "value": "Aklan",
+        "key": 4043
+    },
+    {
+        "value": "Albay",
+        "key": 4044
+    },
+    {
+        "value": "Antiguo",
+        "key": 4045
+    },
+    {
+        "value": "Apayao",
+        "key": 4046
+    },
+    {
+        "value": "Aurora",
+        "key": 4047
+    },
+    {
+        "value": "Basilan",
+        "key": 4048
+    },
+    {
+        "value": "Batanes",
+        "key": 4050
+    },
+    {
+        "value": "Batangas",
+        "key": 4051
+    },
+    {
+        "value": "Batasn",
+        "key": 4049
+    },
+    {
+        "value": "Benguet",
+        "key": 4052
+    },
+    {
+        "value": "Biliran",
+        "key": 4053
+    },
+    {
+        "value": "Bohol",
+        "key": 4054
+    },
+    {
+        "value": "Bukidnon",
+        "key": 4055
+    },
+    {
+        "value": "Bulacan",
+        "key": 4056
+    },
+    {
+        "value": "Cagayan",
+        "key": 4057
+    },
+    {
+        "value": "Camarines Norte",
+        "key": 4058
+    },
+    {
+        "value": "Camarines Sur",
+        "key": 4059
+    },
+    {
+        "value": "Camiguin",
+        "key": 4060
+    },
+    {
+        "value": "Capiz",
+        "key": 4061
+    },
+    {
+        "value": "Catanduanes",
+        "key": 4062
+    },
+    {
+        "value": "Cavite",
+        "key": 4063
+    },
+    {
+        "value": "Cebu",
+        "key": 4064
+    },
+    {
+        "value": "Cotabato del Norte",
+        "key": 4092
+    },
+    {
+        "value": "Cotabato del Sur",
+        "key": 4106
+    },
+    {
+        "value": "Davao",
+        "key": 4066
+    },
+    {
+        "value": "Davao del Sur",
+        "key": 4067
+    },
+    {
+        "value": "Davao Oriental",
+        "key": 4068
+    },
+    {
+        "value": "Eastern Samar",
+        "key": 4069
+    },
+    {
+        "value": "El norte de Samar",
+        "key": 4093
+    },
+    {
+        "value": "Gran Manila",
+        "key": 10057
+    },
+    {
+        "value": "Guimaras",
+        "key": 4070
+    },
+    {
+        "value": "Ifugao",
+        "key": 4071
+    },
+    {
+        "value": "Ilocos Norte",
+        "key": 4072
+    },
+    {
+        "value": "Ilocos Sur",
+        "key": 4073
+    },
+    {
+        "value": "Iloilo",
+        "key": 4074
+    },
+    {
+        "value": "Isabela",
+        "key": 4075
+    },
+    {
+        "value": "Kalinga-Apayso",
+        "key": 4076
+    },
+    {
+        "value": "La Uni\u00f3n",
+        "key": 4080
+    },
+    {
+        "value": "Laguna",
+        "key": 4077
+    },
+    {
+        "value": "Lanao del Norte",
+        "key": 4078
+    },
+    {
+        "value": "Lanao del Sur",
+        "key": 4079
+    },
+    {
+        "value": "Leyte",
+        "key": 4081
+    },
+    {
+        "value": "Leyte del Sur",
+        "key": 4107
+    },
+    {
+        "value": "Maguindanao",
+        "key": 4082
+    },
+    {
+        "value": "Marinduque",
+        "key": 4083
+    },
+    {
+        "value": "Masbate",
+        "key": 4084
+    },
+    {
+        "value": "Mindoro Occidental",
+        "key": 4085
+    },
+    {
+        "value": "Mindoro Oriental",
+        "key": 4086
+    },
+    {
+        "value": "Misamis Occidental",
+        "key": 4087
+    },
+    {
+        "value": "Misamis Oriental",
+        "key": 4088
+    },
+    {
+        "value": "Monta\u00f1a Provincia",
+        "key": 4089
+    },
+    {
+        "value": "Negroe Occidental",
+        "key": 4090
+    },
+    {
+        "value": "Negros Oriental",
+        "key": 4091
+    },
+    {
+        "value": "Nueva Ecija",
+        "key": 4094
+    },
+    {
+        "value": "Nueva Vizcaya",
+        "key": 4095
+    },
+    {
+        "value": "Palawan",
+        "key": 4096
+    },
+    {
+        "value": "Pampanga",
+        "key": 4097
+    },
+    {
+        "value": "Pangasinan",
+        "key": 4098
+    },
+    {
+        "value": "Quezon",
+        "key": 4099
+    },
+    {
+        "value": "Quirino",
+        "key": 4100
+    },
+    {
+        "value": "Rizal",
+        "key": 4101
+    },
+    {
+        "value": "Romblon",
+        "key": 4102
+    },
+    {
+        "value": "Samar occidental",
+        "key": 4114
+    },
+    {
+        "value": "Sarangani",
+        "key": 4103
+    },
+    {
+        "value": "Siquijor",
+        "key": 4104
+    },
+    {
+        "value": "Sorsogon",
+        "key": 4105
+    },
+    {
+        "value": "Sultan Kudarat",
+        "key": 4108
+    },
+    {
+        "value": "Sulu",
+        "key": 4109
+    },
+    {
+        "value": "Surigao del Norte",
+        "key": 4110
+    },
+    {
+        "value": "Surigao del Sur",
+        "key": 4111
+    },
+    {
+        "value": "Tarlac",
+        "key": 4112
+    },
+    {
+        "value": "Tawi-Tawi",
+        "key": 4113
+    },
+    {
+        "value": "Valle de Compostela",
+        "key": 4065
+    },
+    {
+        "value": "Zambales",
+        "key": 4115
+    },
+    {
+        "value": "Zamboanga del Norte",
+        "key": 4116
+    },
+    {
+        "value": "Zamboanga del Sur",
+        "key": 4117
+    },
+    {
+        "value": "Zamboanga Sibiguey",
+        "key": 4118
+    }
+]

@@ -1,0 +1,610 @@
+[
+    {
+        "value": "Ajdovscina",
+        "key": 4383
+    },
+    {
+        "value": "Beltinci",
+        "key": 4384
+    },
+    {
+        "value": "Benedikt",
+        "key": 4385
+    },
+    {
+        "value": "Bistrica ob Sotli",
+        "key": 4386
+    },
+    {
+        "value": "Bled",
+        "key": 4387
+    },
+    {
+        "value": "Bloke",
+        "key": 4388
+    },
+    {
+        "value": "Bohinj",
+        "key": 4389
+    },
+    {
+        "value": "Borovnica",
+        "key": 4390
+    },
+    {
+        "value": "Bovec",
+        "key": 4391
+    },
+    {
+        "value": "Braslovce",
+        "key": 4392
+    },
+    {
+        "value": "Brda",
+        "key": 4393
+    },
+    {
+        "value": "Brezica",
+        "key": 4395
+    },
+    {
+        "value": "Brezovica",
+        "key": 4394
+    },
+    {
+        "value": "Cankova",
+        "key": 4396
+    },
+    {
+        "value": "Celje",
+        "key": 4397
+    },
+    {
+        "value": "Cerklje na Gorenjskem",
+        "key": 4398
+    },
+    {
+        "value": "Cerknica",
+        "key": 4399
+    },
+    {
+        "value": "Cerkno",
+        "key": 4400
+    },
+    {
+        "value": "Cerkvenjak",
+        "key": 4401
+    },
+    {
+        "value": "Crensovci",
+        "key": 4402
+    },
+    {
+        "value": "Crna na Koro\u0161kem",
+        "key": 4403
+    },
+    {
+        "value": "Crnomelj",
+        "key": 4404
+    },
+    {
+        "value": "Destrnik",
+        "key": 4405
+    },
+    {
+        "value": "Divaca",
+        "key": 4406
+    },
+    {
+        "value": "Dobje",
+        "key": 4407
+    },
+    {
+        "value": "Dobrepolje",
+        "key": 4408
+    },
+    {
+        "value": "Dobrna",
+        "key": 4409
+    },
+    {
+        "value": "Dobrova-Polhov Gradec",
+        "key": 4410
+    },
+    {
+        "value": "Dobrovnik",
+        "key": 4411
+    },
+    {
+        "value": "Dol pri Ljubljani",
+        "key": 4412
+    },
+    {
+        "value": "Dolenjske Toplice",
+        "key": 4413
+    },
+    {
+        "value": "Domzale",
+        "key": 4414
+    },
+    {
+        "value": "Dornava",
+        "key": 4415
+    },
+    {
+        "value": "Dravograd",
+        "key": 4416
+    },
+    {
+        "value": "Duplek",
+        "key": 4417
+    },
+    {
+        "value": "Gorenja vas-Poljane",
+        "key": 4418
+    },
+    {
+        "value": "Gornja Radgona",
+        "key": 4420
+    },
+    {
+        "value": "Gornji Grad",
+        "key": 4421
+    },
+    {
+        "value": "Gornji Petrovci",
+        "key": 4422
+    },
+    {
+        "value": "Gorsnica",
+        "key": 4419
+    },
+    {
+        "value": "Grad",
+        "key": 4423
+    },
+    {
+        "value": "Grosuplje",
+        "key": 4424
+    },
+    {
+        "value": "Hajdina",
+        "key": 4425
+    },
+    {
+        "value": "Hoce-Slivnica",
+        "key": 4426
+    },
+    {
+        "value": "Hodos",
+        "key": 4427
+    },
+    {
+        "value": "Hrastnik",
+        "key": 4429
+    },
+    {
+        "value": "Hrpelje-Kozina",
+        "key": 4430
+    },
+    {
+        "value": "Idrija",
+        "key": 4431
+    },
+    {
+        "value": "Ig",
+        "key": 4432
+    },
+    {
+        "value": "IIrska Bistrica",
+        "key": 4433
+    },
+    {
+        "value": "Ivancna Gorica",
+        "key": 4434
+    },
+    {
+        "value": "Izola",
+        "key": 4435
+    },
+    {
+        "value": "Jesenice",
+        "key": 4436
+    },
+    {
+        "value": "Jezersko",
+        "key": 4437
+    },
+    {
+        "value": "Jorjul",
+        "key": 4428
+    },
+    {
+        "value": "Jovevje",
+        "key": 4444
+    },
+    {
+        "value": "Jursinci",
+        "key": 4438
+    },
+    {
+        "value": "Kamnik",
+        "key": 4439
+    },
+    {
+        "value": "Kanal",
+        "key": 4440
+    },
+    {
+        "value": "Kidricevo",
+        "key": 4441
+    },
+    {
+        "value": "Kobarid",
+        "key": 4442
+    },
+    {
+        "value": "Kobilje",
+        "key": 4443
+    },
+    {
+        "value": "Komen",
+        "key": 4445
+    },
+    {
+        "value": "Komenda",
+        "key": 4446
+    },
+    {
+        "value": "Koper",
+        "key": 4447
+    },
+    {
+        "value": "Kostel",
+        "key": 4448
+    },
+    {
+        "value": "Kozje",
+        "key": 4449
+    },
+    {
+        "value": "Kranj",
+        "key": 4450
+    },
+    {
+        "value": "Kranjska Gora",
+        "key": 4451
+    },
+    {
+        "value": "Krizevci",
+        "key": 4452
+    },
+    {
+        "value": "Krsko",
+        "key": 4453
+    },
+    {
+        "value": "Kungota",
+        "key": 4454
+    },
+    {
+        "value": "Kuzma",
+        "key": 4455
+    },
+    {
+        "value": "Lasko",
+        "key": 4456
+    },
+    {
+        "value": "Lenart",
+        "key": 4457
+    },
+    {
+        "value": "Lendava",
+        "key": 4458
+    },
+    {
+        "value": "Litija",
+        "key": 4459
+    },
+    {
+        "value": "Ljubljana",
+        "key": 4460
+    },
+    {
+        "value": "Ljubno",
+        "key": 4461
+    },
+    {
+        "value": "Ljutomer",
+        "key": 4462
+    },
+    {
+        "value": "Logatec",
+        "key": 4463
+    },
+    {
+        "value": "Loska dolina",
+        "key": 4464
+    },
+    {
+        "value": "Loski Potok",
+        "key": 4465
+    },
+    {
+        "value": "Lovrenc na Pohorju",
+        "key": 4466
+    },
+    {
+        "value": "Luce",
+        "key": 4467
+    },
+    {
+        "value": "Lukovica",
+        "key": 4468
+    },
+    {
+        "value": "Majsperk",
+        "key": 4469
+    },
+    {
+        "value": "Maribor",
+        "key": 4470
+    },
+    {
+        "value": "Markovci",
+        "key": 4471
+    },
+    {
+        "value": "Medvode",
+        "key": 4472
+    },
+    {
+        "value": "Menges",
+        "key": 4473
+    },
+    {
+        "value": "Metlika",
+        "key": 4474
+    },
+    {
+        "value": "Mezica",
+        "key": 4475
+    },
+    {
+        "value": "Miklavz na Dravskern polju",
+        "key": 4476
+    },
+    {
+        "value": "Miren-Kostanjevica",
+        "key": 4477
+    },
+    {
+        "value": "Mirna Pec",
+        "key": 4478
+    },
+    {
+        "value": "Mislinja",
+        "key": 4479
+    },
+    {
+        "value": "Moravce",
+        "key": 4480
+    },
+    {
+        "value": "Moravske Toplice",
+        "key": 4481
+    },
+    {
+        "value": "Mozirje",
+        "key": 4482
+    },
+    {
+        "value": "Murska Sobota",
+        "key": 4483
+    },
+    {
+        "value": "Muta",
+        "key": 4484
+    },
+    {
+        "value": "Naklo",
+        "key": 4485
+    },
+    {
+        "value": "Nazarje",
+        "key": 4486
+    },
+    {
+        "value": "Nova Gorica",
+        "key": 4487
+    },
+    {
+        "value": "Nova mesto",
+        "key": 4488
+    },
+    {
+        "value": "Salovci",
+        "key": 4492
+    },
+    {
+        "value": "Sempeter-Vrtojba",
+        "key": 4493
+    },
+    {
+        "value": "\u0160encur",
+        "key": 4494
+    },
+    {
+        "value": "Sentilj",
+        "key": 4495
+    },
+    {
+        "value": "Sentjernej",
+        "key": 4496
+    },
+    {
+        "value": "Sentjur pri Celju",
+        "key": 4497
+    },
+    {
+        "value": "Skocjan",
+        "key": 4498
+    },
+    {
+        "value": "Skofja Loka",
+        "key": 4499
+    },
+    {
+        "value": "Skoftjica",
+        "key": 4500
+    },
+    {
+        "value": "\u0160marje pri Jelsah",
+        "key": 4501
+    },
+    {
+        "value": "Smartno ob Paki",
+        "key": 4502
+    },
+    {
+        "value": "Smartno pri Litiji",
+        "key": 4503
+    },
+    {
+        "value": "\u0160o\u0161tanj",
+        "key": 4504
+    },
+    {
+        "value": "Sveta Ana",
+        "key": 4489
+    },
+    {
+        "value": "Sveti Andraz v Slovenskih goricah",
+        "key": 4490
+    },
+    {
+        "value": "Sveti Jurij",
+        "key": 4491
+    },
+    {
+        "value": "Tabor",
+        "key": 4506
+    },
+    {
+        "value": "Tienda",
+        "key": 4505
+    },
+    {
+        "value": "Tisina",
+        "key": 4507
+    },
+    {
+        "value": "Tolmin",
+        "key": 4508
+    },
+    {
+        "value": "Trbovje",
+        "key": 4509
+    },
+    {
+        "value": "Trebnje",
+        "key": 4510
+    },
+    {
+        "value": "Trnovska vas",
+        "key": 4511
+    },
+    {
+        "value": "Trzic",
+        "key": 4512
+    },
+    {
+        "value": "Trzin",
+        "key": 4513
+    },
+    {
+        "value": "Turnisce",
+        "key": 4514
+    },
+    {
+        "value": "Velenje",
+        "key": 4515
+    },
+    {
+        "value": "Velika Lasce",
+        "key": 4517
+    },
+    {
+        "value": "Velika Polana",
+        "key": 4516
+    },
+    {
+        "value": "Verzej",
+        "key": 4518
+    },
+    {
+        "value": "Videm",
+        "key": 4519
+    },
+    {
+        "value": "Vipava",
+        "key": 4520
+    },
+    {
+        "value": "Vitanje",
+        "key": 4521
+    },
+    {
+        "value": "Vojnik",
+        "key": 4522
+    },
+    {
+        "value": "Vransko",
+        "key": 4523
+    },
+    {
+        "value": "Vrhnika",
+        "key": 4524
+    },
+    {
+        "value": "Vuzenica",
+        "key": 4525
+    },
+    {
+        "value": "Zagorje ob Savi",
+        "key": 4526
+    },
+    {
+        "value": "Zalec",
+        "key": 4529
+    },
+    {
+        "value": "Zavrc",
+        "key": 4527
+    },
+    {
+        "value": "Zelezniki",
+        "key": 4530
+    },
+    {
+        "value": "Zetale",
+        "key": 4531
+    },
+    {
+        "value": "Ziri",
+        "key": 4532
+    },
+    {
+        "value": "Zirovnica",
+        "key": 4533
+    },
+    {
+        "value": "Zrece",
+        "key": 4528
+    },
+    {
+        "value": "\u017du\u017eemberk",
+        "key": 4534
+    }
+]

@@ -1,0 +1,54 @@
+[
+    {
+        "value": "Alberta",
+        "key": 1100
+    },
+    {
+        "value": "Colombia Brit\u00e1nica",
+        "key": 1101
+    },
+    {
+        "value": "Isla del Pr\u00edncipe Eduardo",
+        "key": 1109
+    },
+    {
+        "value": "Manitoba",
+        "key": 1102
+    },
+    {
+        "value": "New Brunswick",
+        "key": 1103
+    },
+    {
+        "value": "Nueva Escocia",
+        "key": 1106
+    },
+    {
+        "value": "Nunavut",
+        "key": 1107
+    },
+    {
+        "value": "Ontario",
+        "key": 1108
+    },
+    {
+        "value": "Quebec",
+        "key": 1110
+    },
+    {
+        "value": "Saskatchewan",
+        "key": 1111
+    },
+    {
+        "value": "Terranova y Labrador",
+        "key": 1104
+    },
+    {
+        "value": "Territorios del Noroeste",
+        "key": 1105
+    },
+    {
+        "value": "Yukon Territory",
+        "key": 1112
+    }
+]

@@ -1,0 +1,34 @@
+[
+    {
+        "value": "Adamaoua",
+        "key": 2103
+    },
+    {
+        "value": "Centro",
+        "key": 2104
+    },
+    {
+        "value": "Extremo Norte",
+        "key": 2106
+    },
+    {
+        "value": "Norte",
+        "key": 2107
+    },
+    {
+        "value": "Oeste",
+        "key": 2110
+    },
+    {
+        "value": "Oriente",
+        "key": 2105
+    },
+    {
+        "value": "Sur",
+        "key": 2108
+    },
+    {
+        "value": "Sur-Oeste",
+        "key": 2109
+    }
+]

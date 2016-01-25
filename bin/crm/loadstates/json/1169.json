@@ -1,0 +1,102 @@
+[
+    {
+        "value": "Amazonas",
+        "key": 10184
+    },
+    {
+        "value": "Ancash",
+        "key": 4000
+    },
+    {
+        "value": "Apurimac",
+        "key": 4001
+    },
+    {
+        "value": "Arequipa",
+        "key": 4002
+    },
+    {
+        "value": "Ayacucho",
+        "key": 4003
+    },
+    {
+        "value": "Cajamarca",
+        "key": 4004
+    },
+    {
+        "value": "Cuzco",
+        "key": 4005
+    },
+    {
+        "value": "El Callao",
+        "key": 3999
+    },
+    {
+        "value": "Huancavelica",
+        "key": 4006
+    },
+    {
+        "value": "Hu\u00e1nuco",
+        "key": 4007
+    },
+    {
+        "value": "Ica",
+        "key": 4008
+    },
+    {
+        "value": "Jun\u00edn",
+        "key": 4009
+    },
+    {
+        "value": "La Libertad",
+        "key": 4010
+    },
+    {
+        "value": "Lambayeque",
+        "key": 4011
+    },
+    {
+        "value": "Lima",
+        "key": 4012
+    },
+    {
+        "value": "Loreto",
+        "key": 4013
+    },
+    {
+        "value": "Madre de Dios",
+        "key": 4014
+    },
+    {
+        "value": "Moquegua",
+        "key": 4015
+    },
+    {
+        "value": "Pasco",
+        "key": 4016
+    },
+    {
+        "value": "Piura",
+        "key": 4017
+    },
+    {
+        "value": "Puno",
+        "key": 4018
+    },
+    {
+        "value": "San Martin",
+        "key": 4019
+    },
+    {
+        "value": "Tacna",
+        "key": 4020
+    },
+    {
+        "value": "Tumbes",
+        "key": 4021
+    },
+    {
+        "value": "Ucayali",
+        "key": 4022
+    }
+]
