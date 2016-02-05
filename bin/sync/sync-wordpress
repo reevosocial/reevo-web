@@ -9,7 +9,7 @@
 
 source ../database_auth.sh
 
-BD='old_reevo_blog'
+BD='reevo_blog'
 BDIMPORT='reevo_blog'
 SITIO='blog.reevo.org'
 
@@ -46,4 +46,4 @@ rm ~/tmp/*
 echo ""
 echo "ETAPA 2: Vamos a sincronizar algunos directorios con archivos..."
 sleep 2s
-rsync -P -r -a -v -e "ssh -l reevo" --delete beta.reevo.org:/srv/reevo/blog.reevo.org/wp-content/uploads/ /srv/reevo-web/files/blog/
+rsync -P -r -a -v -e "ssh -l reevo" --delete reevo.org:/srv/reevo-web/files/blog/ /srv/reevo-web/files/blog/
