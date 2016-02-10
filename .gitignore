@@ -58,4 +58,4 @@ tmp/crm/*
 www/equipo/.bundle
 www/equipo/db/schema.rb
 www/equipo/Gemfile.lock
-www/equipo/public/plugin_assets/*
+!www/equipo/public/plugin_assets/.gitkeep
