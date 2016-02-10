@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2014  Jean-Philippe Lang
+# Copyright (C) 2006-2015  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -57,6 +57,10 @@ class QueryColumn
     object.send name
   end
 
+  def value_object(object)
+    object.send name
+  end
+
   def css_classes
     name
   end
@@ -80,10 +84,21 @@ class QueryCustomFieldColumn < QueryColumn
     @cf
   end
 
-  def value(object)
+  def value_object(object)
     if custom_field.visible_by?(object.project, User.current)
-      cv = object.custom_values.select {|v| v.custom_field_id == @cf.id}.collect {|v| @cf.cast_value(v.value)}
-      cv.size > 1 ? cv.sort {|a,b| a.to_s <=> b.to_s} : cv.first
+      cv = object.custom_values.select {|v| v.custom_field_id == @cf.id}
+      cv.size > 1 ? cv.sort {|a,b| a.value.to_s <=> b.value.to_s} : cv.first
+    else
+      nil
+    end
+  end
+
+  def value(object)
+    raw = value_object(object)
+    if raw.is_a?(Array)
+      raw.map {|r| @cf.cast_value(r.value)}
+    elsif raw
+      @cf.cast_value(raw.value)
     else
       nil
     end
@@ -105,7 +120,7 @@ class QueryAssociationCustomFieldColumn < QueryCustomFieldColumn
     @association = association
   end
 
-  def value(object)
+  def value_object(object)
     if assoc = object.send(@association)
       super(assoc)
     end
@@ -144,8 +159,8 @@ class Query < ActiveRecord::Base
 
   after_save do |query|
     if query.visibility_changed? && query.visibility != VISIBILITY_ROLES
-	    query.roles.clear
-	  end
+      query.roles.clear
+    end
   end
 
   class_attribute :operators
@@ -541,7 +556,7 @@ class Query < ActiveRecord::Base
       next unless v and !v.empty?
       operator = operator_for(field)
 
-      # "me" value subsitution
+      # "me" value substitution
       if %w(assigned_to_id author_id user_id watcher_id).include?(field)
         if v.delete("me")
           if User.current.logged?

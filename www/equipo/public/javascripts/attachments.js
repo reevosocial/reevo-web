@@ -1,5 +1,5 @@
 /* Redmine - project management software
-   Copyright (C) 2006-2014  Jean-Philippe Lang */
+   Copyright (C) 2006-2015  Jean-Philippe Lang */
 
 function addFile(inputEl, file, eagerUpload) {
 
@@ -133,7 +133,7 @@ function addInputFiles(inputEl) {
     }
   }
 
-  clearedFileInput.insertAfter('#attachments_fields').on('change', function(){addInputFiles(this);});
+  clearedFileInput.insertAfter('#attachments_fields');
 }
 
 function uploadAndAttachFiles(files, inputEl) {

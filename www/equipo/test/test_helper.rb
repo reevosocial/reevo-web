@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2014  Jean-Philippe Lang
+# Copyright (C) 2006-2015  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -221,7 +221,8 @@ class ActiveSupport::TestCase
   # It seems correct behavior because of this line comment.
   #   https://github.com/collectiveidea/awesome_nested_set/blame/199fca9bb9/lib/awesome_nested_set/model.rb#L278
   def new_issue_lft
-    ::AwesomeNestedSet::VERSION > "2.1.6" ? Issue.maximum(:rgt) + 1 : 1
+    # ::AwesomeNestedSet::VERSION > "2.1.6" ? Issue.maximum(:rgt) + 1 : 1
+    Issue.maximum(:rgt) + 1
   end
 end
 

@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2014  Jean-Philippe Lang
+# Copyright (C) 2006-2015  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -290,7 +290,7 @@ class AccountController < ApplicationController
     token = Token.new(:user => user, :action => "register")
     if user.save and token.save
       Mailer.register(token).deliver
-      flash[:notice] = l(:notice_account_register_done, :email => user.mail)
+      flash[:notice] = l(:notice_account_register_done, :email => ERB::Util.h(user.mail))
       redirect_to signin_path
     else
       yield if block_given?

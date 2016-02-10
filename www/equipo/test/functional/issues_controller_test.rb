@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2014  Jean-Philippe Lang
+# Copyright (C) 2006-2015  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -25,6 +25,7 @@ class IssuesControllerTest < ActionController::TestCase
            :member_roles,
            :issues,
            :issue_statuses,
+           :issue_relations,
            :versions,
            :trackers,
            :projects_trackers,
@@ -293,6 +294,38 @@ class IssuesControllerTest < ActionController::TestCase
     end
   end
 
+  def test_index_grouped_by_boolean_custom_field_should_distinguish_blank_and_false_values
+    cf = IssueCustomField.create!(:name => 'Bool', :is_for_all => true, :tracker_ids => [1,2,3], :field_format => 'bool')
+    CustomValue.create!(:custom_field => cf, :customized => Issue.find(1), :value => '1')
+    CustomValue.create!(:custom_field => cf, :customized => Issue.find(2), :value => '0')
+    CustomValue.create!(:custom_field => cf, :customized => Issue.find(3), :value => '')
+
+    with_settings :default_language => 'en' do
+      get :index, :project_id => 1, :set_filter => 1, :group_by => "cf_#{cf.id}"
+      assert_response :success
+    end
+
+    assert_select 'tr.group', 3
+    assert_select 'tr.group', :text => /Yes/
+    assert_select 'tr.group', :text => /No/
+    assert_select 'tr.group', :text => /none/
+  end
+
+  def test_index_grouped_by_boolean_custom_field_with_false_group_in_first_position_should_show_the_group
+    cf = IssueCustomField.create!(:name => 'Bool', :is_for_all => true, :tracker_ids => [1,2,3], :field_format => 'bool', :is_filter => true)
+    CustomValue.create!(:custom_field => cf, :customized => Issue.find(1), :value => '0')
+    CustomValue.create!(:custom_field => cf, :customized => Issue.find(2), :value => '0')
+
+    with_settings :default_language => 'en' do
+      get :index, :project_id => 1, :set_filter => 1, "cf_#{cf.id}" => "*", :group_by => "cf_#{cf.id}"
+      assert_response :success
+      assert_equal [1, 2], assigns(:issues).map(&:id).sort
+    end
+
+    assert_select 'tr.group', 1
+    assert_select 'tr.group', :text => /No/
+  end
+
   def test_index_with_query_grouped_by_tracker_in_normal_order
     3.times {|i| Issue.generate!(:tracker_id => (i + 1))}
 
@@ -471,6 +504,18 @@ class IssuesControllerTest < ActionController::TestCase
     end
   end
 
+  def test_index_csv_should_fill_parent_column_with_parent_id
+    Issue.delete_all
+    parent = Issue.generate!
+    child = Issue.generate!(:parent_issue_id => parent.id)
+
+    with_settings :default_language => 'en' do
+      get :index, :format => 'csv', :c => %w(parent)
+    end
+    lines = response.body.split
+    assert_include "#{child.id},#{parent.id}", lines
+  end
+
   def test_index_csv_big_5
     with_settings :default_language => "zh-TW" do
       str_utf8  = "\xe4\xb8\x80\xe6\x9c\x88"
@@ -572,15 +617,6 @@ class IssuesControllerTest < ActionController::TestCase
         assert_response :success
         assert_template 'index'
 
-        if lang == "ja"
-          if RUBY_PLATFORM != 'java'
-            assert_equal "CP932", l(:general_pdf_encoding)
-          end
-          if RUBY_PLATFORM == 'java' && l(:general_pdf_encoding) == "CP932"
-            next
-          end
-        end
-
         get :index, :format => 'pdf'
         assert_response :success
         assert_not_nil assigns(:issues)
@@ -632,6 +668,7 @@ class IssuesControllerTest < ActionController::TestCase
     assert_not_nil issues
     assert !issues.empty?
     assert_equal issues.sort {|a,b| a.tracker == b.tracker ? b.id <=> a.id : a.tracker <=> b.tracker }.collect(&:id), issues.collect(&:id)
+    assert_select 'table.issues.sort-by-tracker.sort-asc'
   end
 
   def test_index_sort_by_field_not_included_in_columns
@@ -644,6 +681,7 @@ class IssuesControllerTest < ActionController::TestCase
     assert_response :success
     assignees = assigns(:issues).collect(&:assigned_to).compact
     assert_equal assignees.sort, assignees
+    assert_select 'table.issues.sort-by-assigned-to.sort-asc'
   end
   
   def test_index_sort_by_assigned_to_desc
@@ -651,6 +689,7 @@ class IssuesControllerTest < ActionController::TestCase
     assert_response :success
     assignees = assigns(:issues).collect(&:assigned_to).compact
     assert_equal assignees.sort.reverse, assignees
+    assert_select 'table.issues.sort-by-assigned-to.sort-desc'
   end
   
   def test_index_group_by_assigned_to
@@ -816,7 +855,7 @@ class IssuesControllerTest < ActionController::TestCase
   def test_index_with_fixed_version_column
     get :index, :set_filter => 1, :c => %w(fixed_version)
     assert_select 'table.issues td.fixed_version' do
-      assert_select 'a[href=?]', '/versions/2', :text => '1.0'
+      assert_select 'a[href=?]', '/versions/2', :text => 'eCookbook - 1.0'
     end
   end
 
@@ -865,6 +904,17 @@ class IssuesControllerTest < ActionController::TestCase
     get :index, :set_filter => 1, :c => %w(subject description), :format => 'pdf'
     assert_response :success
     assert_equal 'application/pdf', response.content_type
+  end
+
+  def test_index_with_parent_column
+    Issue.delete_all
+    parent = Issue.generate!
+    child = Issue.generate!(:parent_issue_id => parent.id)
+
+    get :index, :c => %w(parent)
+
+    assert_select 'td.parent', :text => "#{parent.tracker} ##{parent.id}"
+    assert_select 'td.parent a[title=?]', parent.subject
   end
 
   def test_index_send_html_if_query_is_invalid
@@ -1404,6 +1454,8 @@ class IssuesControllerTest < ActionController::TestCase
   end
 
   def test_show_export_to_pdf
+    issue = Issue.find(3) 
+    assert issue.relations.select{|r| r.other_issue(issue).visible?}.present?
     get :show, :id => 3, :format => 'pdf'
     assert_response :success
     assert_equal 'application/pdf', @response.content_type
@@ -1966,6 +2018,31 @@ class IssuesControllerTest < ActionController::TestCase
     end
 
     assert_error_tag :content => /Due date #{ESCAPED_CANT} be blank/i
+    assert_error_tag :content => /Bar #{ESCAPED_CANT} be blank/i
+  end
+
+  def test_create_should_validate_required_list_fields
+    cf1 = IssueCustomField.create!(:name => 'Foo', :field_format => 'list', :is_for_all => true, :tracker_ids => [1, 2], :multiple => false, :possible_values => ['a', 'b'])
+    cf2 = IssueCustomField.create!(:name => 'Bar', :field_format => 'list', :is_for_all => true, :tracker_ids => [1, 2], :multiple => true, :possible_values => ['a', 'b'])
+    WorkflowPermission.delete_all
+    WorkflowPermission.create!(:old_status_id => 1, :tracker_id => 2, :role_id => 1, :field_name => cf1.id.to_s, :rule => 'required')
+    WorkflowPermission.create!(:old_status_id => 1, :tracker_id => 2, :role_id => 1, :field_name => cf2.id.to_s, :rule => 'required')
+    @request.session[:user_id] = 2
+
+    assert_no_difference 'Issue.count' do
+      post :create, :project_id => 1, :issue => {
+        :tracker_id => 2,
+        :status_id => 1,
+        :subject => 'Test',
+        :start_date => '',
+        :due_date => '',
+        :custom_field_values => {cf1.id.to_s => '', cf2.id.to_s => ['']}
+      }
+      assert_response :success
+      assert_template 'new'
+    end
+
+    assert_error_tag :content => /Foo #{ESCAPED_CANT} be blank/i
     assert_error_tag :content => /Bar #{ESCAPED_CANT} be blank/i
   end
 
@@ -3814,7 +3891,7 @@ class IssuesControllerTest < ActionController::TestCase
 
     assert_difference 'Issue.count', 1 do
       assert_no_difference 'Attachment.count' do
-        post :bulk_update, :ids => [3], :copy => '1',
+        post :bulk_update, :ids => [3], :copy => '1', :copy_attachments => '0',
              :issue => {
                :project_id => ''
              }
@@ -3855,7 +3932,7 @@ class IssuesControllerTest < ActionController::TestCase
     @request.session[:user_id] = 2
 
     assert_difference 'Issue.count', 1 do
-      post :bulk_update, :ids => [issue.id], :copy => '1',
+      post :bulk_update, :ids => [issue.id], :copy => '1', :copy_subtasks => '0',
            :issue => {
              :project_id => ''
            }

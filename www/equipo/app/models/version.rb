@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2014  Jean-Philippe Lang
+# Copyright (C) 2006-2015  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -30,6 +30,7 @@ class Version < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => [:project_id]
   validates_length_of :name, :maximum => 60
+  validates_length_of :description, :maximum => 255
   validates :effective_date, :date => true
   validates_inclusion_of :status, :in => VERSION_STATUSES
   validates_inclusion_of :sharing, :in => VERSION_SHARINGS
@@ -230,6 +231,11 @@ class Version < ActiveRecord::Base
     end
   end
 
+  # Returns true if the version is shared, otherwise false
+  def shared?
+    sharing != 'none'
+  end
+
   private
 
   def load_issue_counts
@@ -260,7 +266,7 @@ class Version < ActiveRecord::Base
 
   # Returns the average estimated time of assigned issues
   # or 1 if no issue has an estimated time
-  # Used to weigth unestimated issues in progress calculation
+  # Used to weight unestimated issues in progress calculation
   def estimated_average
     if @estimated_average.nil?
       average = fixed_issues.average(:estimated_hours).to_f

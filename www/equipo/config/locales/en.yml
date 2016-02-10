@@ -141,7 +141,7 @@ en:
   general_csv_separator: ','
   general_csv_decimal_separator: '.'
   general_csv_encoding: ISO-8859-1
-  general_pdf_encoding: UTF-8
+  general_pdf_fontname: freesans
   general_first_day_of_week: '7'
 
   notice_account_updated: Account was successfully updated.
@@ -508,6 +508,7 @@ en:
   label_issue_updated: Issue updated
   label_issue_note_added: Note added
   label_issue_status_updated: Status updated
+  label_issue_assigned_to_updated: Assignee updated
   label_issue_priority_updated: Priority updated
   label_document: Document
   label_document_new: New document
@@ -851,6 +852,8 @@ en:
   label_group: Group
   label_group_plural: Groups
   label_group_new: New group
+  label_group_anonymous: Anonymous users
+  label_group_non_member: Non member users
   label_time_entry_plural: Spent time
   label_version_sharing_none: Not shared
   label_version_sharing_descendants: With subprojects

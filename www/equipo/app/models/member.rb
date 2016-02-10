@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2014  Jean-Philippe Lang
+# Copyright (C) 2006-2015  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -19,7 +19,7 @@ class Member < ActiveRecord::Base
   belongs_to :user
   belongs_to :principal, :foreign_key => 'user_id'
   has_many :member_roles, :dependent => :destroy
-  has_many :roles, :through => :member_roles
+  has_many :roles, :through => :member_roles, :uniq => true
   belongs_to :project
 
   validates_presence_of :principal, :project
@@ -101,7 +101,7 @@ class Member < ActiveRecord::Base
     end
   end
 
-  # Find or initilize a Member with an id, attributes, and for a Principal
+  # Find or initialize a Member with an id, attributes, and for a Principal
   def self.edit_membership(id, new_attributes, principal=nil)
     @membership = id.present? ? Member.find(id) : Member.new(:principal => principal)
     @membership.attributes = new_attributes

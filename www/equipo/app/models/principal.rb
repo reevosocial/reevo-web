@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2014  Jean-Philippe Lang
+# Copyright (C) 2006-2015  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -61,7 +61,7 @@ class Principal < ActiveRecord::Base
       where("1=0")
     else
       ids = projects.map(&:id)
-      active.uniq.joins(:members).where("#{Member.table_name}.project_id IN (?)", ids)
+      active.where("#{Principal.table_name}.id IN (SELECT DISTINCT user_id FROM #{Member.table_name} WHERE project_id IN (?))", ids)
     end
   }
   # Principals that are not members of projects
@@ -114,3 +114,6 @@ class Principal < ActiveRecord::Base
     true
   end
 end
+
+require_dependency "user"
+require_dependency "group"

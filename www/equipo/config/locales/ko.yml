@@ -188,7 +188,7 @@ ko:
   general_csv_separator: ','
   general_csv_decimal_separator: '.'
   general_csv_encoding: CP949
-  general_pdf_encoding: CP949
+  general_pdf_fontname: hysmyeongjostdmedium
   general_first_day_of_week: '7'
 
   notice_account_updated: 계정이 성공적으로 변경되었습니다.
@@ -1156,7 +1156,10 @@ ko:
   setting_force_default_language_for_anonymous: 익명 사용자의 기본 언어 강제
   setting_force_default_language_for_loggedin: 로그인 사용자의 기본 언어 강제
   label_custom_field_select_type: 사용자 정의 필드에 추가할 대상을 선택해주세요.
+  label_issue_assigned_to_updated: Assignee updated
   label_check_for_updates: Check for updates
   label_latest_compatible_version: Latest compatible version
   label_unknown_plugin: Unknown plugin
   label_radio_buttons: radio buttons
+  label_group_anonymous: Anonymous users
+  label_group_non_member: Non member users

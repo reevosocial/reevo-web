@@ -1,7 +1,7 @@
 # encoding: utf-8
 #
 # Redmine - project management software
-# Copyright (C) 2006-2014  Jean-Philippe Lang
+# Copyright (C) 2006-2015  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,6 +18,8 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 module QueriesHelper
+  include ApplicationHelper
+
   def filters_options_for_select(query)
     options_for_select(filters_options(query))
   end
@@ -81,7 +83,7 @@ module QueriesHelper
   end
 
   def column_content(column, issue)
-    value = column.value(issue)
+    value = column.value_object(issue)
     if value.is_a?(Array)
       value.collect {|v| column_value(column, issue, v)}.compact.join(', ').html_safe
     else
@@ -95,6 +97,8 @@ module QueriesHelper
       link_to value, issue_path(issue)
     when :subject
       link_to value, issue_path(issue)
+    when :parent
+      value ? (value.visible? ? link_to_issue(value, :subject => false) : "##{value.id}") : ''
     when :description
       issue.description? ? content_tag('div', textilizable(issue, :description), :class => "wiki") : ''
     when :done_ratio
@@ -110,7 +114,7 @@ module QueriesHelper
   end
 
   def csv_content(column, issue)
-    value = column.value(issue)
+    value = column.value_object(issue)
     if value.is_a?(Array)
       value.collect {|v| csv_value(column, issue, v)}.compact.join(', ')
     else
@@ -118,23 +122,23 @@ module QueriesHelper
     end
   end
 
-  def csv_value(column, issue, value)
-    case value.class.name
-    when 'Time'
-      format_time(value)
-    when 'Date'
-      format_date(value)
-    when 'Float'
-      sprintf("%.2f", value).gsub('.', l(:general_csv_decimal_separator))
-    when 'IssueRelation'
-      other = value.other_issue(issue)
-      l(value.label_for(issue)) + " ##{other.id}"
-    when 'TrueClass'
-      l(:general_text_Yes)
-    when 'FalseClass'
-      l(:general_text_No)
-    else
-      value.to_s
+  def csv_value(column, object, value)
+    format_object(value, false) do |value|
+      case value.class.name
+      when 'Float'
+        sprintf("%.2f", value).gsub('.', l(:general_csv_decimal_separator))
+      when 'IssueRelation'
+        other = value.other_issue(object)
+        l(value.label_for(object)) + " ##{other.id}"
+      when 'Issue'
+        if object.is_a?(TimeEntry)
+          "#{value.tracker} ##{value.id}: #{value.subject}"
+        else
+          value.id
+        end
+      else
+        value
+      end
     end
   end
 

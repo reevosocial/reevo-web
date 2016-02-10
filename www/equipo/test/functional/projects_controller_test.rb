@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2014  Jean-Philippe Lang
+# Copyright (C) 2006-2015  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -553,6 +553,20 @@ class ProjectsControllerTest < ActionController::TestCase
     @request.session[:user_id] = 1
     get :copy, :id => 99
     assert_response 404
+  end
+
+  def test_get_copy_should_preselect_custom_fields
+    field1 = IssueCustomField.generate!(:is_for_all => false)
+    field2 = IssueCustomField.generate!(:is_for_all => false)
+    source = Project.generate!(:issue_custom_fields => [field1])
+    @request.session[:user_id] = 1
+
+    get :copy, :id => source.id
+    assert_response :success
+    assert_select 'fieldset#project_issue_custom_fields' do
+      assert_select 'input[type=checkbox][value=?][checked=checked]', field1.id.to_s
+      assert_select 'input[type=checkbox][value=?]:not([checked])', field2.id.to_s
+    end
   end
 
   def test_post_copy_should_copy_requested_items

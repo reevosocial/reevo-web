@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2014  Jean-Philippe Lang
+# Copyright (C) 2006-2015  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -80,15 +80,20 @@ class Journal < ActiveRecord::Base
     end
   end
 
+  # Returns the JournalDetail for the given attribute, or nil if the attribute
+  # was not updated
+  def detail_for_attribute(attribute)
+    details.detect {|detail| detail.prop_key == attribute}
+  end
+
   # Returns the new status if the journal contains a status change, otherwise nil
   def new_status
-    c = details.detect {|detail| detail.prop_key == 'status_id'}
-    (c && c.value) ? IssueStatus.find_by_id(c.value.to_i) : nil
+    s = new_value_for('status_id')
+    s ? IssueStatus.find_by_id(s.to_i) : nil
   end
 
   def new_value_for(prop)
-    c = details.detect {|detail| detail.prop_key == prop}
-    c ? c.value : nil
+    detail_for_attribute(prop).try(:value)
   end
 
   def editable_by?(usr)
@@ -185,6 +190,7 @@ class Journal < ActiveRecord::Base
     if notify? && (Setting.notified_events.include?('issue_updated') ||
         (Setting.notified_events.include?('issue_note_added') && notes.present?) ||
         (Setting.notified_events.include?('issue_status_updated') && new_status.present?) ||
+        (Setting.notified_events.include?('issue_assigned_to_updated') && detail_for_attribute('assigned_to_id').present?) ||
         (Setting.notified_events.include?('issue_priority_updated') && new_value_for('priority_id').present?)
       )
       Mailer.deliver_issue_edit(self)

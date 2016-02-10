@@ -142,7 +142,7 @@ bg:
   general_csv_separator: ','
   general_csv_decimal_separator: '.'
   general_csv_encoding: UTF-8
-  general_pdf_encoding: UTF-8
+  general_pdf_fontname: freesans
   general_first_day_of_week: '1'
 
   notice_account_updated: Профилът е обновен успешно.
@@ -511,6 +511,7 @@ bg:
   label_issue_updated: Обновена задача
   label_issue_note_added: Добавена бележка
   label_issue_status_updated: Обновено състояние
+  label_issue_assigned_to_updated: Задачата е с назначен нов изпълнител
   label_issue_priority_updated: Обновен приоритет
   label_document: Документ
   label_document_new: Нов документ
@@ -854,6 +855,8 @@ bg:
   label_group: Група
   label_group_plural: Групи
   label_group_new: Нова група
+  label_group_anonymous: Анонимни потребители
+  label_group_non_member: Потребители, които не са членове на проекта
   label_time_entry_plural: Използвано време
   label_version_sharing_none: Не споделен
   label_version_sharing_descendants: С подпроекти

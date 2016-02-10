@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2014  Jean-Philippe Lang
+# Copyright (C) 2006-2015  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -160,6 +160,20 @@ class Redmine::ApiTest::IssuesTest < Redmine::ApiTest::Base
         end
       end
     end
+  end
+
+  test "GET /issues/:id.xml with journals should format timestamps in ISO 8601" do
+    get '/issues/1.xml?include=journals'
+
+    iso_date = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/
+    assert_select 'issue>created_on', :text => iso_date
+    assert_select 'issue>updated_on', :text => iso_date
+    assert_select 'issue journal>created_on', :text => iso_date
+  end
+
+  def test_index_should_include_issue_attributes
+    get '/issues.xml'
+    assert_select 'issues>issue>is_private', :text => 'false'
   end
 
   def test_index_should_allow_timestamp_filtering
@@ -476,6 +490,11 @@ class Redmine::ApiTest::IssuesTest < Redmine::ApiTest::Base
     end
   end
 
+  def test_show_should_include_issue_attributes
+    get '/issues/1.xml'
+    assert_select 'issue>is_private', :text => 'false'
+  end
+
   test "GET /issues/:id.xml?include=watchers should include watchers" do
     Watcher.create!(:user_id => 3, :watchable => Issue.find(1))
 
@@ -488,6 +507,20 @@ class Redmine::ApiTest::IssuesTest < Redmine::ApiTest::Base
       assert_select 'watchers' do
         assert_select 'user[id=3]'
       end
+    end
+  end
+
+  test "GET /issues/:id.xml should not disclose associated changesets from projects the user has no access to" do
+    project = Project.generate!(:is_public => false)
+    repository = Repository::Subversion.create!(:project => project, :url => "svn://localhost")
+    Issue.find(1).changesets << Changeset.generate!(:repository => repository)
+    assert Issue.find(1).changesets.any?
+
+    get '/issues/1.xml?include=changesets', {}, credentials('jsmith')
+
+    # the user jsmith has no permission to view the associated changeset
+    assert_select 'issue changesets[type=array]' do
+      assert_select 'changeset', 0
     end
   end
 

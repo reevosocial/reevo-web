@@ -1,4 +1,4 @@
-desc "Run the Continous Integration tests for Redmine"
+desc "Run the Continuous Integration tests for Redmine"
 task :ci do
   # RAILS_ENV and ENV[] can diverge so force them both to test
   ENV['RAILS_ENV'] = 'test'
@@ -62,7 +62,7 @@ file 'config/database.yml' do
       dev_conf['password'] = 'jenkins'
     end
     test_conf = dev_conf.merge('database' => test_db_name)
-  when 'postgresql'
+  when /postgresql/
     dev_conf =  {'adapter' => 'postgresql', 'database' => dev_db_name,
                  'host' => 'localhost'}
     if ENV['RUN_ON_NOT_OFFICIAL']

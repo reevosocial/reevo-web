@@ -13,11 +13,8 @@
 </div>
 
 <div class="splitcontentright">
-
-
-
     <% if @projects.any? %>
-<!--  <div class="projects box">
+  <div class="projects box">
   <h3><%=l(:label_project_latest)%></h3>
     <ul>
     <% for project in @projects %>
@@ -29,11 +26,7 @@
     <% end %>
     <% @project = nil %>
     </ul>
-  </div> -->
-  
-  
-  
-  
+  </div>
   <% end %>
     <%= call_hook(:view_welcome_index_right, :projects => @projects) %>
 </div>

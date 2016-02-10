@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2014  Jean-Philippe Lang
+# Copyright (C) 2006-2015  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -28,6 +28,12 @@ class GroupsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_template 'index'
+  end
+
+  def test_index_should_show_user_count
+    get :index
+    assert_response :success
+    assert_select 'tr#group-11 td.user_count', :text => '1'
   end
 
   def test_show

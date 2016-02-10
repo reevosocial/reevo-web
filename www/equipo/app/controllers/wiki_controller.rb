@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2014  Jean-Philippe Lang
+# Copyright (C) 2006-2015  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -270,9 +270,12 @@ class WikiController < ApplicationController
   def destroy_version
     return render_403 unless editable?
 
-    @content = @page.content_for_version(params[:version])
-    @content.destroy
-    redirect_to_referer_or history_project_wiki_page_path(@project, @page.title)
+    if content = @page.content.versions.find_by_version(params[:version])
+      content.destroy
+      redirect_to_referer_or history_project_wiki_page_path(@project, @page.title)
+    else
+      render_404
+    end
   end
 
   # Export wiki to a single pdf or html file

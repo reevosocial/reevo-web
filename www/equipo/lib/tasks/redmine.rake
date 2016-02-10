@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2014  Jean-Philippe Lang
+# Copyright (C) 2006-2015  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -68,7 +68,8 @@ DESC
     tables = ActiveRecord::Base.connection.tables.sort - %w(schema_migrations plugin_schema_info)
 
     if (tables - target_tables).any?
-      abort "The following table(s) are missing from the target database: #{(tables - target_tables).join(', ')}"
+      list = (tables - target_tables).map {|table| "* #{table}"}.join("\n")
+      abort "The following table(s) are missing from the target database:\n#{list}"
     end
 
     tables.each do |table_name|

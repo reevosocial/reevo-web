@@ -1,5 +1,5 @@
 # Redmine - project management software
-# Copyright (C) 2006-2014  Jean-Philippe Lang
+# Copyright (C) 2006-2015  Jean-Philippe Lang
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -256,9 +256,9 @@ Redmine::Activity.map do |activity|
   activity.register :news
   activity.register :documents, :class_name => %w(Document Attachment)
   activity.register :files, :class_name => 'Attachment'
-  activity.register :wiki_edits, :class_name => 'WikiContent::Version', :default => true
-  activity.register :messages, :default => true
-  activity.register :time_entries, :default => true
+  activity.register :wiki_edits, :class_name => 'WikiContent::Version', :default => false
+  activity.register :messages, :default => false
+  activity.register :time_entries, :default => false
 end
 
 Redmine::Search.map do |search|
