@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'CSSmin' => $vendorDir . '/mrclay/minify/min/lib/CSSmin.php',
+    'CallbackFilterIterator' => $vendorDir . '/symfony/polyfill-php54/Resources/stubs/CallbackFilterIterator.php',
     'DooDigestAuth' => $vendorDir . '/mrclay/minify/min/lib/DooDigestAuth.php',
     'FirePHP' => $vendorDir . '/mrclay/minify/min/lib/FirePHP.php',
     'HTTP_ConditionalGet' => $vendorDir . '/mrclay/minify/min/lib/HTTP/ConditionalGet.php',
@@ -57,5 +58,6 @@ return array(
     'Minify_YUI_CssCompressor' => $vendorDir . '/mrclay/minify/min/lib/Minify/YUI/CssCompressor.php',
     'MrClay\\Cli' => $vendorDir . '/mrclay/minify/min/lib/MrClay/Cli.php',
     'MrClay\\Cli\\Arg' => $vendorDir . '/mrclay/minify/min/lib/MrClay/Cli/Arg.php',
-    'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Resources/stubs/SessionHandlerInterface.php',
+    'RecursiveCallbackFilterIterator' => $vendorDir . '/symfony/polyfill-php54/Resources/stubs/RecursiveCallbackFilterIterator.php',
+    'SessionHandlerInterface' => $vendorDir . '/symfony/polyfill-php54/Resources/stubs/SessionHandlerInterface.php',
 );
