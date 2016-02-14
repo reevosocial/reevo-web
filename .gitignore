@@ -35,6 +35,8 @@ files/equipo/*
 !files/equipo/.gitkeep
 files/red/*
 !files/red/.gitkeep
+files/red/recext/*
+!files/red/recext/.gitkeep
 files/wiki/*
 !files/wiki/.gitkeep
 files/mapa/*
