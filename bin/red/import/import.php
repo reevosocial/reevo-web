@@ -9,7 +9,7 @@ $settings = $console->parse();
 
 $startTime = time();
 
-include_once('../engine/start.php');
+include_once('../../../www/red/engine/start.php');
 
 elgg_set_ignore_access(true);
 
