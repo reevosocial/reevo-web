@@ -235,11 +235,11 @@ class JSONImporter {
 		}
 
 		$elggObject->save();
-		echo 'Se importo el objeto: '.$metadata['title'].' con el GUID '. $elggObject->guid;
+		echo $metadata['title'] . ':' . $elggObject->guid . ' es ' . $metadata['yourls'];
 		echo "\n";
 
 		// Archiva los metadatos de forma local
-		$path = '/srv/reevo-web/www/red/';
+		$path = '/srv/reevo-web/www/red';
 		$guid = $elggObject->guid;
 		$url= $elggObject->getURL();
 		$image = ($metadata['image']);
@@ -247,27 +247,23 @@ class JSONImporter {
 		$title = ($metadata['title']);
 
 		// Archiva la imagen destacada
-			echo "el path es: $path";
-			if (isset($metadata['image'])) {
-				echo "entro al if";
-				if (!file_exists("$path/recext-store/$guid")) {
-					mkdir("$path/recext-store/$guid", 0777, true);
-				}
-
-				// obtiene la extension del link a la imagen, si no la tiene usa JPG
-				$ext = pathinfo($image, PATHINFO_EXTENSION);
-				if (!$ext) { $ext = 'jpg'; }
-
-				shell_exec("wget -q $image -O $path/recext-store/$guid/$guid.$ext");
-				// agrega metadatos a la imagen almacenada
-				shell_exec("/usr/bin/exiftool -overwrite_original -title='$title' -comment='Source: $image' -author='$source' -url='$url' $path/recext-store/$guid/$guid.$ext");
-				// reemplaza la imagen por la almacenada localmente
-				$siteurl = elgg_get_site_url();
-				$elggObject->image = $siteurl.'/recext-store/'.$guid.'/'.$guid.'.'.$ext;
-				echo 'url de la imagen: '. $siteurl.'recext-store/'.$guid.'/'.$guid.'.'.$ext;
+		if ($metadata['image']) {
+			if (!file_exists("$path/recext-store/$guid")) {
+				mkdir("$path/recext-store/$guid", 0777, true);
 			}
 
+			// obtiene la extension del link a la imagen, si no la tiene usa JPG
+			$ext = pathinfo($image, PATHINFO_EXTENSION);
+			if (!$ext) { $ext = 'jpg'; }
 
+			shell_exec("wget -q $image -O $path/recext-store/$guid/$guid.$ext");
+			// agrega metadatos a la imagen almacenada
+			shell_exec("/usr/bin/exiftool -overwrite_original -title='$title' -comment='Source: $image' -author='$source' -url='$url' $path/recext-store/$guid/$guid.$ext");
+			// reemplaza la imagen por la almacenada localmente
+			$siteurl = elgg_get_site_url();
+			$elggObject->image = $siteurl.'/recext-store/'.$guid.'/'.$guid.'.'.$ext;
+			echo 'url de la imagen: '. $siteurl.'recext-store/'.$guid.'/'.$guid.'.'.$ext;
+		}
 
 
 		// save guid of new ELGG object to translation table
