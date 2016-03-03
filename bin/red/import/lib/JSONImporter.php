@@ -256,15 +256,14 @@ class JSONImporter {
 			$ext = pathinfo($image, PATHINFO_EXTENSION);
 			if (!$ext) { $ext = 'jpg'; }
 
-			shell_exec("wget -q $image -O $path/recext-store/$guid/$guid.$ext");
+			shell_exec("wget -q '$image' -O $path/recext-store/$guid/$guid.$ext");
 			// agrega metadatos a la imagen almacenada
 			shell_exec("/usr/bin/exiftool -overwrite_original -title='$title' -comment='Source: $image' -author='$source' -url='$url' $path/recext-store/$guid/$guid.$ext");
 			// reemplaza la imagen por la almacenada localmente
 			$siteurl = elgg_get_site_url();
 			$elggObject->image = $siteurl.'/recext-store/'.$guid.'/'.$guid.'.'.$ext;
-			echo 'url de la imagen: '. $siteurl.'recext-store/'.$guid.'/'.$guid.'.'.$ext;
+			//echo 'url de la imagen: '. $siteurl.'recext-store/'.$guid.'/'.$guid.'.'.$ext;
 		}
-
 
 		// save guid of new ELGG object to translation table
 		$this->translate($metadata['guid'], $elggObject->guid);
