@@ -6,16 +6,15 @@
 # EN: This file is part of: reevo-web (http://git.reevo.org/reevo/reevo-web)
 # ----
 
+require('/srv/reevo-web/etc/global_config.php');
+
 require('/srv/reevo-web/www/blog/wp-blog-header.php');
 require_once "/srv/reevo-web/www/crm/civicrm.settings.php";
 require_once 'CRM/Core/Config.php';
 $config = CRM_Core_Config::singleton( );
 require_once 'api/api.php';
 
-$username = "root";
-$password = "yaco22";
 $hostname = "localhost";
-$dbname = "reevo_crm";
 $lista_repetidos = array();
 
 function verificador($resultado) {
@@ -49,7 +48,7 @@ echo 'Este script busca emails duplicados y huerfanos en la tabla `civicrm_email
 ';
 
 // Genera listado desde la tabla de mysql
-$salida = shell_exec('mysql -u '.$username.'  -p"'.$password.'"  -h '.$hostname.'  -e \'SELECT COUNT(*) AS `count`,`id`,`email` FROM civicrm_email  GROUP BY `email`;\' '.$dbname.' | grep -v ^1');
+$salida = shell_exec('mysql -u '.$REEVO_DB_USER.'  -p"'.$REEVO_DB_PASS.'"  -h '.$hostname.'  -e \'SELECT COUNT(*) AS `count`,`id`,`email` FROM civicrm_email  GROUP BY `email`;\' '.$REEVO_DB_CRM.' | grep -v ^1');
 
 $array=explode("\n",$salida);
 $cabecera=array_shift($array);
