@@ -196,16 +196,6 @@ Los siguientes contactos tienen el mismo email:
       }
     }
   } else {
-    // Hay al menos dos contactos diferentes con el mismo correo, asi que están duplicados
-    foreach($mails_repetidos['values'] as $caso) {
-      if ($caso['is_primary'] == 0) {
-        echo 'El email con id '.$caso['contact_id'].' no es primario asi que se elimina
-        ';
-        $result = civicrm_api3('email', 'delete', array('id' => $caso['id']));
-        verificador($result);
-      }
-    }
-
   }
 }
 
