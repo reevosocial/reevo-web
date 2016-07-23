@@ -95,6 +95,13 @@ foreach($lista_repetidos as $item) {
   foreach($mails_repetidos['values'] as $caso) {
     if (!$contacto) {
       $contacto = $caso['contact_id'];
+      if ($caso['is_primary'] == 0) {
+        echo '
+        El email con id '.$caso['contact_id'].' no es primario asi que se elimina
+        ';
+        $result = civicrm_api3('email', 'delete', array('id' => $caso['id']));
+        verificador($result);
+      }
     } else {
       if ($contacto != $caso['contact_id']) {
         if (!$distintos) {
@@ -103,18 +110,17 @@ foreach($lista_repetidos as $item) {
         } else {
           $distintos[] = $caso['contact_id'];
         }
+        if ($caso['is_primary'] == 0) {
+          echo '
+          El email con id '.$caso['contact_id'].' no es primario asi que se elimina
+          ';
+          $result = civicrm_api3('email', 'delete', array('id' => $caso['id']));
+          verificador($result);
+        }
         $iguales = 0;
       } else {
-        // $iguales = 1;
-        // Hay al menos dos contactos diferentes con el mismo correo, asi que están duplicados
-        foreach($mails_repetidos['values'] as $caso) {
-          if ($caso['is_primary'] == 0) {
-            echo 'El email con id '.$caso['contact_id'].' no es primario asi que se elimina
-            ';
-            $result = civicrm_api3('email', 'delete', array('id' => $caso['id']));
-            verificador($result);
-          }
-        }
+        $iguales = 1;
+
       }
     }
   }
@@ -189,6 +195,17 @@ Los siguientes contactos tienen el mismo email:
         }
       }
     }
+  } else {
+    // Hay al menos dos contactos diferentes con el mismo correo, asi que están duplicados
+    foreach($mails_repetidos['values'] as $caso) {
+      if ($caso['is_primary'] == 0) {
+        echo 'El email con id '.$caso['contact_id'].' no es primario asi que se elimina
+        ';
+        $result = civicrm_api3('email', 'delete', array('id' => $caso['id']));
+        verificador($result);
+      }
+    }
+
   }
 }
 
