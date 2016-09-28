@@ -5,9 +5,9 @@ La Plataforma Web busca ingegrar diversas herramientas libres. Este repositorio 
 
 ## Herramientas incluidas
 
-* blog: Wordpress 4.1.1
-	* CiviCRM: 4.5.8
-* equipo: Redmine 4.5 [OUTDATED]
+* blog: Wordpress 4.1.1 [OUTDATED]
+	* CiviCRM: 4.5.8 [OUTDATED]
+* equipo: Redmine 2.6.9 
 * mapa: Ushahidi 2.7.1 [OUTDATED]
 * red: Elgg 1.12.4
 * wiki: MediaWiki 1.20.0 [OUTDATED]

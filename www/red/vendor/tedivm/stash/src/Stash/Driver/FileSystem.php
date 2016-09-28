@@ -114,7 +114,6 @@ class FileSystem extends AbstractDriver
     public function getDefaultOptions()
     {
         return array(
-            'path' => Utilities::getBaseDirectory($this),
             'filePermissions' => 0660,
             'dirPermissions' => 0770,
             'dirSplit' => 2,
@@ -130,9 +129,12 @@ class FileSystem extends AbstractDriver
      *
      * @throws \Stash\Exception\RuntimeException
      */
-    public function setOptions(array $options = array())
+    protected function setOptions(array $options = array())
     {
         $options += $this->getDefaultOptions();
+        if (!isset($options['path'])) {
+            $options['path'] = Utilities::getBaseDirectory($this);
+        }
 
         $this->cachePath = rtrim($options['path'], '\\/') . DIRECTORY_SEPARATOR;
         $this->filePermissions = $options['filePermissions'];
@@ -154,10 +156,11 @@ class FileSystem extends AbstractDriver
                 }
                 $this->encoder = new $encoder;
             } else {
+                $encoderInterface = 'Stash\Driver\FileSystem\EncoderInterface';
                 $encoderClass = 'Stash\Driver\FileSystem\\' . $encoder . 'Encoder';
-                if (class_exists($encoder)) {
+                if (class_exists($encoder) && in_array($encoderInterface, class_implements($encoder))) {
                     $this->encoder = new $encoder();
-                } elseif (class_exists($encoderClass)) {
+                } elseif (class_exists($encoderClass) && in_array($encoderInterface, class_implements($encoderClass))) {
                     $this->encoder = new $encoderClass();
                 } else {
                     throw new RuntimeException('Invalid Encoder: ' . $encoder);

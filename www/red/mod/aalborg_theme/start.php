@@ -16,7 +16,7 @@ function aalborg_theme_init() {
 
 	elgg_unextend_view('page/elements/header', 'search/header');
 	elgg_extend_view('page/elements/sidebar', 'search/header', 0);
-	
+
 	elgg_register_plugin_hook_handler('head', 'page', 'aalborg_theme_setup_head');
 
 	// non-members do not get visible links to RSS feeds
@@ -50,7 +50,7 @@ function aalborg_theme_pagesetup() {
 				elgg_register_menu_item('site', $item);
 			}
 		}
-		
+
 		$item = elgg_get_menu_item('topbar', 'usersettings');
 		if ($item) {
 			$item->setParentName('account');

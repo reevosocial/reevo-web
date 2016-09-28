@@ -33,7 +33,7 @@ abstract class AbstractDriver implements DriverInterface
     public function __construct(array $options = array())
     {
         if (!static::isAvailable()) {
-            throw new RuntimeException(__CLASS__ . ' is not available.');
+            throw new RuntimeException(get_class($this) . ' is not available.');
         }
 
         $this->setOptions($options);
@@ -50,7 +50,7 @@ abstract class AbstractDriver implements DriverInterface
     /**
      * {@inheritdoc}
      */
-    public function setOptions(array $options = array())
+    protected function setOptions(array $options = array())
     {
         // empty
     }

@@ -13,19 +13,19 @@ return array(
 	'login' => "Connexion",
 	'loginok' => "Vous êtes connecté(e).",
 	'loginerror' => "Nous n'avons pas pu vous identifier. Assurez-vous que les informations que vous avez entrées sont correctes et réessayez.",
-	'login:empty' => "Nom d'utilisateur et mot de passe sont requis.",
+	'login:empty' => "Identifiant et mot de passe sont requis.",
 	'login:baduser' => "Impossible de charger votre compte d'utilisateur.",
-	'auth:nopams' => "Erreur interne. Aucune méthode d'authentification des utilisateurs est installée.",
+	'auth:nopams' => "Erreur interne. Aucune méthode d'authentification des utilisateurs n'est installée.",
 
 	'logout' => "Déconnexion",
 	'logoutok' => "Vous avez été déconnecté(e).",
 	'logouterror' => "Nous n'avons pas pu vous déconnecter. Essayez à nouveau.",
-	'session_expired' => "Suite à un temps d'inactivité prolongé, votre session de travail a expiré. Veuillez svp recharger la page afin de vous identifier à nouveau.",
+	'session_expired' => "Suite à un temps d'inactivité prolongé, votre session de travail a expiré. Veuillez SVP recharger la page afin de vous identifier à nouveau.",
 
 	'loggedinrequired' => "Vous devez être connecté(e) pour voir cette page.",
 	'adminrequired' => "Vous devez être administrateur pour voir cette page.",
 	'membershiprequired' => "Vous devez être membre de ce groupe pour voir cette page.",
-	'limited_access' => "Vous n'avez pas la permission de consulter la page demandée.",
+	'limited_access' => "Vous n'avez pas la permission de consulter cette page.",
 
 
 /**
@@ -33,22 +33,25 @@ return array(
  */
 
 	'exception:title' => "Erreur Fatale.",
-	'exception:contact_admin' => 'Une erreur irrécupérable a été rencontrée et a été enregistrée. Veuillez svp contacter l\'administrateur du site avec l\'information suivante :',
+	'exception:contact_admin' => 'Une erreur irrécupérable a été rencontrée et a été enregistrée. Veuillez SVP contacter l\'administrateur du site avec l\'information suivante :',
 
 	'actionundefined' => "L'action demandée (%s) n'est pas définie par le système.",
 	'actionnotfound' => "Le fichier d'action pour %s n'a pas été trouvé.",
 	'actionloggedout' => "Désolé, vous ne pouvez pas effectuer cette action sans être connecté(e).",
-	'actionunauthorized' => 'Vous n êtes pas autorisé(e) à effectuer cette action.',
+	'actionunauthorized' => 'Vous n\'avez pas l\'autorisation d\'effectuer cette action',
+	
+	'ajax:error' => 'Une erreur est survenue lors d\'un appel Ajax. Peut-être que la connection avec le serveur est perdue.',
+	'ajax:not_is_xhr' => 'Vous ne pouvez pas accéder directement aux vues AJAX',
 
 	'PluginException:MisconfiguredPlugin' => "Le plugin %s (guid: %s) est mal configuré. Il a été désactivé. Veuillez rechercher dans le wiki d'aide les causes possibles (http://learn.elgg.org/).",
 	'PluginException:CannotStart' => '%s (guid : %s) ne peut pas démarrer. Raison: %s',
 	'PluginException:InvalidID' => "%s est un ID de plugin invalide.",
-	'PluginException:InvalidPath' => "%s est un chemin invalide pour le plugin.",
+	'PluginException:InvalidPath' => "%s est un chemin de plugin invalide.",
 	'PluginException:InvalidManifest' => 'Fichier manifest.xml invalide pour le plugin %s',
 	'PluginException:InvalidPlugin' => '%s n\'est pas un plugin valide.',
 	'PluginException:InvalidPlugin:Details' => '%s n\'est pas un plugin valide: %s',
 	'PluginException:NullInstantiated' => 'ElggPlugin ne peut pas être laissé vide. Vous devez passer un GUID, un ID de plugin, ou un chemin complet.',
-	'ElggPlugin:MissingID' => 'L\'ID du plugin manque (guid %s)',
+	'ElggPlugin:MissingID' => 'ID du plugin manquant (guid %s)',
 	'ElggPlugin:NoPluginPackagePackage' => 'Le paquet d\'Elgg \'ElggPluginPackage\' du plugin ID %s manque (guid %s)',
 	'ElggPluginPackage:InvalidPlugin:MissingFile' => 'Le fichier obligatoire %s manque dans le paquet.',
 	'ElggPluginPackage:InvalidPlugin:InvalidId' => 'Le dossier du plugin doit être renommé en "%s" pour correspondre à l\'identifiant spécifié dans le manifeste. ',
@@ -84,6 +87,9 @@ return array(
 	
 	'ElggPlugin:Dependencies:ActiveDependent' => 'Il existe d\'autres plugins répertoriant %s en tant que dépendance. Vous devez désactiver les plugins suivants avant de désactiver celui-ci: %s',
 
+	'ElggMenuBuilder:Trees:NoParents' => 'Une entrée de menu a été trouvé sans lien avec un parent',
+	'ElggMenuBuilder:Trees:OrphanedChild' => 'L\'entrée de menu [%s] a été trouvée avec un parent manquant [%s]',
+	'ElggMenuBuilder:Trees:DuplicateChild' => 'L\'entrée de menu [%s] est enregistrée plusieurs fois',
 
 	'RegistrationException:EmptyPassword' => 'Les champs du mot de passe ne peut pas être vide',
 	'RegistrationException:PasswordMismatch' => 'Les mots de passe doivent correspondre',
@@ -107,6 +113,10 @@ return array(
 
 	'error:default:title' => 'Oups...',
 	'error:default:content' => 'Oups... quelque chose est allé de travers.',
+	'error:400:title' => 'Mauvaise requête',
+	'error:400:content' => 'Désolé, la requête est invalide ou incomplète.',
+	'error:403:title' => 'Interdit',
+	'error:403:content' => 'Désolé, vous n\'avez pas la permission de consulter la page demandée.',
 	'error:404:title' => 'Page non trouvée',
 	'error:404:content' => 'Désolé. Nous n\'arrivons pas à trouver la page que vous demandez.',
 
@@ -148,6 +158,8 @@ return array(
 	'access:read' => "Accès en lecture",
 	'access:write' => "Accès en écriture",
 	'access:admin_only' => "Seulement pour les administrateurs",
+	'access:missing_name' => "Le nom du niveau d'accès est manquant",
+	'access:comments:change' => "Cette discussion a actuellement des droits d'accès limités. Faites attention lorsque vous la partagez.",
 
 /**
  * Dashboard and widgets
@@ -375,7 +387,7 @@ return array(
  */
 
 	'account' => "Compte",
-	'settings' => "Paramètres développeurs",
+	'settings' => "Paramètres",
 	'tools' => "Outils",
 	'settings:edit' => 'Editer les paramètres',
 
@@ -514,6 +526,8 @@ return array(
 	'admin:widget:banned_users:help' => 'Liste des utilisateurs bannis',
 	'admin:widget:content_stats' => 'Statistiques',
 	'admin:widget:content_stats:help' => 'Gardez une trace du contenu créé par vos utilisateurs',
+	'admin:widget:cron_status' => 'Status du cron',
+	'admin:widget:cron_status:help' => 'Afficher les statuts du dernier cron finit',
 	'widget:content_stats:type' => 'Type de contenu',
 	'widget:content_stats:number' => 'Nombre',
 
@@ -702,6 +716,7 @@ return array(
 	'admin:robots.txt:instructions' => "Editez le fichier robots.txt du site ci-dessous",
 	'admin:robots.txt:plugins' => "Les plugins ajoutent les lignes suivantes au fichier robots.txt ",
 	'admin:robots.txt:subdir' => "L'outil pour robots.txt ne fonctionnera peut-être pas car Elgg est installé dans un sous-répertoire",
+	'admin:robots.txt:physical' => "La configuration de robots.txt ne fonctionnera pas car un fichier robots.txt est physiquement présent",
 
 	'admin:maintenance_mode:default_message' => 'Le site est fermé pour cause de maintenance',
 	'admin:maintenance_mode:instructions' => 'Le mode maintenance devrait être utilisé pour les mises à jour et les autres changements sur le site. 
@@ -749,6 +764,7 @@ return array(
 	'river:friends' => 'Activités des Amis',
 	'river:select' => 'Afficher %s',
 	'river:comments:more' => '+%u plus',
+	'river:comments:all' => 'Voir tous les %u commentaires',
 	'river:generic_comment' => 'commenté sur %s',
 
 	'friends:widget:description' => "Affiche certains de vos amis.",
@@ -967,8 +983,8 @@ Une fois que vous vous êtes connecté(e), nous vous conseillons fortement de ch
  * Import / export
  */
 		
-	'importsuccess' => "L'import des données a été réalisée avec succès",
-	'importfail' => "L'import OpenDD des données a échouée.",
+	'importsuccess' => "Import des données réussi",
+	'importfail' => "L'import des données OpenDD a échoué.",
 
 /**
  * Time
@@ -979,9 +995,9 @@ Une fois que vous vous êtes connecté(e), nous vous conseillons fortement de ch
 	'friendlytime:minutes:singular' => "il y a une minute",
 	'friendlytime:hours' => "il y a %s heures",
 	'friendlytime:hours:singular' => "il y a une heure",
-	'friendlytime:days' => "Il y a %s jours",
+	'friendlytime:days' => "il y a %s jours",
 	'friendlytime:days:singular' => "hier",
-	'friendlytime:date_format' => 'j F Y @ g:ia',
+	'friendlytime:date_format' => 'j F Y @ G:i',
 	
 	'friendlytime:future:minutes' => "dans %s minutes",
 	'friendlytime:future:minutes:singular' => "dans une minute",
@@ -1003,23 +1019,23 @@ Une fois que vous vous êtes connecté(e), nous vous conseillons fortement de ch
 	'date:month:11' => 'Novembre %s',
 	'date:month:12' => 'Décembre %s',
 
-	'date:weekday:0' => 'dimanche',
-	'date:weekday:1' => 'lundi',
-	'date:weekday:2' => 'mardi',
-	'date:weekday:3' => 'mercredi',
-	'date:weekday:4' => 'jeudi',
-	'date:weekday:5' => 'vendredi',
-	'date:weekday:6' => 'samedi',
+	'date:weekday:0' => 'Dimanche',
+	'date:weekday:1' => 'Lundi',
+	'date:weekday:2' => 'Mardi',
+	'date:weekday:3' => 'Mercredi',
+	'date:weekday:4' => 'Jeudi',
+	'date:weekday:5' => 'Vendredi',
+	'date:weekday:6' => 'Samedi',
 	
-	'interval:minute' => 'chaque minute',
-	'interval:fiveminute' => 'chaque cinq minutes',
-	'interval:fifteenmin' => 'toutes les 15 minutes',
-	'interval:halfhour' => 'toutes les demi-heures',
-	'interval:hourly' => 'toutes les heures',
-	'interval:daily' => 'tous les jours',
-	'interval:weekly' => 'chaque semaine',
-	'interval:monthly' => 'tous les mois',
-	'interval:yearly' => 'chaque année',
+	'interval:minute' => 'Chaque minute',
+	'interval:fiveminute' => 'Chaque 5 minutes',
+	'interval:fifteenmin' => 'Chaque 15 minutes',
+	'interval:halfhour' => 'Chaque demi-heure',
+	'interval:hourly' => 'Chaque heure',
+	'interval:daily' => 'Chaque jour',
+	'interval:weekly' => 'Chaque semaine',
+	'interval:monthly' => 'Chaque mois',
+	'interval:yearly' => 'Chaque année',
 	'interval:reboot' => 'Au redémarrage',
 
 /**
@@ -1028,19 +1044,19 @@ Une fois que vous vous êtes connecté(e), nous vous conseillons fortement de ch
 
 	'installation:sitename' => "Le nom de votre site :",
 	'installation:sitedescription' => "Brève description du site (facultatif) : ",
-	'installation:wwwroot' => "L'URL du site, suivie de ' / ' : ",
-	'installation:path' => "Chemin physique des fichiers sur le serveur, suivi de ' / ' : ",
-	'installation:dataroot' => "Chemin complet où seront hébergés les fichiers uploadés par les utilisateurs, suivi de ' / ' :",
-	'installation:dataroot:warning' => "Vous devez créer ce répertoire manuellement. Il doit se situer dans un répertoire différent de votre installation de Elgg.",
-	'installation:sitepermissions' => "Les permissions d'accés par défaut : ",
+	'installation:wwwroot' => "L'URL du site :",
+	'installation:path' => "Le chemin complet de votre installation de Elgg :",
+	'installation:dataroot' => "Le chemin complet du dossier de données :",
+	'installation:dataroot:warning' => "Vous devez créer ce répertoire manuellement. Il doit se situer dans un répertoire différent de celui de votre installation de Elgg.",
+	'installation:sitepermissions' => "Les niveaux d’accès par défaut : ",
 	'installation:language' => "La langue par défaut de votre site : ",
-	'installation:debug' => "Le mode de débogage permet de mettre en évidence certaines erreurs de fonctionnement, cependant il ralenti l'accès au site, il est à utiliser uniquement en cas de problème :",
-	'installation:debug:label' => "Niveau de log :",
-	'installation:debug:none' => 'Désactive le mode debug (recommandé)',
-	'installation:debug:error' => 'Afficher seulement les erreurs critiques',
-	'installation:debug:warning' => 'Afficher les erreurs et les avertissements',
-	'installation:debug:notice' => 'Log toutes les erreurs, les avertissements et les avis',
-	'installation:debug:info' => 'Enregistrer tout :',
+	'installation:debug' => "Permet de contrôler la quantité d'information écrite dans les journaux du serveur.",
+	'installation:debug:label' => "Niveau de journalisation :",
+	'installation:debug:none' => 'Désactiver la journalisation (recommandé en production)',
+	'installation:debug:error' => 'Journaliser seulement les erreurs critiques',
+	'installation:debug:warning' => 'Journaliser les erreurs et les avertissements',
+	'installation:debug:notice' => 'Journaliser toutes les erreurs, les avertissements et les avis',
+	'installation:debug:info' => 'Enregistrer tout',
 
 	// Walled Garden support
 	'installation:registration:description' => 'L\'enregistrement d\'un utilisateur est activé par défaut. Désactivez cette option si vous ne voulez pas que de nouveaux utilisateurs soient en mesure de s\'inscrire eux-mêmes.',
@@ -1059,36 +1075,37 @@ Une fois que vous vous êtes connecté(e), nous vous conseillons fortement de ch
 	'installation:allow_user_default_access:description' => "Si coché, les utilisateurs pourront modifier leur niveau d'accés par défaut et pourront surpasser le niveau d'accés mis en place par défaut dans le système.",
 	'installation:allow_user_default_access:label' => "Autoriser un niveau d'accés par défaut pour l'utilisateur",
 
-	'installation:simplecache:description' => "Le cache simple augmente les performances en mettant en cache du contenu statique comme des CSS et des fichiers Javascripts. Normalement vous ne devriez pas avoir besoin de l'activer.",
-	'installation:simplecache:label' => "Utiliser un cache simple (recommandé)",
+	'installation:simplecache:description' => "Le cache simple augmente les performances en mettant en cache du contenu statique comme des fichiers CSS et Javascript.",
+	'installation:simplecache:label' => "Utiliser le cache simple (recommandé)",
 
-	'installation:minify:description' => "Le cache peut être amélioré en compressant les fichiers JavaScript et  CSS. (Il est nécessaire que le ache simple soit activé). ",
+	'installation:minify:description' => "Le cache simple peut également améliorer les performances en compressant les fichiers JavaScript et  CSS. (Le cache simple doit être activé.)",
 	'installation:minify_js:label' => "Compresser le JavaScript (recommandé)",
 	'installation:minify_css:label' => "Compresser les CSS (recommandé)",
 
-	'installation:htaccess:needs_upgrade' => "Vous devez mettre à jour votre fichier .htaccess afin que le chemin soit ajouté au paramètre GET __elgg_uri (vous pouvez vous aider de htaccess_dist)",
-	'installation:htaccess:localhost:connectionfailed' => "Elgg ne peut pas se connecter à lui-même pour tester les règles de réécriture. Veuillez vérifier si l'extension curl fonctionne, et qu'il n'y a pas de restriction au niveau des IP interdisant de se connecter depuis localhost.",
+	'installation:htaccess:needs_upgrade' => "Vous devez mettre à jour votre fichier .htaccess afin que le chemin soit injecté dans le paramètre GET __elgg_uri (vous pouvez utiliser le fichier install/config/htaccess_dist comme modèle)",
+	'installation:htaccess:localhost:connectionfailed' => "Elgg ne peut pas se connecter à lui-même pour tester les règles de réécriture correctement. Veuillez vérifier que curl fonctionne, et qu'il n'y a pas de restriction au niveau des IP interdisant les connexions depuis localhost.",
 	
 	'installation:systemcache:description' => "Le cache système diminue le temps de chargement du moteur Elgg en mettant en cache les données dans des fichiers.",
 	'installation:systemcache:label' => "Utiliser le cache système (recommandé)",
 
+	'admin:legend:system' => 'Système',
 	'admin:legend:caching' => 'Mise en cache',
 	'admin:legend:content_access' => 'Accès au contenu',
 	'admin:legend:site_access' => 'Accès au site',
-	'admin:legend:debug' => 'Débugger et s\'identifier',
+	'admin:legend:debug' => 'Débogage et journalisation',
 
-	'upgrading' => 'Mise à jour en cours',
-	'upgrade:db' => 'Votre base de données a été mise à jour.',
-	'upgrade:core' => 'Votre installation d\'Elgg a été mise à jour.',
-	'upgrade:unlock' => 'Déverrouiller la mise à jour',
-	'upgrade:unlock:confirm' => "La base de données est verrouillée par une autre mise à jour. Exécuter des mises à jours concurrentes est dangereux. Vous devriez continuer seulement si vous savez qu'il n'y a pas d'autre mise à jour en cours d'exécution. Déverrouiller ?",
-	'upgrade:locked' => "Impossible de mettre à jour. Une autre mise à jour est en cours. Pour effacer le verrouillage de la mise à jour, visiter la partie administrateur.",
+	'upgrading' => 'Mise à niveau en cours...',
+	'upgrade:db' => 'Votre base de données a été mise à niveau.',
+	'upgrade:core' => 'Votre installation d\'Elgg a été mise à niveau.',
+	'upgrade:unlock' => 'Débloquer la mise à niveau',
+	'upgrade:unlock:confirm' => "La base de données est verrouillée par une autre mise à niveau. Exécuter des mises à jours simultanées est dangereux. Vous devriez continuer seulement si vous savez qu'il n'y a pas d'autre mise à jour en cours d'exécution. Déverrouiller ?",
+	'upgrade:locked' => "Impossible de mettre à niveau. Une autre mise à niveau est en cours. Pour supprimer le verrouillage de la mise à jour, visitez la partie administrateur.",
 	'upgrade:unlock:success' => "Mise à niveau débloquée.",
 	'upgrade:unable_to_upgrade' => 'Impossible de mettre à jour.',
 	'upgrade:unable_to_upgrade_info' =>
 		'Cette installation ne peut pas être mise à jour, car des fichiers de l\'ancienne version ont été détectées dans le noyau d\'Elgg. Ces fichiers sont obsolètes et doivent être supprimés pour qu\'Elgg fonctionne correctement. Si vous n\'avez pas modifié les fichiers du noyau d\'Elgg, vous pouvez simplement supprimer le répertoire noyau et le remplacer par celui de la dernière version d\'Elgg téléchargée  depuis <a href="http://elgg.org> elgg.org" </ a>. <br /> <br />
 
-Si vous avez besoin d\'instructions détaillées, veuillez visiter la <a href="http://learn.elgg.org/en/stable/admin/upgrading.html">Documentation sur la mise à niveau d\'Elgg</ a>. Si vous avez besoin d\'aide, veuillez poser votre question dans les <a href="http://community.elgg.org/pg/groups/discussion/"> Forums d\'aide technique communautaire</ a>.',
+Si vous avez besoin d\'instructions détaillées, veuillez visiter la <a href="http://learn.elgg.org/en/stable/admin/upgrading.html">Documentation sur la mise à niveau d\'Elgg</ a>. Si vous avez besoin d\'aide, veuillez poser votre question dans les <a href="http://community.elgg.org/pg/groups/discussion/"> Forums d\'aide technique communautaires</ a>.',
 
 	'update:twitter_api:deactivated' => 'Twitter API (précédemment Twitter Service) a été désactivé lors de la mise à niveau. Veuillez l\'activer manuellement si nécessaire.',
 	'update:oauth_api:deactivated' => 'OAuth API (précédemment OAuth Lib) a été désactivé lors de la mise à niveau. Veuillez l\'activer manuellement si nécessaire.',
@@ -1098,14 +1115,14 @@ Si vous avez besoin d\'instructions détaillées, veuillez visiter la <a href="h
 	'deprecated:function' => '%s() est obsolète et a été remplacé par %s()',
 
 	'admin:pending_upgrades' => 'Le site a des mises à niveau en attente qui nécessitent votre attention immédiate.',
-	'admin:view_upgrades' => 'Afficher les mises à jour en attente.',
+	'admin:view_upgrades' => 'Afficher les mises à niveau en attente.',
  	'admin:upgrades' => 'Mise à niveau',
-	'item:object:elgg_upgrade' => 'Site mis à jour',
-	'admin:upgrades:none' => 'Votre traduction est à jour !',
+	'item:object:elgg_upgrade' => 'Mises à niveau du site',
+	'admin:upgrades:none' => 'Votre installation est à jour !',
 
-	'upgrade:item_count' => 'Il y a <b>%s</b> éléments qui doivent être mis à niveau.',
-	'upgrade:warning' => '<b>Attention :</b> Sur un site volumineux cette mise à jour peut prendre un temps significatif (voire très long) !',
-	'upgrade:success_count' => 'Mise à jour :',
+	'upgrade:item_count' => '<b>%s</b> éléments ont besoin d\'être mis à niveau.',
+	'upgrade:warning' => '<b>Attention :</b> Sur un grand site cette mise à jour peut prendre un temps significativement long !',
+	'upgrade:success_count' => 'Mis à niveau :',
 	'upgrade:error_count' => 'Erreurs :',
 	'upgrade:river_update_failed' => 'Impossible de mettre à jour l\'entrée du flux de l\'élément d\'identifiant id %s',
 	'upgrade:timestamp_update_failed' => 'Impossible de mettre à jour l\'horodatage de l\'élément d\'identifiant id %s',
@@ -1114,14 +1131,15 @@ Si vous avez besoin d\'instructions détaillées, veuillez visiter la <a href="h
 
 	// Strings specific for the comments upgrade
 	'admin:upgrades:comments' => 'Mise à jour des commentaires',
-	'upgrade:comment:create_failed' => 'Impossible de convertir le commentaire id %s en une entité.',
+	'upgrade:comment:create_failed' => 'Impossible de convertir le commentaire d\'id %s en une entité.',
+	'admin:upgrades:commentaccess' => 'Mise à jour du niveau d\'accès des commentaires',
 
 	// Strings specific for the datadir upgrade
 	'admin:upgrades:datadirs' => 'Répertoire de données mis à jour',
 
 	// Strings specific for the discussion reply upgrade
 	'admin:upgrades:discussion_replies' => 'Réponse à la discussion mise à jour',
-	'discussion:upgrade:replies:create_failed' => 'Impossible de convertir la discussion id %s en une entité.',
+	'discussion:upgrade:replies:create_failed' => 'Impossible de convertir la réponse à la discussion d\'id %s en une entité.',
 
 /**
  * Welcome
@@ -1140,7 +1158,7 @@ Si vous avez besoin d\'instructions détaillées, veuillez visiter la <a href="h
 	'email:body' => 'Corps de l\'article',
 	
 	'email:settings' => "Paramètres e-mail",
-	'email:address:label' => "Votre adresse e-mail",
+	'email:address:label' => "Adresse e-mail",
 
 	'email:save:success' => "Nouvelle adresse e-mail enregistrée. Une vérification a été envoyée.",
 	'email:save:fail' => "Votre nouvelle adresse e-mail n'a pas pu être enregistrée.",
@@ -1202,6 +1220,7 @@ Si vous êtes à l'origine de cette demande, cliquez sur le lien ci-dessous. Sin
 	'generic_comment:deleted' => "Votre commentaire a été correctement supprimé.",
 	'generic_comment:blank' => "Désolé ; vous devez écrire un commentaire avant de pouvoir l'enregistrer.",
 	'generic_comment:notfound' => "Désolé ; l'élément recherché n'a pas été trouvé.",
+	'generic_comment:notfound_fallback' => "Désolé, le commentaire demandé n'a pas été trouvé. Vous avez été redirigé sur la page précédente.",
 	'generic_comment:notdeleted' => "Désolé; le commentaire n'a pu être supprimé.",
 	'generic_comment:failure' => "Une erreur inattendue a eu lieu pendant la sauvegarde du commentaire.",
 	'generic_comment:none' => 'Pas de commentaire',
@@ -1236,6 +1255,8 @@ Ne répondez pas à cet e-mail.",
 
 	'entity:delete:success' => 'L\'entité %s a été effacée',
 	'entity:delete:fail' => 'L\'entité %s n\'a pas pu être effacée',
+	
+	'entity:can_delete:invaliduser' => 'Impossible de vérifier canDelete() pour l\'utilisateur user_guid [%s] car l\'utilisateur n\'existe pas.',
 
 /**
  * Action gatekeeper
@@ -1307,6 +1328,7 @@ Ne répondez pas à cet e-mail.",
 	"es" => "Espagnol",
 	"et" => "Estonien",
 	"eu" => "Basque",
+	"eu_es" => "Basque (Espagne)",
 	"fa" => "Persan",
 	"fi" => "Finnois",
 	"fj" => "Fidjien",
@@ -1371,11 +1393,12 @@ Ne répondez pas à cet e-mail.",
 	"pl" => "Polonais",
 	"ps" => "Pachto",
 	"pt" => "Portugais",
-	"pt_br" => 'Portugais Brésilien',
+	"pt_br" => "Portugais (Brésil)",
 	"qu" => "Quechua",
 	"rm" => "Romanche",
 	"rn" => "Kirundi",
 	"ro" => "Roumain",
+	"ro_ro" => "Roumain (Roumanie)",
 	"ru" => "Russe",
 	"rw" => "Kinyarwanda",
 	"sa" => "Sanskrit",
@@ -1390,9 +1413,10 @@ Ne répondez pas à cet e-mail.",
 	"so" => "Somalien",
 	"sq" => "Albanais",
 	"sr" => "Serbe",
+	"sr_latin" => "Serbe (Latin)",
 	"ss" => "Siswati",
 	"st" => "Sotho",
-	"su" => "Soundanais",
+	"su" => "Soudanais",
 	"sv" => "Suédois",
 	"sw" => "Swahili",
 	"ta" => "Tamoul",
@@ -1421,5 +1445,6 @@ Ne répondez pas à cet e-mail.",
 	"yo" => "Yoruba",
 	"za" => "Zhuang",
 	"zh" => "Chinois",
+	"zh_hans" => "Chinois simplifié",
 	"zu" => "Zoulou",
 );
