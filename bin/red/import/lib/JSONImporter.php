@@ -235,19 +235,40 @@ class JSONImporter {
 		}
 
 		$elggObject->save();
-		echo $metadata['title'] . ':' . $elggObject->guid . ' es ' . $metadata['yourls'];
-		echo "\n";
+
 
 		// Archiva los metadatos de forma local
 		$path = '/srv/reevo-web/www/red';
 		$guid = $elggObject->guid;
 		$url= $elggObject->getURL();
 		$image = ($metadata['image']);
+		$address = ($metadata['address']);
 		$source = ($metadata['source']);
 		$title = ($metadata['title']);
 
+		echo $metadata['title'] . ': ' . $elggObject->guid;
+		echo "\n";
+		echo $metadata['shorturl'] . ',' . $url ;
+		echo "\n";
+		echo "\n";
+
+		// Si no tiene imagen tratamos de obtenerla del og:image de la fuente
+		if (!$metadata['image']) {
+			//echo "No tiene imagen, trato de obtenerla de $address\n";
+			$page_content = file_get_contents($address);
+			$dom_obj = new DOMDocument();
+			$dom_obj->loadHTML($page_content);
+			$meta_val = null;
+			foreach($dom_obj->getElementsByTagName('meta') as $meta) {
+				if($meta->getAttribute('property')=='og:image'){
+					$meta_val = $meta->getAttribute('content');
+				}
+			}
+			$image = $meta_val;
+		}
+
 		// Archiva la imagen destacada
-		if ($metadata['image']) {
+		if ($image) {
 			if (!file_exists("$path/recext-store/$guid")) {
 				mkdir("$path/recext-store/$guid", 0777, true);
 			}
@@ -261,7 +282,7 @@ class JSONImporter {
 			shell_exec("/usr/bin/exiftool -overwrite_original -title='$title' -comment='Source: $image' -author='$source' -url='$url' $path/recext-store/$guid/$guid.$ext");
 			// reemplaza la imagen por la almacenada localmente
 			$siteurl = elgg_get_site_url();
-			$elggObject->image = $siteurl.'/recext-store/'.$guid.'/'.$guid.'.'.$ext;
+			$elggObject->image = '/recext-store/'.$guid.'/'.$guid.'.'.$ext;
 			//echo 'url de la imagen: '. $siteurl.'recext-store/'.$guid.'/'.$guid.'.'.$ext;
 		}
 
