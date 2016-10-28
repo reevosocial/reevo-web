@@ -250,7 +250,7 @@ class JSONImporter {
 		echo "\n";
 		echo $metadata['shorturl'] . ',' . $url ;
 		echo "\n";
-		echo "\n";
+
 
 		// Si no tiene imagen tratamos de obtenerla del og:image de la fuente
 		if (!$metadata['image']) {
@@ -300,7 +300,11 @@ class JSONImporter {
 		}
 
 		if (isset($metadata['tags'])) {
-			$elggObject->tags = string_to_tag_array($metadata['tags']);
+			$elggObject->tags = string_to_tag_array(strtolower($metadata['tags']));
+			echo "\n";
+		} else {
+			echo "Sin tags: $guid";
+			echo "\n";
 		}
 
 		$elggObject->save();
