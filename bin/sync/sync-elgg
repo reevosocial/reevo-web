@@ -2,7 +2,7 @@
 
 # ----
 # Copyright (C) 2013-2015 - Reevo Project (http://reevo.org)
-# License: Affero GPL version 3 - http://www.gnu.org/licenses/agpl.html 
+# License: Affero GPL version 3 - http://www.gnu.org/licenses/agpl.html
 # ES: Este archivos es parte de: reevo-web (http://git.reevo.org/reevo/reevo-web)
 # EN: This file is part of: reevo-web (http://git.reevo.org/reevo/reevo-web)
 # ----
@@ -38,7 +38,7 @@ mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE elgg_sites
 mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE elgg_datalists SET value = "/srv/reevo-web/www/red/" WHERE name = "path";'
 mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE elgg_datalists SET value = "/srv/reevo-web/files/red/" WHERE name = "dataroot";'
 mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE elgg_metastrings SET string = "/srv/reevo-web/files/red/" WHERE id = (SELECT value_id    FROM elgg_metadata    WHERE name_id = (       SELECT *       FROM (          SELECT id          FROM elgg_metastrings          WHERE string = "filestore::dir_root"       ) as ms2    )    LIMIT 1 );'
-
+mysql --user=$USER --password=$PASS --database="$BDIMPORT" -e 'UPDATE elgg_config SET value = "i:0;" WHERE name = "https_login";'
 
 echo ""
 echo "Borramos los temporales"
@@ -47,4 +47,4 @@ rm $HOME/tmp/*
 echo ""
 echo "ETAPA 2: Vamos a sincronizar algunos directorios con archivos..."
 sleep 2s
-rsync -P -r -a -v -e "ssh -l reevo" --delete beta.reevo.org:/srv/reevo-web/files/red/ /srv/reevo-web/files/red/
+rsync -P -r -a -v -e "ssh -l reevo" --delete reevo.org:/srv/reevo-web/files/red/ /srv/reevo-web/files/red/
