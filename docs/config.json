@@ -10,12 +10,12 @@
     },
     "html": {
         "theme": "lorea-hydra",
-        "breadcrumbs": false,
+        "float": false,
+        "breadcrumbs": true,
         "breadcrumb_separator": "Chevrons",
         "toggle_code": false,
         "date_modified": true,
-        "float": true,
         "auto_landing": true,
-        "repo": "lorea"
+         "search": true
     }
 }
