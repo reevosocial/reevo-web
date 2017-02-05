@@ -1,0 +1,23 @@
+{
+    "name": "hypejunction/elgg-cli",
+	"version": "1.2.0",
+    "description": "A set of CLI tools for Elgg",
+    "require": {
+        "symfony/console": "^3.1",
+		"symfony/var-dumper": "^3.1"
+    },
+	"minimum-stability": "dev",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Ismayil Khayredinov",
+            "email": "ismayil.khayredinov@gmail.com"
+        }
+    ],
+	"autoload": {
+		"psr-0": {
+			"": "src/"
+		}
+	},
+	"bin": ["elgg-cli"]
+}
