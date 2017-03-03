@@ -1,0 +1,2 @@
+  flags=FDX user=reevo argv=/var/lib/elgg/mod/elggman/deliver.php
+  ${size} ${user} ${sender} http://red.dev.reevo.org/ 8ac807a86dbee7102e1c632845fd5f7d69391cde

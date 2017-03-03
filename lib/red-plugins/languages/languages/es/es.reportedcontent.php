@@ -1,0 +1,36 @@
+<?php
+$es = array (
+  'admin:administer_utilities:reportedcontent' => 'Contenido reportado',
+  'item:object:reported_content' => 'Objetos compartidos',
+  'reportedcontent' => 'Contenido reportado',
+  'reportedcontent:this' => 'Reportar abuso',
+  'reportedcontent:none' => 'No hay contenido reportado',
+  'reportedcontent:report' => 'Reportar abuso',
+  'reportedcontent:title' => 'Título de la página',
+  'reportedcontent:deleted' => 'El contenido reportado ha sido borrado',
+  'reportedcontent:notdeleted' => 'No podemos borrar el contenido',
+  'reportedcontent:delete' => 'Borrar',
+  'reportedcontent:areyousure' => '¿Estás segurx de que quieres borrarlo?',
+  'reportedcontent:archive' => 'Archivar',
+  'reportedcontent:archived' => 'El contenido ha sido archivado',
+  'reportedcontent:visit' => 'Visitar el contenido del informe',
+  'reportedcontent:by' => 'Reportado por',
+  'reportedcontent:objecttitle' => 'Título del objeto',
+  'reportedcontent:objecturl' => 'URL del objeto',
+  'reportedcontent:reason' => 'Razón para informar',
+  'reportedcontent:description' => 'Explica a lxs administradorxs por qué estás reportando este contenido:',
+  'reportedcontent:address' => 'Localización del objeto',
+  'reportedcontent:success' => 'El informe ha sido enviado a lxs administradorxs',
+  'reportedcontent:failing' => 'El informe no puede ser enviado. Inténtalo de nuevo o ponte en contacto con lxs administradorx.',
+  'reportedcontent:moreinfo' => 'Más información',
+  'reportedcontent:failed' => 'El intento de reportar el contenido ha fallado. Inténtalo de nuevo o ponte en contacto con lxs administradorxs.',
+  'reportedcontent:notarchived' => 'No podemos archivar el contenido reportado. Inténtalo de nuevo o ponte en contacto con lxs administradorxs.',
+  'reportedcontent:this:tooltip' => 'Reportar esta página al administrador',
+  'reportedcontent:instructions' => 'El reporte será enviado a los administradores del sitio para moderación.',
+  'reportedcontent:numbertodisplay' => 'Cantidad de reportes a mostrar',
+  'reportedcontent:widget:description' => 'Mostrar el contenido reportado',
+  'reportedcontent:user' => 'Reportar usuario',
+);
+
+add_translation("es", $es);
+

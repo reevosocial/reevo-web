@@ -1,0 +1,20 @@
+<?php
+$language = array (
+  'admin:administer_utilities:logbrowser' => 'Navegador de registres',
+  'logbrowser' => 'Navegador de registres',
+  'logbrowser:browse' => 'Navegar pel registre del sistema',
+  'logbrowser:search' => 'Refinar resultats',
+  'logbrowser:user' => 'Cercar com la usuària',
+  'logbrowser:starttime' => 'Temps d\'inici (per exemple "l\'últim dilluns", "fa 1 hora")',
+  'logbrowser:endtime' => 'Tems de finalització',
+  'logbrowser:explore' => 'Explora el registre',
+  'logbrowser:date' => 'Data i temps',
+  'logbrowser:ip_address' => 'Adreça IP',
+  'logbrowser:user:name' => 'Usuària',
+  'logbrowser:user:guid' => 'GUID de la usuària',
+  'logbrowser:object' => 'Tipus d\'objecte',
+  'logbrowser:object:guid' => 'GUID de l\'objecte',
+  'logbrowser:action' => 'Acció',
+  'logbrowser:no_result' => 'Sense resultats',
+);
+add_translation("ca", $language);

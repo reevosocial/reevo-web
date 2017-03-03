@@ -1,0 +1,15 @@
+Copyright 2009-2013 Lorea Faeries and each language pack's authors
+Copyright 2014 Lorea Faeries <federation@lorea.org>
+
+Language packs' authors:
+
+- da Danish: TheMuller
+- de German: iionly
+- es Spanish: nnmis
+- eu Basque: Ander Goñi (@agonirena)
+- fr French: Jean-Baptiste Duclos
+- nl Dutch: Coldtrick IT Solutions
+- pt Portuguese: R.Cerceau
+
+@TODO: add proper copyright entries for all authors
+

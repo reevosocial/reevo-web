@@ -1,0 +1,338 @@
+Version history
+===============
+
+5.2 (2016-01-20):
+
+- added: ability for group owners to update all widgets access level
+- added: content by tag widget now supports static pages
+- added: option to alphabetically sort content in content_by_tag widget
+- added: support for poll and questions in content_by_tag widget
+- added: allow additional contexts based on default widgets config
+- added: use title menu for Add widgets button
+- changed: content_by_tag supported plugins list is now centralized
+- changed: moved favorites extras menu item to a register hook
+- changed: widget add panel contents are fetched on demand
+- changed: convert favorites widgets JS to an AMD module
+- changed: convert site and admin JS to AMD
+- changed: dutch translation
+- fixed: community favorites working again and fixed saving of title
+- fixed: incorrect access options available in specific widgets contexts
+- fixed: more specific selector for widget insert
+- fixed: only output icon if there is any
+- fixed: user search widget content not loaded when search with spaces
+- fixed: wrong composer include
+
+5.1 (2015-07-08):
+
+- added: mechanisme to permanently cache widgets based on their handler
+- added: support for object/thewire entities
+- added: composer support
+- added: widget edit and delete icon now only show when hovering widget
+- changed: reorganized javascript
+- changed: Simplepie library is now loaded by composer
+- changed: delayed loading of the AMD modules to document ready to prevent conflicts
+- fixed: correctly ajax load search results for user_search widget
+- fixed: performance of rss server widget
+- fixed: replaced deprecate ->get calls with variable variables
+- fixed: replaced deprecated use of class in ElggMenuItem::factory
+- fixed: output/confirmlink deprecation notices
+- fixed: content by tag widget case insensitive tag search
+- fixed: moved favorites toggle action file to correct location
+- fixed: non admins can not correctly manage widgets on landing pages
+- fixed: twitter search embed code parsing failed
+- fixed: use input/text view to output search input on addpanel
+
+5.0 (2014-12-08):
+
+- added: widget collapsed state is remember for logged in users in the database
+- added: widget advanced setting to set default collapse state 
+- added: widget advanced setting to set availability of collapse toggle button
+- added: custom more link for widgets
+- added: group forum topics added to content by tag widget
+- added: content by tag support multi tag search link if search_advanced is available
+- added: widget setting is showed in a lightbox
+- added: support for bookmark_tools link setting
+- added: extra css class to widget layout so there is more styling control
+- added: client side rss widget using Google Feed API
+- added: plugin setting to force use of group widgets
+- added: hooks to have widgets added/removed when related group tool option is toggled
+- added: admin action to update widgets on all groups to verify group tool option
+- added: single column layout
+- added: iframe widget
+- added: rss widget now has option to show feed contents in lightbox
+- added: per rss widget setting of feed timeout
+- added: content by tag widget now also has an exclusion list of tags
+- added: extra context pages now also support top row config
+- changed: hide header widget option also hides for admins
+- changed: free html widget now uses long text so there is an editor
+- changed: updated for Elgg 1.9
+- changed: split css views
+- changed: updated to Elgg coding standards
+- changed: replaced some language keys with core versions
+- changed: relocated widgets code
+- changed: plugin settings view only shows applicable
+- fixed: widgets created in groups get unusable access #25
+- fixed: ability to globally hide a widget on the widgets manage page
+- fixed: issue with extra minus sign in content by tag widget #31
+- deprecated: widgets url hook is no longer usable, use the entity url hook if you want to set widget title links
+- removed: widget url links for non core plugins (plugins should provide themselves) 
+
+4.8 (2014-03-07):
+
+- added: ability to add custom pages with index widgets
+- added: content_by_tag widget now support multiple content_types selected
+- added: plugin setting to control default dashboard column layout
+- added: content_by_tag now also support event_manager, tasks and videolist entities
+- added: rss widget excerpt added to title of rss post link 
+- changed: applied Elgg coding standards on almost all code
+- removed: obsolete group_news widget code (was already moved to group_tools)
+- fixed: content_by_tag widget bookmarks entities now have direct address link
+
+4.7 (2013-08-30):
+
+- added: group default widget support (thanks to Connecting Conservation)
+- added: show avatar and show timestamp options to content_by_tag widget
+- fixed: respect limit set in tagcloud widget settings
+
+4.6 (2013-06-27):
+
+- added: content_by_tag widget also support bookmarks
+- added: content_by_tag widget has an optional search link
+- added: optional fixed widget height
+- changed: twitter_search widget now uses twitters new widget embed code
+- changed: rss widget uses new version of SimplePie library
+- fixed: memcache reset on widget settings save
+
+4.5 (2013-05-06):
+
+- added: admin users search widget (also searches disabled/blocked/unvalidated users and by email)
+- fixed: incorrect has_widget check for favorites widget
+- fixed: some php notices
+
+4.4 (2013-04-05):
+
+- added: experimental likes widget
+- changed: use system cache for some widget settings
+- removed: widget statistics in favor of advanced_statistics plugin
+- fixed: access options should not show up after adding a widget to dashboard
+- fixed: tags are stripped from dashboard title
+- fixed: slider output not closing anchor when using link
+
+4.3 (2012-07-26):
+
+- added: favorites widget
+- added: updates widget titles without page refresh (thanks to Matt Beckett)
+- added: new 'simple' layout in content_by_tag widget
+- changed: freehtml is now contained within a div with elgg-output class (better styling)	
+- changed: manifest requirements (needs to be after twitter and tagcloud plugins)
+- changed: Natural sorting of widgets (for example in add panel)
+- changed: content by tag widget now allows to show all site content from within a group
+- removed: index_file and group_files widgets moved to file_tools plugin
+- removed: unused language keys
+- removed: index_pages widget (moved to pages_tools plugin)
+- removed: widgets_pagesetup event trigger
+- fixed: support for old widget settings in index_activity widget
+- fixed: add panel keeps correct layout if no widget description is given
+- fixed: some layout issues when using IE7
+- fixed: no need for flooding apache error logs with the error message that a rss feed could not be found (SimplePie)
+
+4.2 (2012-05-10):
+
+- added: re-enabled index_activity widget
+- added: widget class now is able to handle arrays as widget settings
+- added: re-enabled entity statistics widget
+- changed: now admin can always drag and edit/remove fixed widgets
+- changed: better/extendable check for advanced widget features
+- changed: widget title links can now be set with a hook
+- changed: default hide feed title in rss widget
+- changed: reduced language keys by replacing them with default core language keys
+- changed: available widgets context is now adjustable with a plugin hook
+- changed: widgetmanager controls widget class
+- removed: unnecessary widget context check, we trust all contexts
+- removed: group related widgets (moved to group_tools plugin)
+- fixed: a lot of php notices / warnings
+- fixed: group top row missing
+- fixed: a nasty z-index in twitter search widget
+- fixed: 2 column index layout do not merge column 2 and 3
+- fixed: multidashboards are showing on the admin side
+- fixed: edit twitter search not remembering height param
+- fixed: some default core widget title urls
+- fixed: only show multidashboard extras button when logged in
+
+4.1.1 (2012-03-19):
+
+- changed: button styling on advanced widget settings
+- changed: add tab is now a tab instead of a button
+- fixed: group admins can not add/edit widgets on a group profile page
+
+4.1 (2012-02-12):
+
+- added: Multi Dashboard support
+- changed: updated the Dutch language file
+- changed: required Elgg version to 1.8.3
+
+4.0 beta (2011-12-29):
+
+- added: support for Elgg 1.8
+- added: widget sortable tolerance changes to pointer instead of intersect (needed for index widgets top row) 
+- added: widget usage statistics page
+- changed: temporarily disabled the following widgets (index_activity, entity_statistics, river_widget); awaiting core fix
+- changed: fix mechanisme for default widgets
+- removed: run_once fix for elgg widget object/subtype class (obsolete)
+- removed: run_once migration from group_custom_layout plugin
+- removed: lazy loading plugin setting
+- removed: target column setting
+- removed: auto-cleanup of broken widgets
+- removed: plugin option to show broken widgets
+- removed: option to configure if a widget is multiple or single (this is now handled correct by Elgg core)
+- removed: option to configure if a widget is deletable (use 'fix widget' instead)
+- removed: group_event_calendar widget
+- removed: top row 2 column right option for index page
+- removed: various widgets without a valid 1.8 version of their plugin (izap_videos, tidypics, videolist, tasks)
+
+3.9 (2011-11-22):
+
+- added: messages widget (show new messages from inbox)
+- added: entity_statistics widget (index only)
+- added: images to rss feed items (only if showing excerpt) in rss widget
+- added: flexslider as a new slider type for image slider widget
+- changed: content_by_tag widget now also available as group widget
+- changed: activity widgets can be filtered by multiple type/subtypes
+	
+3.8 (2011-11-09):
+
+- added: new widget header layout (getting used to Elgg 1.8)
+- added: optional filter for index_activity and river_widget to filter content based on type/subtype
+	
+3.7.2 (2011-10-04):
+
+- fixed: icon error in content_by_tag widget in slim mode
+- fixed: group widget access pulldown not showing correct groupname
+- changed: moved event functions to different file
+- changed: moved pluginhook functions to different file
+
+3.7.1 (2011-08-15):
+
+- removed: all the wire widgets (moved to thewire_tools plugin)
+	
+3.7 (2011-08-11):
+
+- changed: major performance gains
+
+3.6.1 (2011-07-22):
+
+- changed: layout of tagcloud
+- changed: updated some js to be smaller 
+- changed: loading of js and css of image_slider and twitter widget
+- fixed: wrong key when no data for tagcloud
+	
+3.6 (2011-06-21):
+
+- added: auto cleanup for broken widgets (if broken -> delete)
+- fixed: widget edit link is not showing if a widget is loaded collapsed
+- fixed: with broken widgets on some widgets crash the site
+- fixed: group widgets settings not being saved
+- fixed: fancybox ie alpha functions url
+
+3.5 (2011-06-17):
+
+- added: group news widget
+- fixed: the_wire extend should not be visible when not loggedin
+
+3.4 (2011-06-07):
+
+- added: group tasks widgets (tasks plugin)
+- added: tagcloud widget
+- added: optionally prepends the thewire widget with post form (default on) 
+- changed: ordering of widgets in lightbox are now alphabetically
+- fixed: page crashes on default widgets configuration => no longer showing widget body
+- fixed: wrong class handler for object => widget
+- fixed: slider widget fix no text -> no slide over
+- removed: group_river_widget moved to group_tools plugin
+
+3.3 (2011-05-24):
+
+- added: custom url for widget title added for group and index widgets
+- changed: widget options for content_by_tag and rss widget
+- fixed: free_html admin ignore option not working
+- fixed: coding error in rss widget view
+- fixed: Fancybox CSS errors in IE
+
+3.2 (2011-05-06):
+
+- added: thewire_post widget to post directly to the wire from a widget
+- fixed: socialink layout in index_login widget
+- fixed: group_forum_topics widget when nog items
+- fixed: z-index to low with new fancybox
+
+3.1 (2011-05-03):
+
+- added: new widget group_river_widget to show activity from a specific group
+- added: support for categories plugin to content_by_tag widget
+- added: default twitter widget view override to support https
+- added: option to enable group widget management by default
+- added: option to only allow admins to enable group widget management
+- added: group tool option to enable/disable widget manager group management
+- added: caching of rss feeds in dataroot + cron cache cleanup job
+- changed: custom title made available for all widgets on all contexts
+- changed: custom hook to set ACL options for widgets
+- changed: access input options on group widgets are limited to "group", "loggedin", "public"
+- changed: updated fancybox to 1.3.4 (be aware of conflicts with other plugins using fancybox)
+- changed: rss widget now available on profile and dashboard
+- fixed: default access on group widget is group_acl
+- fixed: dropping widgets on empty right column in group layout not possible
+- fixed: wrong context in lightbox when adding widgets to default profile/dashboard 
+- fixed: input pulldown in widget edit panel need to be restricted to the edit panel
+- fixed: river_widget title link location (activity)
+
+3.0 beta (2011-04-05):
+
+- added: new way to manage default widgets (profile/dashboard) (not perfect yet, but it works). It now allows default settings for widgets.
+- added: option to disallow editing / collapsing default widgets
+- added: manage group widgets with widget manager (enable in plugin settings). This replaces widget features from group custom layout plugin
+- added: group widgets
+- added: css class on fixed widget headers
+- added: search widgets in lightbox popup
+- added: various widgets to various contexts
+- changed: grouped admin only widget edit options into 'Advanced' section  
+- changed: widgets are consolidated in widget_manager/widgets 
+- fixed: calling undefined function in /lib/functions.php (line 234) when using Elgg < 1.7
+- fixed: adding widgets to other users profile uses wrong page_owner in lightbox
+- removed: support for dropdown list of widgets. Now always in a lightbox
+- removed: old default widget placement mechanism
+
+2.1 (2011-01-24):
+
+- added: indicator for widget without header for admins
+- added: option to disable widget content styling
+- added: twitter_search widget
+- added: content_by_tag widget
+- added: first row on front page
+- added: custom_index widget links
+- changed: frontpage layout to div layout
+- fixed: widget edit options now more secure
+	
+2.0 (2011-01-13):
+
+- added: option to design custom index with widgets
+- added: custom index widget layouts (in admin options)
+- added: custom index widgets
+- added: hide widget title (on custom index only)
+- added: custom widget title (on custom index only)
+- fixed: issue with context when hiding broken widgets
+
+1.1 (2010-12-24):
+
+- added: admin option to hide a widget (also existing widgets on profiles will be hidden with this feature)
+- fixed: using wrong functions for ignoring access on Elgg 1.7.x
+- fixed: widget titles for Elgg 1.7.5
+
+1.0.1 beta (2010-08-27):
+
+- fixed: header also changes on group widgets (with some plugins)
+- fixed: adding non existing widgets
+- changed: create user widget timestamps
+
+1.0 beta (2010-08-13):
+
+- replacement of Draggable widgets
