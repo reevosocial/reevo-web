@@ -1,123 +1,70 @@
 # ----
 # Copyright (C) 2013-2015 - Reevo Project (http://reevo.org)
-# License: Affero GPL version 3 - http://www.gnu.org/licenses/agpl.html 
+# License: Affero GPL version 3 - http://www.gnu.org/licenses/agpl.html
 # ES: Este archivos es parte de: reevo-web (http://git.reevo.org/reevo/reevo-web)
 # EN: This file is part of: reevo-web (http://git.reevo.org/reevo/reevo-web)
 # ----
 
 server {
+	listen 80;
 	server_name red.example.org;
+
+	# Server root, replace it with your elgg installation location
 	root /srv/reevo-web/www/red;
+	index index.php index.html index.htm;
 
 	access_log /srv/reevo-web/log/red/nginx.access.log;
 	error_log /srv/reevo-web/log/red/nginx.error.log warn;
 
-	index index.php;
-	try_files /maintenance.html $uri @rewrite;
+	gzip on;
+	gzip_types
+		# text/html is always compressed by HttpGzipModule
+		text/css
+		text/javascript
+		text/xml
+		text/plain
+		text/x-component
+		application/javascript
+		application/x-javascript
+		application/json
+		application/xml
+		application/rss+xml
+		font/truetype
+		font/opentype
+		application/vnd.ms-fontobject
+		image/svg+xml;
 
-	error_page 404 502 504 = @elgg;
-	error_page 418 = @elgg;
 
-	# Cache bypasses the Elgg engine
-	location ~ ^/cache/ {
-		rewrite ^/cache\/(.*)$ /engine/handlers/cache_handler.php?request=$1&$query_string;
-	}
+	# Max post size
+	client_max_body_size 8M;
 
-	# Export allows data export
-	location /export {
-		rewrite ^/export\/([A-Za-z]+)\/([0-9]+)\/?$ /engine/handlers/export_handler.php?view=$1&guid=$2;
-		rewrite ^/export\/([A-Za-z]+)\/([0-9]+)\/([A-Za-z]+)\/([A-Za-z0-9\_]+)\/$ /engine/handlers/export_handler.php?view=$1&guid=$2&type=$3&idname=$4;
+	location ~ (^\.|/\.) {
+		return 403;
 	}
 
 	location = /rewrite.php {
 		rewrite ^(.*)$ /install.php;
 	}
 
-	# Pass known PHP files to backend
-	location ~ /(index|install|upgrade)\.php(/|$) {
-		return	418;
-	}
-
-	# Only authorize access to PHP handlers via internal redirections (@rewrite rules)
-	location ~ ^/engine/handlers/(action|cache|export|page|service)_handler\.php(/|$) {
-		internal;
-		return 418;
-	}
-
-	# force static locations
-	location = /favicon.ico {
-		expires +1y;
-		log_not_found off;
-	}
-
-	# Only present during maintenance
-	location = /maintenance.html {
-		log_not_found off;
-	}
-	
-	# Cache and/or compress assets
-	location ~* \.(css|js|html)$ {
-		expires modified +1y;
-		gzip_static on;
-		log_not_found off;
-	}
-
-	# Non-static images FTW :P
-	location ~ ^/(^groupicon) {
-		location ~* \.(jpg|jpeg|gif|png|mp3|ogg|oga|ogv|mpg|mpeg|flv|mov|avi|3pg|swf|ico)$ {
-			expires modified +1y;
-			gzip_static off;
-			log_not_found off;
-		}
-	}
-
-	# Hide version.php from the Web
-	location = /version.php {
-		internal;
-	}
-
-	# Hide dotfiles
-	location ~ /\. {
-		return 403;
-	}
-	
 	location / {
-		try_files $uri $uri/ /index.php?__elgg_uri=$uri&$query_string;
-
-		# Sitio offline
-		if ($maintenance) { return 503; }
-
-		# Bloqeua bots
-		if ($limit_bots) { add_header  X-Robots-Tag "noindex, nofollow, nosnippet, noarchive"; }
-
+		try_files $uri $uri/ @elgg_reevo;
 	}
 
-	location ~ /mod/profile/icondirect\.php$ {
-		return 418;
-	}
-	
-	# file plugin
-	location ~ /mod/file/thumbnail\.php {
-		return 418;
-	}
-
-	# Enable catching faulty modules missing a page_handler
-	location ~ \.php(/|$) {
-		access_log /srv/reevo-web/log/red/php-direct-access.log;
-		return 403;
-	}
-	
-	location @elgg {
-		fastcgi_pass unix:/srv/reevo-web/run/red.socket; 
-		fastcgi_split_path_info ^(.+\.php)(/.+)$;
-		# NOTE: You should have "cgi.fix_pathinfo = 0;" in php.ini
-		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+	# pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+	location ~ \.php$ {
+		try_files $uri @elgg_reevo;
 		fastcgi_index index.php;
-		include fastcgi_params;
+		fastcgi_pass unix:/srv/reevo-web/run/red.socket;
+		fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+		include /etc/nginx/fastcgi_params;
 	}
 
-	error_page 503 @maintenance;
-	location @maintenance {
-		rewrite ^(.*)$ /errors/503/index.html break;
+	location @elgg_reevo {
+		fastcgi_pass unix:/srv/reevo-web/run/red.socket;
+
+		include /etc/nginx/fastcgi_params;
+		fastcgi_param SCRIPT_FILENAME $document_root/index.php;
+		fastcgi_param SCRIPT_NAME     /index.php;
+		fastcgi_param QUERY_STRING    __elgg_uri=$uri&$args;
 	}
 }
