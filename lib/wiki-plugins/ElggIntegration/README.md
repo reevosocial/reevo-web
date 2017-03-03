@@ -1,0 +1,33 @@
+# Elgg Integration with Mediawiki
+
+Provides integration between Elgg >= 1.8.16 and Mediawiki >= 1.21.3
+
+## Setup
+
+  - Elgg lives on a subdomain defined by HOST_ELGG (e.g., 'red')
+  - Mediawiki lives on a subdomain defined by HOST_WIKI (e.g., 'wiki')
+  - Once both software are installed and configured, install this extension.
+
+### Configuration
+
+  - Set ELGG_PATH (default: /var/lib/elgg)
+  - Set HOST_ELGG, HOST_MAPS, and HOST_WIKI
+
+## Features
+
+  - Delegate authentication and user management to Elgg
+  - Replace Talk pages with Lorea Threads in Elgg
+
+## License
+
+   This is free software, See the [./COPYING](GNU Affero General Public License) file.
+
+## Resources
+
+  - `git clone [https://github.com/peervox/mediawiki.ElggIntegration](https://github.com/peervox/mediawiki.ElggIntegration.git)`
+  - [http://src.peervox.org/mediawiki-extensions/ElggIntegration](Documentation)
+  - [http://src.peervox.org/mediawiki-extensions/ElggIntegration/issues](Issues)
+
+  Brought to you by [http://peervox.org/](PeerVox),
+  a [http://NetworksOfPeers.org/](network of peers).
+  Join the developers on Freenode IRC channel __#peer__.
