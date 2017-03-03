@@ -8,11 +8,11 @@ for i in `ls -lah | grep ">" |cut -d " " -f 13`; do rm  $i; done
 echo ""
 
 for i in `ls  -d ../../../lib/red-plugins/*/`;
-  do
-    ln -s $i
-    PLUGIN=`echo $i | cut -d "/" -f6`
-    #echo "Se instaló el plugin: $PLUGIN"
-  done
+do
+  ln -s $i
+  PLUGIN=`echo $i | cut -d "/" -f6`
+  #echo "Se instaló el plugin: $PLUGIN"
+done
 
 echo "Activando plugins indicados en plugins.list"
 echo ""
