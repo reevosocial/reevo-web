@@ -18,13 +18,13 @@ subgroups
 threads
 elggman
 
-#event_calendar
 #fontawesome
 #profile_manager_joingroups
 #roles
 #roles_group_admins
 widget_manager
 
+event_manager
 elgg-opengraph
 tag_tools
 recext
