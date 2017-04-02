@@ -94,6 +94,19 @@ if ($recext->address != $address) {
 	));
 
 	if ($duplicates_count > 0 ) {
+		$duplicates_count = elgg_get_entities_from_metadata(array(
+		    'type' => 'object',
+		    'subtype' => 'recext',
+				'count' => FALSE,
+		    'metadata_name_value_pairs' => array(
+		        array(
+		            'name' => 'address',
+		            'value' => $address,
+		            'opearnd' => '=',
+		            'case_sensitive' => FALSE,
+		        ),
+		    ),
+		));
 		$duplicated = object_to_array($duplicates_count);
 		$original = $duplicated[0]['guid'];
 		register_error(elgg_echo('recext:save:failed:duplicated', array($original)));
@@ -194,7 +207,7 @@ if ($recext->save()) {
 
 			shell_exec("wget -q $recext->image -O $path/recext-store/$guid/$guid.$ext");
 			// agrega metadatos a la imagen almacenada
-			shell_exec("/usr/bin/exiftool -overwrite_original -title='$title' -comment='Source: $recext->image' -author='$source' -url='$url' $path/recext-store/$guid/$guid.$ext");
+			// shell_exec("/usr/bin/exiftool -overwrite_original -title='$title' -comment='Source: $recext->image' -author='$source' -url='$url' $path/recext-store/$guid/$guid.$ext");
 			// reemplaza la imagen por la almacenada localmente
 			$siteurl = elgg_get_site_url();
 			$recext->image = '/recext-store/'.$guid.'/'.$guid.'.'.$ext;
