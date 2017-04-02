@@ -14,6 +14,9 @@ El formato está basado en los lineamientos de [Keep a Changelog](http://keepach
 
 * Denominación de las versiones: se cambia formato cronológico por versionado semántico.
 
+### Fixed
+
+* Arregla enlace a RE original cuando se intenta cargar uno ya cargado
 
 ## [1.0.0] - 2017-03-03
 
