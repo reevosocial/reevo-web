@@ -6,7 +6,13 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Gaufrette' => array($vendorDir . '/knplabs/gaufrette/src'),
-    'Composer\\Installers\\' => array($vendorDir . '/composer/installers/src'),
-    '' => array($baseDir . '/engine/classes'),
+    'Prophecy\\' => array($vendorDir . '/phpspec/prophecy/src'),
+    'Misd\\Linkify\\' => array($vendorDir . '/misd/linkify/src'),
+    'Michelf' => array($vendorDir . '/michelf/php-markdown'),
+    'Imagine' => array($vendorDir . '/imagine/imagine/lib'),
+    'Doctrine\\DBAL\\' => array($vendorDir . '/doctrine/dbal/lib'),
+    'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib'),
+    'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),
+    'Doctrine\\Common\\Collections\\' => array($vendorDir . '/doctrine/collections/lib'),
+    '' => array($vendorDir . '/elgg/elgg/engine/classes', $vendorDir . '/hypejunction/elgg-cli/src'),
 );

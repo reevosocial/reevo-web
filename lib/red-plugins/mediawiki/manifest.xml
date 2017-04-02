@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin_manifest xmlns="http://www.elgg.org/plugin_manifest/1.8">
+  <name>MediaWiki</name>
+  <author>hellekin</author>
+  <version>0.1.0</version>
+  <category>reevo</category>
+  <category>wiki</category>
+  <category>integration</category>
+  <description>MediaWiki integration</description>
+  <repository>http://git.reevo.org/reevo/reevo-web/lib/red-plugins/</repository>
+  <donations>https://donar.reevo.org</donations>
+  <license>GNU Affero General Public License version 3, or later</license>
+  <copyright>Copyright 2013 Redes de Pares &lt;info@redesdepares.org&gt;</copyright>
+  <license>GNU Affero General Public License version 3 or later</license>
+  <requires>
+    <type>elgg_release</type>
+    <version>1.8</version>
+  </requires>
+</plugin_manifest>

@@ -7,12 +7,6 @@
 [submodule "lib/blog-plugins"]
 	path = lib/blog-plugins
 	url = http://git.reevo.org/reevo/reevo-web/lib/blog-plugins
-[submodule "lib/red-plugins"]
-	path = lib/red-plugins
-	url = http://git.reevo.org/reevo/reevo-web/lib/red-plugins
-[submodule "lib/wiki-plugins"]
-	path = lib/wiki-plugins
-	url = http://git.reevo.org/reevo/reevo-web/lib/wiki-plugins
 [submodule "lib/mapa-plugins"]
 	path = lib/mapa-plugins
 	url = http://git.reevo.org/reevo/reevo-web/lib/mapa-plugins

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin_manifest xmlns="http://www.elgg.org/plugin_manifest/1.8">
+	<name>Profile Manager Join Groups on registration</name>
+	<author>Yaco</author>
+	<version>0.2</version>
+	<description>Permite sumar a un nuevo usuario a diversos grupos</description>
+	<id>profile_manager_joingroups</id>
+	<category>reevo</category>
+  <repository>http://git.reevo.org/reevo/reevo-web/lib/red-plugins/</repository>
+  <donations>https://donar.reevo.org</donations>
+  <license>GNU Affero General Public License version 3, or later</license>
+ 	
+ 	<requires>
+		<type>elgg_release</type>
+		<version>1.8</version>
+	</requires>
+	
+	<requires>
+		<type>plugin</type>
+		<name>profile</name>
+	</requires>
+	
+	<requires>
+		<type>priority</type>
+		<plugin>profile</plugin>
+		<priority>after</priority>
+	</requires>
+
+   <requires>
+        <type>plugin</type>
+        <name>profile_manager</name>
+    </requires>
+	
+	<requires>
+		<type>priority</type>
+		<plugin>profile_manager</plugin>
+		<priority>after</priority>
+	</requires>
+	 	
+
+</plugin_manifest>

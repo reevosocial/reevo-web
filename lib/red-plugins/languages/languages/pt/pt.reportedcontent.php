@@ -1,0 +1,36 @@
+<?php
+$pt = array (
+  'item:object:reported_content' => 'Itens denunciados',
+  'reportedcontent' => 'Conteúdo denunciado',
+  'reportedcontent:this' => 'Denunciar isto',
+  'reportedcontent:none' => 'Não existe nenhuma denúncia de conteúdo',
+  'reportedcontent:report' => 'Denunciar isto',
+  'reportedcontent:title' => 'Título da página',
+  'reportedcontent:deleted' => 'O conteúdo denunciado foi excluído',
+  'reportedcontent:notdeleted' => 'Não foi possível excluir essa denúncia',
+  'reportedcontent:delete' => 'Excluir',
+  'reportedcontent:areyousure' => 'Tem certeza que deseja excluir?',
+  'reportedcontent:archive' => 'Arquivar',
+  'reportedcontent:archived' => 'A denúncia foi arquivada',
+  'reportedcontent:visit' => 'Visitar o item denunciado',
+  'reportedcontent:by' => 'Denunciado por',
+  'reportedcontent:objecttitle' => 'Título do objeto',
+  'reportedcontent:objecturl' => 'URL do objeto',
+  'reportedcontent:reason' => 'Razão para a denúncia',
+  'reportedcontent:description' => 'Por que você está denunciando isto?',
+  'reportedcontent:address' => 'Localização do item',
+  'reportedcontent:success' => 'Sua denúncia foi enviada para o administrador do site',
+  'reportedcontent:failing' => 'Não foi possível enviar sua denúncia',
+  'reportedcontent:moreinfo' => 'Mais informações',
+  'reportedcontent:failed' => 'Desculpe, mas ocorreu um erro com a sua denúncia deste conteúdo.',
+  'reportedcontent:notarchived' => 'Não foi possível arquivar essa denúncia',
+  'admin:administer_utilities:reportedcontent' => 'Conteúdo denunciado',
+  'reportedcontent:this:tooltip' => 'Denunciar esta página ao administrador',
+  'reportedcontent:instructions' => 'Esta denuncia será enviada para o administrador do site revisar.',
+  'reportedcontent:numbertodisplay' => 'Número de denuncias a apresentar',
+  'reportedcontent:widget:description' => 'Demonstre os conteúdos denunciados',
+  'reportedcontent:user' => 'Pessoa denunciada',
+);
+
+add_translation("pt", $pt);
+

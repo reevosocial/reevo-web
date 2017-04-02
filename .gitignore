@@ -58,6 +58,7 @@ tmp/crm/*
 !tmp/wiki/cache/.gitkeep
 !tmp/crm/.gitkeep
 
+www/red.*
 www/equipo/.bundle
 www/equipo/db/schema.rb
 www/equipo/Gemfile.lock
