@@ -113,6 +113,16 @@ function event_manager_init() {
 	elgg_register_plugin_hook_handler('likes:is_likable', 'object:' . \Event::SUBTYPE, '\Elgg\Values::getTrue');
 	elgg_register_plugin_hook_handler('supported_types', 'entity_tools', '\ColdTrick\EventManager\MigrateEvents::supportedSubtypes');
 	
+	// custom priorities for the following hooks allow others to influence export data order
+	elgg_register_plugin_hook_handler('export_attendee', 'event', '\ColdTrick\EventManager\Attendees::exportBaseAttributes', 100);
+	elgg_register_plugin_hook_handler('export_attendee', 'event', '\ColdTrick\EventManager\Attendees::exportQuestionData', 200);
+	elgg_register_plugin_hook_handler('export_attendee', 'event', '\ColdTrick\EventManager\Attendees::exportProgramData', 300);
+
+	elgg_register_plugin_hook_handler('view_vars', 'widgets/content_by_tag/display/simple', '\ColdTrick\EventManager\Widgets::contentByTagEntityTimestamp');
+	elgg_register_plugin_hook_handler('view_vars', 'widgets/content_by_tag/display/slim', '\ColdTrick\EventManager\Widgets::contentByTagEntityTimestamp');
+	
+	elgg_register_plugin_hook_handler('view_vars', 'input/objectpicker/item', '\ColdTrick\EventManager\ObjectPicker::customText');
+	
 	// actions
 	elgg_register_action('event_manager/event/edit', $base_dir . '/actions/event/edit.php');
 	elgg_register_action('event_manager/event/delete', $base_dir . '/actions/event/delete.php');
