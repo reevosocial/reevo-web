@@ -53,6 +53,23 @@ class Event extends ElggObject {
 	public function getURL() {
 		return elgg_get_site_url() . "events/event/view/" . $this->getGUID() . "/" . elgg_get_friendly_title($this->title);
 	}
+
+	/**
+	 * Returns excerpt based on shortdescription and falls back to long description
+	 *
+	 * @param $limit (optional) limited amount of characters
+	 *
+	 * @return string
+	 *
+	 * @see elgg_get_excerpt()
+	 */
+	public function getExcerpt($limit = null) {
+		$result = $this->shortdescription;
+		if (empty($shortdescription)) {
+			$result = $this->description;
+		}
+		return elgg_get_excerpt($result, $limit);
+	}
 	
 	/**
 	 * Returns the timestamp for the start of the event
@@ -533,14 +550,16 @@ class Event extends ElggObject {
 			$event_title_link,
 		]);
 		
-		$completed_text = elgg_strip_tags($this->registration_completed, '<a>');
-		if (!empty($completed_text)) {
-			$completed_text = str_ireplace('[NAME]', $to_entity->name, $completed_text);
-			$completed_text = str_ireplace('[EVENT]', $this->title, $completed_text);
-			
-			$user_message .= PHP_EOL . $completed_text;
+		if ($type == EVENT_MANAGER_RELATION_ATTENDING) {
+			$completed_text = elgg_strip_tags($this->registration_completed, '<a>');
+			if (!empty($completed_text)) {
+				$completed_text = str_ireplace('[NAME]', $to_entity->name, $completed_text);
+				$completed_text = str_ireplace('[EVENT]', $this->title, $completed_text);
+				
+				$user_message .= PHP_EOL . PHP_EOL . $completed_text;
+			}
 		}
-
+		
 		$user_message .= $registrationLink . $unsubscribeLink;
 
 		if ($to_entity instanceof ElggUser) {
@@ -773,7 +792,7 @@ class Event extends ElggObject {
 		if ($count) {
 			$query = "SELECT relationship, count(*) as count FROM " . elgg_get_config("dbprefix") . "entity_relationships WHERE guid_one=$event_guid GROUP BY relationship ORDER BY relationship ASC";
 		} else {
-			$query = "SELECT * FROM " . elgg_get_config("dbprefix") . "entity_relationships WHERE guid_one=$event_guid ORDER BY relationship ASC";
+			$query = "SELECT * FROM " . elgg_get_config("dbprefix") . "entity_relationships WHERE guid_one=$event_guid ORDER BY relationship ASC, time_created ASC";
 		}
 
 		$all_relations = get_data($query);
@@ -884,16 +903,31 @@ class Event extends ElggObject {
 			return false;
 		}
 		
-		$this->rsvp(EVENT_MANAGER_RELATION_ATTENDING, $waiting_user->getGUID(), false, false);
+		$this->rsvp(EVENT_MANAGER_RELATION_ATTENDING, $waiting_user->getGUID(), false, false, false);
 
+		$notification_body = elgg_echo("event_manager:event:registration:notification:user:text:event_spotfree", [
+			$waiting_user->name,
+			$this->title,
+			$this->getURL(),
+		]);
+		
+		$completed_text = elgg_strip_tags($this->registration_completed, '<a>');
+		if (!empty($completed_text)) {
+			$completed_text = str_ireplace('[NAME]', $waiting_user->name, $completed_text);
+			$completed_text = str_ireplace('[EVENT]', $this->title, $completed_text);
+			
+			$notification_body .= PHP_EOL . PHP_EOL . $completed_text;
+		}
+		
+		if (elgg_is_active_plugin('html_email_handler')) {
+			// add addthisevent banners in footer
+			$notification_body .= elgg_view('event_manager/email/addevent', ['entity' => $this]);
+		}
+		
 		notify_user($waiting_user->getGUID(),
 					$this->getOwnerGUID(),
 					elgg_echo("event_manager:event:registration:notification:user:subject"),
-					elgg_echo("event_manager:event:registration:notification:user:text:event_spotfree", [
-						$waiting_user->name,
-						$this->title,
-						$this->getURL(),
-					]));
+					$notification_body);
 
 		return true;
 	}
