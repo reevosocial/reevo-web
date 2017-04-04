@@ -8,6 +8,8 @@ ul.tagit {
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 	border: 1px solid #ccc;
+	background: white;
+	cursor: text;
 }
 ul.tagit li {
     display: block;
@@ -112,9 +114,6 @@ ul.tagit input[type="text"] {
     color: #333333;
     background: none;
 }
-.ui-widget {
-    font-size: 1.1em;
-}
 
 /* Forked from a jQuery UI theme, so that we don't require the jQuery UI CSS as a dependency. */
 .tagit-autocomplete.ui-autocomplete { position: absolute; cursor: default; }
@@ -156,3 +155,18 @@ ul.tagit input[type="text"] {
 
 .tagit-autocomplete .ui-widget-content { border: 1px solid #aaaaaa; }
 .tagit .ui-helper-hidden-accessible { position: absolute !important; clip: rect(1px,1px,1px,1px); }
+
+.tagit.elgg-input-required {
+	box-shadow: 0 0px 2px red;
+}
+input.elgg-input-tags.tagit-hidden-field,
+input.elgg-input-tags.tagit-hidden-field:required {
+	display: block;
+	border: 0;
+	height: 0;
+	width: 0;
+	padding: 0;
+	margin: 0;
+	box-shadow: none;
+	position: absolute;
+}
