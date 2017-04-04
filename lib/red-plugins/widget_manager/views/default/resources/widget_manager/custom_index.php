@@ -1,5 +1,5 @@
 <?php
-
+	
 // set context
 elgg_push_context('index');
 
@@ -25,13 +25,13 @@ switch ($layout) {
 	case "50|50":
 		break;
 	default:
-		$columns = explode("|", $layout);
-
+		$columns = array_reverse(explode("|", $layout));
+		
 		foreach ($columns as $index => $col_width) {
 			$col_index = $index + 1;
-			$style .= "#elgg-widget-col-" . $col_index . " { float:left; width: " . $col_width . "%; }";
+			$style .= "#elgg-widget-col-" . $col_index . " { width: " . $col_width . "%; }";
 		}
-
+		
 		// determine top row width
 		if ($index_top_row == "two_column_left") {
 			$top_row_width = 100 - $columns[0];
@@ -48,11 +48,11 @@ if ($index_top_row == "full_row" || ($num_columns === 2)) {
 $top_row_used = false;
 if (!empty($index_top_row) && ($index_top_row != "none")) {
 	$widget_types = elgg_get_widget_types("index", false);
-
+	
 	elgg_push_context('widgets');
 	$widgets = elgg_get_widgets(elgg_get_page_owner_entity()->getGUID(), "index");
 	$widget_content = "";
-
+	
 	if (isset($widgets[4])) {
 		$column_widgets = $widgets[4];
 		if (sizeof($column_widgets) > 0) {
@@ -63,7 +63,7 @@ if (!empty($index_top_row) && ($index_top_row != "none")) {
 			}
 		}
 	}
-
+	
 	$top_row = "<div id='elgg-widget-col-4' class='elgg-widgets'>" . $widget_content . "</div>";
 	if (elgg_is_admin_logged_in()) {
 		$min_height = "min-height: 50px !important;";
@@ -80,14 +80,14 @@ if ($style) {
 }
 
 // draw the page
-$params = array(
-		'content' => $top_row,
-		'top_row_used' => $top_row_used,
-		'num_columns' => $num_columns,
-		'exact_match' => true
-);
+$params = [
+	'content' => $top_row,
+	'top_row_used' => $top_row_used,
+	'num_columns' => $num_columns,
+	'exact_match' => true,
+];
 $content = elgg_view_layout('widgets', $params);
 
-$body = elgg_view_layout('one_column', array('content' => $style . $content));
+$body = elgg_view_layout('one_column', ['content' => $style . $content]);
 
-echo elgg_view_page("", $body);
+echo elgg_view_page('', $body);

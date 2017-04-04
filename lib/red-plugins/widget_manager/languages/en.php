@@ -68,6 +68,7 @@ $english = array(
 
 	'widget_manager:settings:dashboard' => "Dashboard",
 	'widget_manager:settings:dashboard:multi_dashboard' => "Enable multiple dashboards",
+	'widget_manager:settings:dashboard:multi_dashboard:internal_deprecated' => "Usage of internal dashboards is no longer available. This is the link you used for the internal dashboard: %s",
 	'widget_manager:settings:dashboard:dashboard_widget_layout' => "Dashboard widget layout",
 	'widget_manager:settings:dashboard:dashboard_widget_layout:info' => "This widget layout only applies to the default dashboard and not to extra dashboards created with the multidashboard option",
 
@@ -98,7 +99,6 @@ $english = array(
 
 	// multi dashboard
 	'widget_manager:multi_dashboard:add' => "New Tab",
-	'widget_manager:multi_dashboard:extras' => "Add as dashboard tab",
 
 	// multi dashboard - edit
 	'widget_manager:multi_dashboard:new' => "Create a new dashboard",
@@ -163,9 +163,6 @@ $english = array(
 	'widget_manager:widgets:index_members_online:member_count' => "How many members to show",
 	'widget_manager:widgets:index_members_online:user_icon' => "Must the users have a profileicon",
 	'widget_manager:widgets:index_members_online:no_result' => "No users found",
-
-	// index_bookmarks
-	'widget_manager:widgets:index_bookmarks:description' => "Show the latest bookmarks on your community",
 
 	// index_activity
 	'widget_manager:widgets:index_activity:description' => "Show the latest activity on your site",
@@ -266,12 +263,6 @@ $free_html = array(
 );
 add_translation("en", $free_html);
 
-$tagcloud = array(
-	'widgets:tagcloud:description' => "Shows a tagcloud based on all the content on the site, in the group or from the user",
-	'widgets:tagcloud:no_data' => "No data available to display a tagcloud",
-);
-add_translation("en", $tagcloud);
-
 $entity_statistics = array(
 	// entity_statistics widget
 	"widgets:entity_statistics:title" => "Statistics",
@@ -288,24 +279,6 @@ $messages = array(
 	"widgets:messages:settings:only_unread" => "Only show unread messages",
 );
 add_translation("en", $messages);
-
-$favorites = array(
-	// favorites widget
-	"widgets:favorites:title" => "Community Favorites",
-	"widgets:favorites:description" => "Shows your favorite community pages",
-
-	"widgets:favorites:delete:success" => "Favorite removed",
-	"widgets:favorites:delete:failed" => "Failed to remove favorite",
-	"widgets:favorites:save:success" => "Favorite created",
-	"widgets:favorites:save:failed" => "Failed to create favorite",
-	"widgets:favorites:toggle:missing_input" => "Missing input for this action",
-	"widgets:favorites:content:more_info" => "Add your favorite community pages to this widget by clicking on the star icon in the sidebar menu.",
-
-	"widgets:favorites:menu:add" => "Add this page to your favorites widget",
-	"widgets:favorites:menu:remove" => "Remove this page from your favorites widget",
-
-);
-add_translation("en", $favorites);
 
 $likes = array(
 	// likes widget

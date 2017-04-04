@@ -1,6 +1,52 @@
 Version history
 ===============
 
+6.2.1 (2016-08-26):
+
+- fixed: php notice when page already routed
+
+6.2 (2016-06-16):
+
+- changed: content_by_tag widget now preloads owners and containers
+- changed: do not include container object in results content_by_tag
+- changed: moved event functions to class files
+- changed: moved pagehandler functions to class functions
+- changed: moved pagesetup actions to separate class functions
+- changed: moved plugin hooks into the init function
+- changed: moved router hooks to class functions
+- changed: moved some more hooks to class functions
+- changed: moved the widget_manager_update_widget registration in init
+- changed: moved various hooks to class functions
+- changed: split widget_manager_init into multiple init functions
+- changed: use translatable short month/day in slim view content_by_tag
+- fixed: correctly get widget collapse state due to event order change
+- fixed: declare elgg/widgets js dependancy to prevent timing issues
+
+6.1 (2016-05-26):
+
+- added: dashboard entity URLs can now be filtered
+- fixed: MultiDashboard::save() no longer sets attributes
+- fixed: only show edit icon if dashboard is editable
+- fixed: do not crash the loader if there are no private settings
+- fixed: moved elgg-widgets sortable modifications to system init event
+
+6.0.1 (2016-05-04):
+
+- fixed: widget cache was not resetting correctly on cache flush
+
+6.0 (2016-04-13):
+
+- added: cached data for cacheable widgets is now reset on cache flush
+- fixed: accidentally deactivated registration cacheable widgets
+- fixed: widget cache clear took too long
+
+6.0-beta (2016-01-26):
+
+- added: support for Elgg 2.0 added
+- removed: no longer provide favorites widget
+- removed: no longer provide index_bookmarks widget
+- removed: no longer provide tagcloud widget
+
 5.2 (2016-01-20):
 
 - added: ability for group owners to update all widgets access level
