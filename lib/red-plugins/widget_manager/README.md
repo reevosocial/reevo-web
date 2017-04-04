@@ -28,7 +28,6 @@ Widgets
  - Twitter widget (paste your widget code)
  - Content (blog, file, pages, bookmarks) by tag
  - rss
- - tagcloud
  - free html
  - messages
  
@@ -37,14 +36,9 @@ Widgets
  - login box
  - members
  - online members
- - bookmarks
  - activity
  - image slider
  - community stats
- 
-### Dashboard widgets
-
- - favorites (favorite community pages)
  
 ### Admin widgets
 

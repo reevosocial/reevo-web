@@ -13,7 +13,6 @@ class MultiDashboard extends ElggObject {
 	private $allowed_dashboard_types = [
 		'widgets',
 		'iframe',
-		'internal'
 	];
 	
 	/**
@@ -28,35 +27,6 @@ class MultiDashboard extends ElggObject {
 	}
 	
 	/**
-	 * Correctly sets attributes on save
-	 *
-	 * @return void
-	 */
-	public function save() {
-		if (!$this->guid) {
-			$this->attributes['owner_guid'] = elgg_get_logged_in_user_guid();
-			$this->attributes['container_guid'] = elgg_get_logged_in_user_guid();
-			$this->attributes['access_id'] = ACCESS_PRIVATE;
-		}
-		
-		return parent::save();
-	}
-	
-	/**
-	 * Returns url to the dashboard
-	 *
-	 * @return string|boolean
-	 */
-	public function getURL() {
-		if (empty($this->guid)) {
-			return false;
-		}
-
-		$site = elgg_get_site_entity($this->site_guid);
-		return $site->url . 'dashboard/' . $this->getGUID();
-	}
-	
-	/**
 	 * On delete of dashboard remove all widgets in it
 	 *
 	 * @param boolean $recursive Whether to delete all the entities contained by this entity
@@ -64,12 +34,15 @@ class MultiDashboard extends ElggObject {
 	 * @return boolean
 	 */
 	public function delete($recursive = true) {
-		if ($widgets = $this->getWidgets(false)) {
+		$widgets = $this->getWidgets(false);
+		if ($widgets) {
 			foreach ($widgets as $col => $col_widgets) {
-				if (!empty($col_widgets)) {
-					foreach ($col_widgets as $widget) {
-						$widget->delete();
-					}
+				if (empty($col_widgets)) {
+					continue;
+				}
+				
+				foreach ($col_widgets as $widget) {
+					$widget->delete();
 				}
 			}
 		}
@@ -137,13 +110,11 @@ class MultiDashboard extends ElggObject {
 	 * @return boolean
 	 */
 	public function setIframeUrl($url) {
-		$result = false;
-		
-		if (!empty($url)) {
-			$result = $this->set('iframe_url', $url);
+		if (empty($url)) {
+			return false;
 		}
-		
-		return $result;
+
+		return $this->set('iframe_url', $url);
 	}
 	
 	/**
@@ -163,14 +134,13 @@ class MultiDashboard extends ElggObject {
 	 * @return boolean
 	 */
 	public function setIframeHeight($height) {
-		$result = false;
 		$height = sanitise_int($height);
 		
-		if (!empty($height)) {
-			$result = $this->set('iframe_height', $height);
+		if (empty($height)) {
+			return false;
 		}
 		
-		return $result;
+		return $this->set('iframe_height', $height);
 	}
 	
 	/**
@@ -180,38 +150,6 @@ class MultiDashboard extends ElggObject {
 	 */
 	public function getIframeHeight() {
 		return $this->iframe_height;
-	}
-	
-	/**
-	 * Sets the internal url
-	 *
-	 * @param string $url url of the internal page
-	 *
-	 * @return boolean
-	 */
-	public function setInternalUrl($url) {
-		$result = false;
-		
-		if (!empty($url)) {
-			$result = $this->set('internal_url', $url);
-		}
-		
-		return $result;
-	}
-	
-	/**
-	 * Returns the internal url
-	 *
-	 * @return boolean|string
-	 */
-	public function getInternalUrl() {
-		$result = false;
-		
-		if ($url = $this->internal_url) {
-			$result = elgg_http_add_url_query_elements($url, ['view' => 'internal_dashboard']);
-		}
-		
-		return $result;
 	}
 	
 	/**
@@ -235,7 +173,7 @@ class MultiDashboard extends ElggObject {
 			'owner_guid' => $this->owner_guid,
 			'relationship' => self::WIDGET_RELATIONSHIP,
 			'relationship_guid' => $this->guid,
-			'inverse_relationship' => true
+			'inverse_relationship' => true,
 		]);
 		
 		if (empty ($widgets)) {
