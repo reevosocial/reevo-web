@@ -1,5 +1,25 @@
 <?php
 
+elgg_register_plugin_hook_handler('header', 'opengraph', function ($hook, $handler, $return, $params){
+	$guid = get_input('guid');
+	elgg_entity_gatekeeper($guid, 'object', 'event');
+	$event = get_entity($guid);
+	$baseurl = rtrim(elgg_get_site_url(), "/");
+	$event_banner_url = '';
+	if ($event->hasIcon('event_banner')) {
+		$event_banner_url = $event->getIconURL('event_banner');
+	} elseif ($event->hasIcon('master')) {
+		$event_banner_url = $event->getIconURL('master');
+	}
+
+	if (preg_match('/'.str_replace('/','\\/',elgg_get_site_url()).'event/', $params['url'])) {
+			$return['og:description'] = strip_tags($event->shortdescription);
+			$return['og:image'] = $event_banner_url;
+			return $return;
+	}
+});
+
+
 $event = elgg_extract('entity', $vars);
 
 $body =  elgg_view('event_manager/event/fields', $vars);
