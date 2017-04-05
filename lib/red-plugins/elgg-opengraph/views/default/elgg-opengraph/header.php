@@ -10,14 +10,15 @@
         'og:type' => 'website',
         'og:url' => current_page_url(),
         'og:site_name' => elgg_get_config('sitename'),
-        'og:description' => elgg_get_config('sitedescription')
+        'og:description' => elgg_get_config('sitedescription'),
+        'fb:app_id' => '1724849754416904' // App id de red.reevo
     ), elgg_get_config('site_opengraph')));
 
 
     $headers = elgg_trigger_plugin_hook('header', 'opengraph', array('url' => current_page_url()), elgg_get_config('site_opengraph'));
-    
+
     foreach ($headers as $property => $content) {
         ?>
-<meta property="<?=$property;?>" content="<?=$content;?>" />
+        <meta property="<?=$property;?>" content="<?=$content;?>" />
         <?php
     }
