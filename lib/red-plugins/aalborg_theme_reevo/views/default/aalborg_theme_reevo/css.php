@@ -135,6 +135,23 @@ REEVO Customizations
 .elgg-module-widget.widget_manager_disable_widget_content_style > .elgg-head {
 	border: none;
 }
+
+.event-manager-event-when .elgg-body {
+	padding-left: 15px;
+}
+
+.event-manager-event-banner img {
+	max-height: 100%;
+}
+
+.event-manager-event-banner-bg-blur {
+	background-blend-mode: color-dodge;
+  background-color: #999;
+  background-position-y: center;
+  background-size: cover;
+}
+
+
 /* ***************************************
 	RESPONSIVE
 *****************************************/
