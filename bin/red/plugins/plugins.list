@@ -24,6 +24,7 @@ elggman
 #roles_group_admins
 widget_manager
 
+blog_tools
 event_manager
 elgg-opengraph
 tag_tools
