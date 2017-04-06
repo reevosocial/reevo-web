@@ -6,6 +6,7 @@ notifications
 search
 discussions
 messages
+blog
 
 #profile_manager
 ### genera el error: ERROR: 'create, member_of_site' event is no longer triggered. Update your event registration to use 'create, relationship'
