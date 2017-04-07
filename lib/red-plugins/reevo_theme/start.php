@@ -5,33 +5,33 @@
  * @package AalborgTheme
  */
 
-elgg_register_event_handler('init','system','aalborg_theme_reevo_init');
+elgg_register_event_handler('init','system','reevo_theme_init');
 
 
 elgg_unregister_menu_item('footer', 'powered');
 
-function aalborg_theme_reevo_init() {
+function reevo_theme_init() {
 
 	// theme specific CSS
-	elgg_extend_view('css/elgg', 'aalborg_theme_reevo/css');
+	elgg_extend_view('css/elgg', 'reevo_theme/css');
 
 	// Load js
-	// elgg_register_js('clipboard', 'mod/aalborg_theme_reevo/vendors/js/clipboard.min.js');
+	// elgg_register_js('clipboard', 'mod/reevo_theme/vendors/js/clipboard.min.js');
 	// elgg_load_js('clipboard');
 
 
 	elgg_unregister_event_handler('pagesetup', 'system', 'aalborg_theme_pagesetup');
-	elgg_register_event_handler('pagesetup', 'system', 'aalborg_theme_reevo_pagesetup', 900);
+	elgg_register_event_handler('pagesetup', 'system', 'reevo_theme_pagesetup', 900);
 }
 
 
 // adds custom logo
-elgg_register_event_handler('init', 'system', 'aalborg_theme_reevo_addlogo');
+elgg_register_event_handler('init', 'system', 'reevo_theme_addlogo');
 
-function aalborg_theme_reevo_addlogo() {
+function reevo_theme_addlogo() {
 	elgg_unregister_menu_item('topbar', 'elgg_logo');
 
-	$logo_url = elgg_get_site_url() . "mod/aalborg_theme_reevo/graphics/logo.png";
+	$logo_url = elgg_get_site_url() . "mod/reevo_theme/graphics/logo.png";
 
 	elgg_register_menu_item('topbar', array(
 	    'name' => 'logo',
@@ -46,9 +46,9 @@ function aalborg_theme_reevo_addlogo() {
 
 // Quita los menues de la izquierda al lado del logo
 // removes topbar icons
-elgg_register_plugin_hook_handler('register', 'menu:topbar', 'aalborg_theme_reevo_topbar');
+elgg_register_plugin_hook_handler('register', 'menu:topbar', 'reevo_theme_topbar');
 
-function aalborg_theme_reevo_topbar($hook, $type, $return, $params) {
+function reevo_theme_topbar($hook, $type, $return, $params) {
 
     $remove = array('profile', 'friends', 'messages');
 
@@ -62,7 +62,7 @@ function aalborg_theme_reevo_topbar($hook, $type, $return, $params) {
 }
 
 
-function aalborg_theme_reevo_pagesetup() {
+function reevo_theme_pagesetup() {
 
 	if (elgg_is_logged_in()) {
 
@@ -170,8 +170,8 @@ function aalborg_theme_reevo_pagesetup() {
 
 
 // Quita los menues del navbar
-elgg_register_plugin_hook_handler('register', 'menu:site', 'aalborg_theme_reevo_navbar');
-function aalborg_theme_reevo_navbar($hook, $type, $return, $params) {
+elgg_register_plugin_hook_handler('register', 'menu:site', 'reevo_theme_navbar');
+function reevo_theme_navbar($hook, $type, $return, $params) {
 
     $remove = array('file', 'bookmarks', 'activity', 'pages', 'thewire');
 
@@ -186,9 +186,9 @@ function aalborg_theme_reevo_navbar($hook, $type, $return, $params) {
 
 
 
-elgg_register_plugin_hook_handler('head', 'page', 'aalborg_theme_reevo_favicon');
+elgg_register_plugin_hook_handler('head', 'page', 'reevo_theme_favicon');
 
-function aalborg_theme_reevo_favicon($hook, $type, $return, $params) {
+function reevo_theme_favicon($hook, $type, $return, $params) {
 	$return['links']['apple-touch-icon'] = array(
 		'rel' => 'apple-touch-icon',
 		'href' => 'http://assets.reevo.org/logo/favicon/favicon.png',

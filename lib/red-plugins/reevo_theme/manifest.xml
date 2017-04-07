@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin_manifest xmlns="http://www.elgg.org/plugin_manifest/1.8">
-	<name>Aalborg Theme - Reevo adaptation</name>
-	<id>aalborg_theme_reevo</id>
-	<author>Per Jensen - Elggzone</author>
+	<name>Reevo Theme - Aalborg Theme adaptation</name>
+	<id>reevo_theme</id>
+	<author>Yaco</author>
 	<version>1.9</version>
     <description>Adaptaciones de Aalborg para Reevo</description>
 	<category>reevo</category>
