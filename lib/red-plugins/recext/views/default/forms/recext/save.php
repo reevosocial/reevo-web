@@ -19,7 +19,7 @@ $shares = elgg_extract('shares', $vars, array());
 ?>
 <div>
 	<label><?php echo elgg_echo('title'); ?></label><br />
-	<?php echo elgg_view('input/text', array('name' => 'title', 'value' => $title)); ?>
+	<?php echo elgg_view('input/text', array('name' => 'title', 'value' => $title, 'maxlength' => '72')); ?>
 </div>
 <div>
 	<label><?php echo elgg_echo('recext:address'); ?></label><br />
