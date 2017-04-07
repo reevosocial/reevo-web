@@ -15,11 +15,26 @@ function recext_init() {
 	$root = dirname(__FILE__);
 	elgg_register_library('elgg:recext', "$root/lib/recext.php");
 
+
+
 	// actions
 	$action_path = "$root/actions/recext";
 	elgg_register_action('recext/save', "$action_path/save.php");
 	elgg_register_action('recext/delete', "$action_path/delete.php");
 	elgg_register_action('recext/share', "$action_path/share.php");
+	// register actions
+	elgg_register_action('recext/toggle_metadata',"$action_path/toggle_metadata.php", 'admin');
+
+
+	// add featured filter menu item
+	elgg_register_menu_item('filter', ElggMenuItem::factory([
+		'name' => 'featured',
+		'text' => elgg_echo('status:featured'),
+		'context' => 'recext',
+		'href' => 'recext/featured',
+		'priority' => 600
+	]));
+
 
 	// menus
 	elgg_register_menu_item('site', array(
@@ -30,6 +45,7 @@ function recext_init() {
 
 	elgg_register_plugin_hook_handler('register', 'menu:page', 'recext_page_menu');
 	elgg_register_plugin_hook_handler('register', 'menu:owner_block', 'recext_owner_block_menu');
+	elgg_register_plugin_hook_handler('register', 'menu:entity', 'recext_feature_link');
 
 	elgg_register_page_handler('recext', 'recext_page_handler');
 
@@ -137,6 +153,12 @@ function recext_page_handler($page) {
 			include "$pages/owner.php";
 			break;
 
+		case 'featured':
+			// elgg_group_gatekeeper();
+			include "$pages/featured.php";
+			break;
+
+
 		case "recextlet":
 			set_input('container_guid', $page[1]);
 			include "$pages/recextlet.php";
@@ -166,6 +188,44 @@ function recext_set_url($hook, $type, $url, $params) {
 		return "recext/view/" . $entity->getGUID() . "/" . $title;
 	}
 }
+
+function recext_feature_link($hook, $entity_type, $returnvalue, $params) {
+
+
+	$entity = elgg_extract('entity', $params);
+	// if (!($entity instanceof recext)) {
+	// 	return;
+	// }
+
+	// only published blogs
+	if ($entity->status === 'draft') {
+		return;
+	}
+
+	if (!elgg_in_context('widgets') && elgg_is_admin_logged_in()) {
+		elgg_require_js('recext/site');
+
+		$returnvalue[] = \ElggMenuItem::factory([
+			'name' => 'recext-feature',
+			'text' => elgg_echo('recext:toggle:feature'),
+			'href' => "action/recext/toggle_metadata?guid={$entity->getGUID()}&metadata=featured",
+			'item_class' => empty($entity->featured) ? '' : 'hidden',
+			'is_action' => true,
+			'priority' => 175,
+		]);
+		$returnvalue[] = \ElggMenuItem::factory([
+			'name' => 'recext-unfeature',
+			'text' => elgg_echo('recext:toggle:unfeature'),
+			'href' => "action/recext/toggle_metadata?guid={$entity->getGUID()}&metadata=featured",
+			'item_class' => empty($entity->featured) ? 'hidden' : '',
+			'is_action' => true,
+			'priority' => 176,
+		]);
+	}
+	return $returnvalue;
+}
+
+
 
 /**
  * Add a menu item to an ownerblock

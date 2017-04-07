@@ -4,7 +4,8 @@
 cd /srv/reevo-web/www/red/mod
 
 echo "Disponibilizando los plugins alojados en /lib/red-plugins ..."
-for i in `ls -lah ../../../www/red/mod/ | grep ">" |cut -d " " -f 13`; do rm  $i; done
+
+for i in `ls -lah ../../../www/red/mod/ | grep ">" | rev | cut -d " " -f 3 | rev`; do rm  $i; done
 echo ""
 
 for i in `ls  -d ../../../lib/red-plugins/*/`;

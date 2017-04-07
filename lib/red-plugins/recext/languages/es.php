@@ -87,4 +87,12 @@ Ver y comentar el enlace en:
 	'recext:save:invalid' => "La direcci&oacute;n no es válida y no pudo ser guardada.",
 	'recext:delete:failed' => "El enlace no pudo ser borrado. Intentalo de nuevo.",
 	'recext:unknown_recext' => 'No se puede encontrar el enlace indicado',
+
+	'recext:toggle:feature' => "Destacar",
+	'recext:toggle:unfeature' => "No destacar",
+
+	'recext:action:toggle_metadata:error' => "Un error desconocido ha ocurrido al editar el enlace, por favor intentelo de nuevo.",
+	'recext:action:toggle_metadata:success' => "El enlace se editó correctamente.",
+
+
 );
