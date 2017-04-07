@@ -101,14 +101,14 @@ class BootstrapMediaWikiTemplate extends QuickTemplate {
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</button>
-						<a class="navbar-brand" href="<?php echo $this->data['nav_urls']['mainpage']['href'] ?>" title="<?php echo $wgSitename ?>"><?php echo isset( $wgLogo ) && $wgLogo ? "<img src='{$wgLogo}' alt='Logo'/> " : ''; echo $wgSitenameshort ?: $wgSitename; ?></a>
+						<a class="navbar-brand" href="<?php echo $this->data['nav_urls']['mainpage']['href'] ?>" title="<?php echo $wgSitename ?>"><?php echo isset( $wgLogo ) && $wgLogo ? "<img src='{$wgLogo}' alt='Logo'/> " : '';?></a>
 					</div>
 
 					<div class="collapse navbar-collapse">
 						<ul class="nav navbar-nav">
-							<li>
+							<!-- <li>
 							<a href="<?php echo $this->data['nav_urls']['mainpage']['href'] ?>">Home</a>
-							</li>
+							</li> -->
 							<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">Tools <span class="caret"></span></a>
 								<ul class="dropdown-menu">
@@ -150,12 +150,7 @@ class BootstrapMediaWikiTemplate extends QuickTemplate {
 						<?php
 					}
 					?>
-					<form class="navbar-search navbar-form navbar-right" action="<?php $this->text( 'wgScript' ) ?>" id="searchform" role="search">
-						<div>
-							<input class="form-control" type="search" name="search" placeholder="Search" title="Search <?php echo $wgSitename; ?> [ctrl-option-f]" accesskey="f" id="searchInput" autocomplete="off">
-							<input type="hidden" name="title" value="Special:Search">
-						</div>
-					</form>
+
 					</div>
 				</div>
 		</div><!-- topbar -->
@@ -210,7 +205,7 @@ class BootstrapMediaWikiTemplate extends QuickTemplate {
 
 				<div class="pagetitle page-header">
 					<h1><?php $this->html( 'title' ) ?> <small><?php $this->html('subtitle') ?></small></h1>
-				</div>	
+				</div>
 
 				<div class="body">
 				<?php $this->html( 'bodytext' ) ?>
@@ -243,8 +238,8 @@ class BootstrapMediaWikiTemplate extends QuickTemplate {
 			<div class="container">
 				<?php $this->includePage('Bootstrap:Footer'); ?>
 				<footer>
-					<p>&copy; <?php echo date('Y'); ?> by <a href="<?php echo (isset($wgCopyrightLink) ? $wgCopyrightLink : 'http://borkweb.com'); ?>"><?php echo (isset($wgCopyright) ? $wgCopyright : 'BorkWeb'); ?></a> 
-						&bull; Powered by <a href="http://mediawiki.org">MediaWiki</a> 
+					<p>&copy; <?php echo date('Y'); ?> by <a href="<?php echo (isset($wgCopyrightLink) ? $wgCopyrightLink : 'http://borkweb.com'); ?>"><?php echo (isset($wgCopyright) ? $wgCopyright : 'BorkWeb'); ?></a>
+						&bull; Powered by <a href="http://mediawiki.org">MediaWiki</a>
 					</p>
 				</footer>
 			</div><!-- container -->
@@ -407,7 +402,7 @@ class BootstrapMediaWikiTemplate extends QuickTemplate {
 			}//end else
 		}
 
-		return $nav;	
+		return $nav;
 	}//end get_page_links
 
 	private function get_array_links( $array, $title, $which ) {
@@ -486,4 +481,3 @@ class BootstrapMediaWikiTemplate extends QuickTemplate {
 
 	public static function link() { }
 }
-
