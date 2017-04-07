@@ -1,3 +1,84 @@
+/* Estilos adaptados aalborg de Elgg */
+
+body {
+	color: #333;
+	font-size: 14.4px;
+	line-height: 1.4em;
+	font-family: "Open Sans", "Helvetica Neue", Helvetica, "Lucida Grande", Arial, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+    color: #444;
+    font-family: "Lato", "Open Sans", "Helvetica Neue", Helvetica, "Lucida Grande", Arial, sans-serif;
+    text-rendering: optimizelegibility;
+}
+
+h1 { font-size: 1.8em; }
+h2 { font-size: 1.5em; line-height: 1.1em; }
+h3 { font-size: 1.2em; }
+h4 { font-size: 1.0em; }
+h5 { font-size: 0.9em; }
+h6 { font-size: 0.8em; }
+
+
+
+.navbar-default {
+    background-color: #424242;
+    border-color: transparent;
+}
+
+.navbar-nav > li > a {padding-top:5px !important; padding-bottom:5px !important;}
+.navbar {
+	min-height:32px !important;
+	height: 32px;
+}
+
+.navbar-brand {
+	padding: 0;
+	height: 32px;
+  margin: 5px;
+}
+
+.navbar-brand img {
+
+}
+
+
+.subnav {
+	padding: 0 20px;
+	background: #4787B8;
+}
+
+.subnav .nav > li > a {
+	color: white;
+}
+
+.subnav .nav > li > a:hover {
+	text-decoration: none;
+}
+
+.subnav .nav > a,
+.subnav .nav > li:hover > a,
+.subnav .nav > li:hover > a { {
+	background-color: #60B8F7;
+	color: #FFF;
+}
+
+.subnav {
+    padding: 0 20px;
+    background: #4787B8;
+}
+
+.subnav-fixed {
+	top: 30px !important;
+}
+
+
+.subnav .nav-tabs .dropdown-toggle .caret, .subnav .nav-pills .dropdown-toggle .caret {
+  border-top-color: #fff;
+}
+
 .jumbotron {
 	background-color: #333;
 	color: #eee;
