@@ -23,7 +23,8 @@
 	border: 5px solid white;
 	position: relative;
 	min-height: 200px;
-	 background-size: cover;
+	background-size: cover;
+	background-position: center;
 }
 
 .list-recext li a header  {
@@ -38,7 +39,8 @@
 }
 
 .list-recext li a header h3 {
-	color: white
+	color: white;
+  font-size: 16pt;
 }
 
 .list-recext li a{
