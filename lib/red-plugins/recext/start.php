@@ -193,9 +193,10 @@ function recext_feature_link($hook, $entity_type, $returnvalue, $params) {
 
 
 	$entity = elgg_extract('entity', $params);
-	// if (!($entity instanceof recext)) {
-	// 	return;
-	// }
+
+	if (!($entity->getSubtype() == 'recext')) { 
+		return;
+	}
 
 	// only published blogs
 	if ($entity->status === 'draft') {
