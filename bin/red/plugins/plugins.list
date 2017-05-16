@@ -32,6 +32,7 @@ elgg-opengraph
 tag_tools
 recext
 bulk_user_admin
+uservalidationbyemail
 
 mediawiki
 reevo
