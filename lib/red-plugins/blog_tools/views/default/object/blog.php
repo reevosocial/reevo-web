@@ -23,7 +23,7 @@ if (empty($excerpt)) {
 $owner_icon = elgg_view_entity_icon($owner, 'tiny');
 
 $vars['owner_url'] = "blog/owner/$owner->username";
-$by_line = elgg_view('page/elements/by_line', $vars);
+$by_line = elgg_view('page/elements/by_line_blog', $vars);
 
 // The "on" status changes for comments, so best to check for !Off
 $comments_link = '';
@@ -54,7 +54,7 @@ $title = '';
 if (!empty($blog->icontime)) {
 	$params = $vars;
 	$params['plugin_settings'] = true;
-	
+
 	$blog_icon = elgg_view_entity_icon($blog, 'dummy', $params);
 }
 
@@ -76,7 +76,7 @@ if ($full) {
 		'value' => $blog->description,
 		'class' => 'blog-post',
 	));
-	
+
 	$params = array(
 		'entity' => $blog,
 		'title' => false,
@@ -86,7 +86,7 @@ if ($full) {
 	);
 	$params = $params + $vars;
 	$summary = elgg_view('object/elements/summary', $params);
-	
+
 	echo elgg_view('object/elements/full', array(
 		'entity' => $blog,
 		'summary' => $summary,
@@ -103,7 +103,7 @@ if ($full) {
 		$tags = false;
 		$subtitle = '';
 		$title = false;
-		
+
 		// prepend title to the excerpt
 		$title_link = elgg_format_element('h3', [], elgg_view('output/url', [
 			'text' => $blog->title,
@@ -111,7 +111,7 @@ if ($full) {
 			'is_trusted' => true,
 		]));
 		$excerpt = $title_link . $excerpt;
-		
+
 		// add read more link
 		if (substr($excerpt, -3) === '...') {
 			$read_more = elgg_view('output/url', [
@@ -124,13 +124,13 @@ if ($full) {
 	} elseif (elgg_get_plugin_setting('listing_strapline', 'blog_tools') === 'time') {
 		$subtitle = '';
 		$tags = false;
-		
+
 		$excerpt = date('F j, Y', $blog->time_created) . ' - ' . $excerpt;
 	}
-	
+
 	// prepend icon
 	$excerpt = $blog_icon . $excerpt;
-	
+
 	// brief view
 	$params = array(
 		'entity' => $blog,
@@ -140,10 +140,10 @@ if ($full) {
 		'tags' => $tags,
 		'content' => $excerpt,
 	);
-	
+
 	$params = $params + $vars;
-	
+
 	$list_body = elgg_view('object/elements/summary', $params);
-	
+
 	echo elgg_view_image_block($owner_icon, $list_body);
 }
