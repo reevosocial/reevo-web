@@ -21,6 +21,7 @@ if ($owner instanceof ElggEntity) {
 }
 
 // Muestra el campo last_action, porque podemos definir la fecha de publicacion
+$by_line[] = ' - ';
 $by_line[] = date('d/m/Y', $entity->last_action);
 
 $container_entity = $entity->getContainerEntity();
