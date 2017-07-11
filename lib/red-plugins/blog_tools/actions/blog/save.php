@@ -41,7 +41,7 @@ if ($guid) {
 	$blog = new ElggBlog();
 	$blog->subtype = 'blog';
 	$blog->container_guid = (int) get_input('container_guid');
-	
+
 	$new_post = TRUE;
 }
 
@@ -72,7 +72,7 @@ foreach ($values as $name => $default) {
 	} else {
 		$value = get_input($name, $default);
 	}
-	
+
 	if (in_array($name, $required) && empty($value)) {
 		$error = elgg_echo("blog:error:missing:$name");
 		break;
@@ -92,18 +92,22 @@ foreach ($values as $name => $default) {
 		case 'publication_date':
 			if (!empty($value)) {
 				$values[$name] = $value;
-				
+
 				// publication date has not yet passed, set as draft
 				if (strtotime($value) > time()) {
 					$save = false;
 				}
+				$date = DateTime::createFromFormat('Y-m-d', $value);
+				update_entity_last_action($guid, $date->getTimestamp());
+
+
 			}
 			break;
-			
+
 		case 'expiration_date':
 			if (!empty($value)) {
 				$values[$name] = $value;
-				
+
 				if ($new_post) {
 					// new blogs can't expire directly
 					if (strtotime($value) < time()) {
@@ -117,7 +121,7 @@ foreach ($values as $name => $default) {
 				}
 			}
 			break;
-			
+
 		default:
 			$values[$name] = $value;
 			break;
@@ -152,7 +156,7 @@ if (!$error) {
 		} else {
 			$blog->saveIconFromUploadedFile('icon');
 		}
-		
+
 		// remove sticky form entries
 		elgg_clear_sticky_form('blog');
 
@@ -170,7 +174,7 @@ if (!$error) {
 		system_message(elgg_echo('blog:message:saved'));
 
 		$status = $blog->status;
-		
+
 		// add to river if changing status or published, regardless of new post
 		// because we remove it for drafts.
 		if (($new_post || $old_status === 'draft') && $status === 'published') {
@@ -180,10 +184,10 @@ if (!$error) {
 				'subject_guid' => $blog->owner_guid,
 				'object_guid' => $blog->getGUID(),
 			));
-			
+
 			// we only want notifications sent when post published
 			elgg_trigger_event('publish', 'object', $blog);
-			
+
 			// reset the creation time for posts that move from draft to published
 			if ($guid) {
 				$blog->time_created = time();
@@ -201,6 +205,7 @@ if (!$error) {
 		} else {
 			forward("blog/edit/$blog->guid");
 		}
+
 	} else {
 		register_error(elgg_echo('blog:error:cannot_save'));
 		forward($error_forward_url);
