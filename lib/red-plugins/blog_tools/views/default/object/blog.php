@@ -5,25 +5,6 @@
  * @package Blog
  */
 
-elgg_register_plugin_hook_handler('header', 'opengraph', function ($hook, $handler, $return, $params){
-	$guid = get_input('guid');
-	elgg_entity_gatekeeper($guid, 'object', 'blog');
-	$blog = get_entity($guid);
-	$baseurl = rtrim(elgg_get_site_url(), "/");
-	if ($blog->hasIcon('large')) {
-		$icon = $blog->getIconURL('large');
-	} else {
-		$icon = 'https://donar.reevo.org/img/banner-fb-es.png'; // cualquiera! cambiar!!!
-	}
-
-	if (preg_match('/'.str_replace('/','\\/',elgg_get_site_url()).'blog/', $params['url'])) {
-			$return['og:description'] = strip_tags($blog->excerpt);
-			$return['og:image'] = $icon;
-			return $return;
-	}
-});
-
-
 $full = (bool) elgg_extract('full_view', $vars, FALSE);
 $blog = elgg_extract('entity', $vars, FALSE);
 
