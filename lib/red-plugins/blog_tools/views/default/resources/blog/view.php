@@ -5,8 +5,8 @@ elgg_register_plugin_hook_handler('header', 'opengraph', function ($hook, $handl
 	elgg_entity_gatekeeper($guid, 'object', 'blog');
 	$blog = get_entity($guid);
 	$baseurl = rtrim(elgg_get_site_url(), "/");
-	if ($blog->hasIcon('large')) {
-		$icon = $blog->getIconURL('large');
+	if ($blog->hasIcon('master')) {
+		$icon = $blog->getIconURL('master');
 	} else {
 		$icon = 'https://donar.reevo.org/img/banner-fb-es.png'; // cualquiera! cambiar!!!
 	}
