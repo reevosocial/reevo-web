@@ -1,0 +1,24 @@
+{
+	"name": "hypejunction/notifications_editor",
+	"version": "1.0.0",
+	"type": "elgg-plugin",
+	"description": "Notification Editor for Elgg",
+	"homepage": "http://hypejunction.com",
+	"keywords": [
+		"elgg", "plugin", "notifications", "html", "templates"
+	],
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "Ismayil Khayredinov",
+			"email": "info@hypejunction.com"
+		}
+	],
+	"require": {
+		"php": ">=5.5",
+		"composer/installers": "1.*",
+		"hypejunction/mustache": "~1.0",
+		"hypejunction/forms_api": "~1.0"
+	}
+}
+
