@@ -1,0 +1,3 @@
+<?php
+
+forward('notifications/editor');

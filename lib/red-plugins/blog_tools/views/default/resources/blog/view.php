@@ -1,10 +1,14 @@
 <?php
 
+
+
 elgg_register_plugin_hook_handler('header', 'opengraph', function ($hook, $handler, $return, $params){
 	$guid = get_input('guid');
 	elgg_entity_gatekeeper($guid, 'object', 'blog');
 	$blog = get_entity($guid);
+  $owner = $blog->getOwnerEntity();
 	$baseurl = rtrim(elgg_get_site_url(), "/");
+  $sitename = elgg_get_config('sitename');
 	if ($blog->hasIcon('master')) {
 		$icon = $blog->getIconURL('master');
 	} else {
@@ -12,9 +16,10 @@ elgg_register_plugin_hook_handler('header', 'opengraph', function ($hook, $handl
 	}
 
 	if (preg_match('/'.str_replace('/','\\/',elgg_get_site_url()).'blog/', $params['url'])) {
-			$return['og:description'] = strip_tags($blog->excerpt);
-			$return['og:image'] = $icon;
-			return $return;
+    $return['og:title'] = $blog->title . ' - ' .$owner->name . ' | ' . $sitename;
+    $return['og:description'] = strip_tags($blog->excerpt);
+		$return['og:image'] = $icon;
+		return $return;
 	}
 });
 
@@ -24,7 +29,9 @@ $guid = elgg_extract('guid', $vars);
 elgg_entity_gatekeeper($guid, 'object', 'blog');
 elgg_group_gatekeeper();
 
+
 $blog = get_entity($guid);
+$container = $blog->getContainerEntity();
 
 elgg_set_page_owner_guid($blog->container_guid);
 
@@ -34,7 +41,6 @@ $params = [
 	'title' => $blog->title
 ];
 
-$container = $blog->getContainerEntity();
 $crumbs_title = $container->name;
 
 if (elgg_instanceof($container, 'group')) {

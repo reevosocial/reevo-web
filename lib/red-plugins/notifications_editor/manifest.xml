@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin_manifest xmlns="http://www.elgg.org/plugin_manifest/1.8">
+
+	<name>Notification Editor</name>
+	<id>notifications_editor</id>
+
+	<description>Notification editor</description>
+	<category>notifications</category>
+	<version type="dist">1.0.0</version>
+
+	<author>Ismayil Khayredinov (inof@hypejunction.com)</author>
+	<website>http://www.hypejunction.com/</website>
+	<copyright>(c) 2015 Ismayil Khayredinov</copyright>
+	<license>GNU General Public License version 2</license>
+
+	<requires>
+		<type>elgg_release</type>
+		<version>2.0</version>
+	</requires>
+
+	<requires>
+		<type>plugin</type>
+		<name>notifications</name>
+	</requires>
+
+	<requires>
+		<type>plugin</type>
+		<name>mustache</name>
+	</requires>
+
+	<suggests>
+		<type>plugin</type>
+		<name>notifications_html_handler</name>
+	</suggests>
+
+	<suggests>
+		<type>plugin</type>
+		<name>notifications_templates</name>
+	</suggests>
+
+</plugin_manifest>

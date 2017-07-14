@@ -33,6 +33,8 @@ tag_tools
 recext
 bulk_user_admin
 uservalidationbyemail
+notifications_editor
+notifications_tools
 
 mediawiki
 reevo
