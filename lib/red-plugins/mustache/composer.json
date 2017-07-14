@@ -1,0 +1,29 @@
+{
+	"name": "hypejunction/mustache",
+	"type": "elgg-plugin",
+	"description": "Mustache templating in Elgg",
+	"homepage": "http://hypejunction.com",
+	"keywords": [
+		"elgg", "plugin", "templates", "mustache"
+	],
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "Ismayil Khayredinov",
+			"email": "info@hypejunction.com"
+		}
+	],
+	"autoload": {
+		"psr-0": {
+			"": "classes/"
+		}
+	},
+	"require": {
+		"mustache/mustache": "~2.9.0",
+		"bower-asset/mustache.js": "~2.1.3"
+	},
+	"require-dev": {
+		"composer/installers": "1.*"
+	}
+}
+
