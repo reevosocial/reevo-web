@@ -47,6 +47,39 @@ if (elgg_is_logged_in()) {
 	// $display_form = true;
 
 }
+$site = elgg_get_site_entity();
+
+$ia = elgg_set_ignore_access(true);
+
+$entities = elgg_get_entities_from_metadata([
+ 'type' => 'object',
+ 'subtype' => StaticPage::SUBTYPE,
+ 'metadata_name_value_pairs' => [
+	 'parent_guid' => 0,
+ ],
+	 'relationship' => 'subpage_of',
+ 'limit' => false,
+ 'container_guid' => $site->getGUID(),
+ 'joins' => [
+	 'JOIN ' . elgg_get_config('dbprefix') . 'objects_entity oe ON e.guid = oe.guid',
+ ],
+ 'order_by' => 'oe.title asc',
+]);
+
+foreach ($entities as $menu_item) {
+	$url = $menu_item->getURL();
+	$title = $menu_item->title;
+}
+
+echo '<ul id="topbar-menu-text">';
+foreach ($entities as $menu_item) {
+	$url = $menu_item->getURL();
+	$title = $menu_item->title;
+	echo '<li class="elgg-menu-item-groups"><a href="'.$url.'" class="elgg-menu-content">'.$title.'</a></li>';
+}
+echo '</ul>';
+
+
 
 // elements in the topbar
 echo <<<__HTML

@@ -173,7 +173,7 @@ function reevo_theme_pagesetup() {
 elgg_register_plugin_hook_handler('register', 'menu:site', 'reevo_theme_navbar');
 function reevo_theme_navbar($hook, $type, $return, $params) {
 
-    $remove = array('file', 'bookmarks', 'activity', 'pages', 'thewire');
+    $remove = array('groups', 'members', 'file', 'bookmarks', 'activity', 'pages', 'thewire');
 
     foreach($return as $key => $item) {
         if (in_array($item->getName(), $remove)) {
