@@ -75,6 +75,7 @@ REEVO Customizations
 	padding: 5px 10px;
 	height: 32px;
   box-sizing: border-box;
+	display: inline-block;
 }
 
 #topbar-menu-text li a {
