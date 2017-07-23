@@ -26,10 +26,15 @@
 		<priority>after</priority>
 		<plugin>profile</plugin>
 	</requires>
-    <requires>
-        <type>priority</type>
-        <priority>after</priority>
-        <plugin>aalborg_theme</plugin>
-    </requires>
+  <requires>
+      <type>priority</type>
+      <priority>after</priority>
+      <plugin>aalborg_theme</plugin>
+  </requires>
+	<requires>
+      <type>priority</type>
+      <priority>after</priority>
+      <plugin>static</plugin>
+  </requires>
 	<activate_on_install>false</activate_on_install>
 </plugin_manifest>
