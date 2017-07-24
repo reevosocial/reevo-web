@@ -1,0 +1,181 @@
+Version history
+===============
+
+5.1.1 (2017-07-12):
+
+- fixed: reordering of pages not always possible for moderators
+
+5.1 (2017-02-28):
+
+- added: isOutOfDate function is now hookable and used in cron
+- added: last editor information to csv_exporter
+- added: last revision information to csv_exporter
+- added: more out-of-date settings
+- added: out-of-date information to csv_exporter
+- added: show a message of out-of-date content on the full view
+- changed: out-of-date notification has bundled content
+
+5.0 (2017-01-26):
+
+- changed: increased Elgg version requirement to 2.3
+- changed: static page now exist in correct containers
+- changed: updated to correctly support migrating pages with entity_tools
+- changed: use the new elgg api for icon handling
+- fixed: incompatible function declaration
+
+4.3 (2016-11-18):
+
+- added: support for EntityTools migrate feature
+
+4.2 (2016-10-06):
+
+- changed: improved parent selector on static edit for big trees
+
+4.1.1 (2016-09-15):
+
+- changed: out of date page now has pagination to prevent OOM/OOT
+- fixed: call to non namespaced class
+- fixed: php notice when page is already routed
+
+4.1 (2016-06-16):
+
+- added: a normal list view is now available, special views are separated
+- changed: moved admin menu item registration to menu hook
+- changed: now using serve-file api for thumbnail
+- changed: static entity menu has an edit link again
+- changed: updated requirements to Elgg 2.1
+- fixed: regular users should not be able to create site static pages
+
+4.0.1 (2016-05-26):
+
+- fixed: removing page icon didn't remove icontime
+
+4.0 (2016-04-14):
+
+- changed: moved pages to resource views
+- changed: StaticPage->getURL() triggers hook 'entity:url', 'object' again
+- fixed: correctly load dataroot for Elgg 2.0
+- fixed: incorrect type hint check
+- fixed: php notice about overruled function declaration
+- fixed: static pages can't be liked
+- fixed: typehint error
+- fixed: unable to generate static menu cache
+- fixed: validate correct usage of classes
+
+3.0 (2016-03-08):
+
+- added: comment icon/hooks
+- added: option to list out-of-date static pages also sends notifications about out-of-date content
+- added: support for search_advanced autocomplete
+- added: thumbnail upload
+- added: composer support
+- added: entity menu in full view
+- added: event to flush top pages menu cache
+- added: filter option on out of date page to include group content
+- added: group static pages (WIP)
+- added: group static pages as plugin setting
+- added: group widget
+- added: information text above the table listing of the static pages
+- added: it is now possible to reorder the static root pages
+- added: moderators (WIP)
+- added: notifications to the last editor of a static page on comment
+- added: option to enable comments
+- added: sidebar menu items are now cached to increase performance on large pages
+- added: support for content subscriptions
+- added: support for newsletter embed layout
+- added: upgrade handling from old tree structure to new structure
+- added: html5 required attribute added
+- added: difference between clicking on link or toggle icon in sidebar menu
+- added: file comment and removed a misplaced space
+- added: sortable menu items
+- changed: always draw in content layout for consistent layouts
+- changed: fallback to title if searchdata is missing
+- changed: moved permissions hooks to class file
+- changed: permalinks to lowercase
+- changed: refactoring of a lot of code
+- changed: format to dm
+- changed: layout of widget listing
+- changed: notify the correct user about a comment
+- changed: order entities by title
+- changed: title and description are now required
+- changed: updated to Elgg coding standards
+- changed: upped requirement to elgg 1.9 release
+- fixed: better feedback to the user if page not found
+- fixed: limited recursive check for moderators to prevent errors
+- fixed: set correct height for thumbnails
+- fixed: #4 correct default access level for new pages
+- fixed: also check for existing pagehandlers when saving friendly title
+- fixed: call to member function on non-object for cached menu items in rare cases
+- fixed: call to unneeded function causes php warnings
+- fixed: changed sortable parameters for table sort
+- fixed: content moderator should be able to see all metadata
+- fixed: correctly check dir location of thumbnails
+- fixed: correctly check for widget availability
+- fixed: correctly check if a user manages guids in the menu tree
+- fixed: friendly title not always shows up on the edit form
+- fixed: getting root entity doesn't always work as expected
+- fixed: group access in widget for group owners
+- fixed: issues with access related to group owners and private pages
+- fixed: issue with duplicate permalinks, now gives a warning
+- fixed: moving lis between uls was a bit buggy
+- fixed: no text shown if no static pages are found
+- fixed: order of submenu items doesn't match admin side
+- fixed: prevent fatal error call to non object
+- fixed: problems with group (sub)pages
+- fixed: provide correct access to private entities for moderators
+- fixed: several access problems within groups
+- fixed: show empty cells for non editable static objects in list
+- fixed: static url fallback not always working
+- fixed: table headers are no longer sortable
+- fixed: unable to disable comments
+- fixed: widget root pages should be ordered the same as the page
+- fixed: correct redirect after removing a page in a group
+- fixed: etag compression postfix
+- fixed: issue with duplicate menu name conflict with plugin settings
+- fixed: moderator access should be fixed now
+- fixed: only show delete button if there is an entity
+- fixed: remove quotes from friendly title
+- fixed: replaced output/confirmlink deprecated notice
+- fixed: respect global icon configuration
+- fixed: updated header to correct md formating
+- fixed: wrong title in search
+- removed: custom comments id for consistency
+
+2.3 (2013-07-24):
+
+- added: sorting of subpages
+- added: static subpages can be moved to other parent page (by editing)
+- added: own view for search results
+
+2.2 (2013-04-05):
+
+- added: dutch translation
+- added: static pages are searchable
+- changed: static page without subpages now in one column layout
+- fixed: missing language key for object:static
+- fixed: manage link not showing
+- fixed: sorting of menu items
+- fixed: when deleting a parent page, the first child will be the new parent
+
+2.1 (2012-02-16):
+
+- added: Full Support for Elgg 1.8.3
+- added: permalinks to pages
+- changed: always use content layout for static pages for consistent styling
+
+2.0 (2011-10-25):
+
+- changed: made compatible with Elgg 1.8
+
+1.2 (2011-07-12):
+
+- added: friendly title links (no more guids)
+	
+1.1 (2011-07-08):
+
+- added: option to create subpages (max 1 level)
+- added: 2 column layout + menu when page has subpages or is a subpage
+
+1.0:
+
+- initial version
