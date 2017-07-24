@@ -82,12 +82,15 @@ if (elgg_is_active_plugin('static')) {
 		echo '<li class="elgg-menu-item-groups"><a href="'.$url.'" class="elgg-menu-content">'.$title.'</a></li>';
 	}
 }
+
+// Contacto
 if (elgg_is_active_plugin('elgg_contact')) {
 	$url = '/contact';
 	$title = elgg_echo('contact:contact');
 	echo '<li class="elgg-menu-item-groups"><a href="'.$url.'" class="elgg-menu-content">'.$title.'</a></li>';
 }
 
+// Donar
 $url = 'https://donar.reevo.org';
 $title = elgg_echo('aalborg_theme_reevo:donate');
 echo '<li class="elgg-menu-item-groups"><a href="'.$url.'" class="elgg-menu-content">'.$title.'</a></li>';

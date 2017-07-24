@@ -12,6 +12,9 @@
 REEVO Customizations
 *****************************************/
 
+body {
+	background-image: url('/mod/reevo_theme/graphics/background.jpg');
+}
 /*Topbar*/
 
 .elgg-page-topbar {
