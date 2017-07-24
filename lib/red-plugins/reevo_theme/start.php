@@ -164,6 +164,13 @@ function reevo_theme_pagesetup() {
 		'link_class' => 'navbar-search',
 	));
 
+	// Agrega link al mapa
+	elgg_register_menu_item('site', array(
+  	'name' => 'contact',
+		'text' => elgg_echo('aalborg_theme_reevo:map'),
+		'href' => 'http://mapa.reevo.org'
+	));
+
 
 }
 
