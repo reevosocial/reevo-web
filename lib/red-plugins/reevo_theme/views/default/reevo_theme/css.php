@@ -12,6 +12,9 @@
 REEVO Customizations
 *****************************************/
 
+body {
+	background-image: url('/mod/reevo_theme/graphics/background.jpg');
+}
 /*Topbar*/
 
 .elgg-page-topbar {
@@ -64,6 +67,44 @@ REEVO Customizations
 	box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.1);
 	margin: 9px 0 0 0;
 }
+
+#topbar-menu-text {
+	float: left;
+	display: block;
+}
+
+#topbar-menu-text li {
+	font-size: 9pt;
+	padding: 5px 10px;
+	height: 32px;
+  box-sizing: border-box;
+	display: inline-block;
+}
+
+#topbar-menu-text li a {
+	color: #ccc;
+}
+
+#topbar-menu-text li:hover {
+	color: #fff;
+	background-color: #19191A;
+	text-decoration: none;
+}
+
+#topbar-menu-text li:hover a, #topbar-menu-text li a:hover {
+	color: #fff;
+	background-color: #19191A;
+	text-decoration: none;
+}
+
+.elgg-avatar-topbar img {
+	border: 1px solid #ccc;
+}
+
+.elgg-menu-item-messages {
+	display: none;
+}
+
 
 /* ***************************************
 	MISC

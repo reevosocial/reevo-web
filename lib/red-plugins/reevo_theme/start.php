@@ -36,7 +36,7 @@ function reevo_theme_addlogo() {
 	elgg_register_menu_item('topbar', array(
 	    'name' => 'logo',
 	    'href' => '/',
-	    'text' => "<img src=\"$logo_url\" alt=\"Ir a la portada\" width=\"100\" height=\"24\" />",
+	    'text' => "<img src=\"$logo_url\" alt=\"Ir a la portada\" width=\"90\" height=\"24\" />",
 	    'priority' => 1,
 	    'link_class' => 'elgg-topbar-logo',
 	));
@@ -173,7 +173,7 @@ function reevo_theme_pagesetup() {
 elgg_register_plugin_hook_handler('register', 'menu:site', 'reevo_theme_navbar');
 function reevo_theme_navbar($hook, $type, $return, $params) {
 
-    $remove = array('file', 'bookmarks', 'activity', 'pages', 'thewire');
+    $remove = array('groups', 'members', 'file', 'bookmarks', 'activity', 'pages', 'thewire');
 
     foreach($return as $key => $item) {
         if (in_array($item->getName(), $remove)) {

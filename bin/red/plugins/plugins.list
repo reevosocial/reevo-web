@@ -37,6 +37,8 @@ uservalidationbyemail
 mustache
 notifications_editor
 notifications_tools
+static
+elgg_contact
 
 mediawiki
 reevo

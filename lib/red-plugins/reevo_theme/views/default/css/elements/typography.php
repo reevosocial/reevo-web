@@ -78,7 +78,7 @@ h1, h2, h3, h4, h5, h6 {
 	font-weight: bold;
 	color: #444;
 	font-family: "Lato", "Open Sans", "Helvetica Neue", Helvetica, "Lucida Grande", Arial, sans-serif;
-
+	text-transform: uppercase;
 	text-rendering: optimizelegibility;
 }
 
