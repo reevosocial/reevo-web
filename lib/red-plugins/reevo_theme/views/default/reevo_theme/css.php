@@ -15,6 +15,17 @@ REEVO Customizations
 body {
 	background-image: url('/mod/reevo_theme/graphics/background.jpg');
 }
+
+/*Tipografias*/
+
+.elgg-layout .elgg-output h2 {
+	margin: 25px 0px 10px;
+}
+
+.elgg-heading-main {
+	font-size: 2em;
+}
+
 /*Topbar*/
 
 .elgg-page-topbar {
