@@ -16,6 +16,12 @@ body {
 	background-image: url('/mod/reevo_theme/graphics/background.jpg');
 }
 
+/*Limite de ancho*/
+.elgg-inner {
+    max-width: 1170px;
+    margin: 0 auto;
+}
+
 /*Tipografias*/
 
 .elgg-layout .elgg-output h2 {
