@@ -68,4 +68,13 @@ Ver y comentar en este enlace:
 	'blog:numbertodisplay' => 'N&uacute;mero de publicaciones a mostrar',
 	'blog:noblogs' => 'No hay publicaciones'
 
+  // event-manager
+
+  'event_manager:event'  => 'Participar del evento',
+  'event_manager:event:rsvp' => 'Inscripción',
+  'event_manager:event:relationship:event_attending'  => 'Quiero participar',
+  'event_manager:event:relationship:event_attending:undo'  => 'Cancelar mi participación',
+  'event_manager:river:event_relationship:create:event_attending' => '%s participará de %s',
+  'event_manager:edit:form:fee' => 'Costo',
+
 );
