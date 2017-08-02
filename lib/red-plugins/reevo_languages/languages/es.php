@@ -66,7 +66,7 @@ Ver y comentar en este enlace:
 	'blog:widget:description' => 'Mostrar las &uacute;ltimas publicaciones del Blog',
 	'blog:moreblogs' => 'M&aacute;s publicaciones',
 	'blog:numbertodisplay' => 'N&uacute;mero de publicaciones a mostrar',
-	'blog:noblogs' => 'No hay publicaciones'
+	'blog:noblogs' => 'No hay publicaciones',
 
   // event-manager
 
