@@ -1,0 +1,8 @@
+/*Oculta campos extras del profile del grupo */
+
+#body-events .elgg-owner-block,
+#body-events .elgg-menu-item-addthisevent,
+#body-events .elgg-listing-summary-subtitle
+{
+  display: none;
+}
