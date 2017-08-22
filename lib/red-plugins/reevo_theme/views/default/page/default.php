@@ -12,6 +12,8 @@
  * @uses $vars['sysmessages'] A 2d array of various message registers, passed from system_messages()
  */
 
+
+
 // backward compatability support for plugins that are not using the new approach
 // of routing through admin. See reportedcontent plugin for a simple example.
 if (elgg_get_context() == 'admin') {
@@ -85,8 +87,19 @@ $params = array(
 	'body' => $body,
 );
 
+$attr_id = elgg_get_context();
+$user = elgg_get_logged_in_user_entity();
+if ($user) {
+	$attr_user = $user['username'];
+}
+
+$vars['body_attrs'] = "";
+$vars['body_attrs']['id'] = 'body-'.$attr_id;
+$vars['body_attrs']['class'] = 'body-'.$attr_user;
+
 if (isset($vars['body_attrs'])) {
 	$params['body_attrs'] = $vars['body_attrs'];
 }
+
 
 echo elgg_view("page/elements/html", $params);
