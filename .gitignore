@@ -1,4 +1,5 @@
 .gitmodules
+*.old
 
 bin/database_auth.sh
 bin/red/import/*.json
