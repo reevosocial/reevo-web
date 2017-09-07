@@ -1,5 +1,8 @@
 <?php
 
+// Agrega botones de registro y logueo para usuarios no logueados, los mismos redirigen a la pantalla de inscripcion al evento usando el paramentro 'goto' que provee el plugin profile_manager_joingroups
+
+
 $event = elgg_extract('entity', $vars);
 if (!($event instanceof Event)) {
 	return;
@@ -77,10 +80,11 @@ if (elgg_is_logged_in()) {
 			'text' => elgg_echo('event_manager:event:register:register_link'),
 		];
 	} else {
+		// Agrega botones de registro y logueo para usuarios no logueados, los mismos redirigen a la pantalla de inscripcion al evento usando el paramentro 'goto' que provee el plugin profile_manager_joingroups
 		if ($full_view) {
 			$rsvp_options[] = [
 				'link_attributes' => [
-					'href' => '/login/?goto=http://red.reevo.dev' . '/events/event/register/' . $event->getGUID(),
+					'href' => '/login/?goto=' . '/events/event/register/' . $event->getGUID(),
 				],
 				'text' => elgg_echo('event_manager:event:register:log_in_first'),
 				'textonly' => false,
@@ -91,7 +95,7 @@ if (elgg_is_logged_in()) {
 			];
 			$rsvp_options[] = [
 				'link_attributes' => [
-					'href' => '/register/?goto=http://red.reevo.dev' . '/events/event/register/' . $event->getGUID(),
+					'href' => '/register/?goto=' . '/events/event/register/' . $event->getGUID(),
 				],
 				'text' => elgg_echo('event_manager:event:register:register_first'),
 				'textonly' => false,
