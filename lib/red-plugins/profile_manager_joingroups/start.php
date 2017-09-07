@@ -75,6 +75,7 @@ function profile_manager_redirect($event, $object_type, $object) {
 			if ($link == $login || $link == elgg_get_site_url()) {
 				// Si el usuario ya existe y se loguea desde el form de login o desde la portada, va a su pagina de perfil
 				forward("/profile/{$user->username}");
+				
 			} else {
 				// Si el usuario ya existe y se loguea desde el form tipo popup, vuelve a la pagina donde estaba
 				forward($link);
