@@ -9,7 +9,7 @@ messages
 blog
 file
 
-#profile_manager
+profile_manager
 ### genera el error: ERROR: 'create, member_of_site' event is no longer triggered. Update your event registration to use 'create, relationship'
 
 nofriends
@@ -18,11 +18,11 @@ group_operators
 group_alias
 subgroups
 groups_tools
-threads
-elggman
+#threads
+#elggman
 
 #fontawesome
-#profile_manager_joingroups
+profile_manager_joingroups
 #roles
 #roles_group_admins
 widget_manager
@@ -33,9 +33,10 @@ elgg-opengraph
 tag_tools
 recext
 bulk_user_admin
-uservalidationbyemail
-mustache
-notifications_editor
+#uservalidationbyemail
+#mustache
+#notifications_editor
+elgg_recaptcha
 notifications_tools
 static
 elgg_contact
