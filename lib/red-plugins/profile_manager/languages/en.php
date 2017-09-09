@@ -44,8 +44,6 @@ return [
 	'profile_manager:settings:default_profile_type' => "Default profile type on registration form",
 	'profile_manager:settings:hide_profile_type_default' => "Hide the 'Default' profile type on registration form",
 
-	'profile_manager:settings:hide_non_editables' => 'Hide the non editable fields from the Edit Profile form',
-
 	'profile_manager:settings:edit_profile_mode' => "How to show the 'edit profile' screen",
 	'profile_manager:settings:edit_profile_mode:list' => "List",
 	'profile_manager:settings:edit_profile_mode:tabbed' => "Tabbed",
@@ -66,6 +64,8 @@ return [
 	'profile_manager:settings:enable_username_change' => "Allow users to change their username in settings",
 	'profile_manager:settings:enable_username_change:option:admin' => "Admin only",
 	'profile_manager:settings:enable_site_join_river_event' => "Add a river event when people join this site",
+	'profile_manager:settings:profile_completeness:avatar' => "Avatar completeness percentage",
+	'profile_manager:settings:profile_completeness:avatar:help' => "If using profile completeness features you can, optionally, configure here how much a profile avatar counts towards profile completeness. The remainder percentage will be used for the profile field configuration.",
 	
 	'profile_manager:settings:registration:terms' => "To show an 'Accept terms' field on the registration page, please fill in the URL to the terms below",
 	'profile_manager:settings:registration:extra_fields' => "Where to show extra profile fields",
@@ -82,12 +82,15 @@ return [
 	// Field Configuration
 	'profile_manager:admin:metadata_name' => 'Name',
 	'profile_manager:admin:metadata_label' => 'Label',
+	'profile_manager:admin:metadata_input_label' => 'Input label',
+	'profile_manager:admin:metadata_input_label:help' => 'Used on register and profile edit form instead of the label',
 	'profile_manager:admin:metadata_hint' => 'Hint',
 	'profile_manager:admin:metadata_placeholder' => 'Placeholder',
 	'profile_manager:admin:metadata_options' => 'Options (comma separated)',
 	'profile_manager:admin:field_type' => "Field Type",
 	'profile_manager:admin:options:dropdown' => 'Dropdown',
 	'profile_manager:admin:options:radio' => 'Radio',
+	'profile_manager:admin:options:tel' => 'Telephone',
 	'profile_manager:admin:options:multiselect' => 'MultiSelect',
 	'profile_manager:admin:options:file' => 'File',
 	'profile_manager:admin:options:pm_rating' => 'Rating',
@@ -132,6 +135,7 @@ return [
 	// Custom fields categories
 	'profile_manager:categories:add' => "Add a new category",
 	'profile_manager:categories:edit' => "Edit a category",
+	'profile_manager:categories:edit:related_types' => "Related profile types",
 	'profile_manager:categories:list:title' => "Categories",
 	'profile_manager:categories:list:default' => "Default",
 	'profile_manager:categories:list:system' => "System (admin only)",
@@ -142,6 +146,9 @@ return [
 	// Custom Profile Types
 	'profile_manager:profile_types:add' => "Add a new profile type",
 	'profile_manager:profile_types:edit' => "Edit a profile type",
+	'profile_manager:profile_types:edit:related_categories' => "Related categories",
+	'profile_manager:profile_types:edit:metadata_label:singular' => "Label (singular)",
+	'profile_manager:profile_types:edit:metadata_label:plural' => "Label (plural)",
 	'profile_manager:profile_types:list:title' => "Profile Types",
 	'profile_manager:profile_types:list:no_types' => "No profile types defined",
 	'profile_manager:profile_types:delete:confirm' => "Are you sure you wish to delete this profile type?",
@@ -332,15 +339,13 @@ return [
 	'widgets:register:loggedout' => "You need to be logged out to use this widget",
 
 	'profile_manager:input:multi_select:empty_text' => 'Please select ...',
+	'profile_manager:input:multi_select:selected_text' => '# selected',
 
 	// Edit profile => profile type selector
 	'profile_manager:profile:edit:custom_profile_type:label' => "Select your profile type",
 	'profile_manager:profile:edit:custom_profile_type:description' => "Description of selected profile type",
 	'profile_manager:profile:edit:custom_profile_type:default' => "Default",
 
-	// non_editable
-	'profile_manager:non_editable:info' => 'This field can not be edited',
-	
 	// register form mandatory notice
 	'profile_manager:register:mandatory' => "Items marked with a * are mandatory",
 

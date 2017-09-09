@@ -6,3 +6,8 @@
 {
   display: none;
 }
+
+#body-events .elgg-comments {
+    margin-top: 0px;
+    padding-left: 10px; 
+}

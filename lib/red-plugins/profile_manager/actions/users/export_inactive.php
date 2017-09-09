@@ -5,7 +5,7 @@ set_time_limit(0);
 $last_login = sanitise_int(get_input('last_login'), false);
 
 if (empty($last_login)) {
-	register_error(elgg_echo('InvalidParameterException:NoDataFound'));
+	register_error(elgg_echo('error:missing_data'));
 	forward(REFERER);
 }
 
@@ -22,7 +22,7 @@ foreach ($fields as $field) {
 }
 fputcsv($df, $headers, ';');
 
-$options = [
+$users = new ElggBatch('elgg_get_entities_from_relationship', [
 	'type' => 'user',
 	'limit' => false,
 	'relationship' => 'member_of_site',
@@ -31,10 +31,9 @@ $options = [
 	'site_guids' => false,
 	'joins' => ['JOIN ' . $dbprefix . 'users_entity ue ON e.guid = ue.guid'],
 	'wheres' => ['ue.last_login <= ' . $last_login],
-	'order_by' => 'ue.last_login'
-];
+	'order_by' => 'ue.last_login',
+]);
 
-$users = new ElggBatch('elgg_get_entities_from_relationship', $options);
 foreach ($users as $user) {
 	$row = [];
 	foreach ($fields as $field) {
@@ -48,7 +47,7 @@ fclose($df);
 $output = ob_get_clean();
 
 if (empty($output)) {
-	register_error(elgg_echo("InvalidParameterException:NoDataFound"));
+	register_error(elgg_echo("error:missing_data"));
 	forward(REFERER);
 }
 

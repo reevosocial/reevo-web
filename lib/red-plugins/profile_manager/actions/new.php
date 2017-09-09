@@ -14,6 +14,7 @@ $site_guid = elgg_get_site_entity()->getGUID();
 
 $metadata_name = trim(get_input('metadata_name'));
 $metadata_label = trim(get_input('metadata_label'));
+$metadata_input_label = trim(get_input('metadata_input_label'));
 $metadata_hint = trim(get_input('metadata_hint'));
 $metadata_placeholder = trim(get_input('metadata_placeholder'));
 $metadata_type = get_input('metadata_type');
@@ -42,36 +43,30 @@ if ($guid) {
 }
 if ($current_field && ($current_field->getSubtype() != CUSTOM_PROFILE_FIELDS_PROFILE_SUBTYPE && $current_field->getSubtype() != CUSTOM_PROFILE_FIELDS_GROUP_SUBTYPE)) {
 	// wrong custom field type
-	register_error(elgg_echo('profile_manager:action:new:error:type2'));
-	forward(REFERER);
+	return elgg_error_response(elgg_echo('profile_manager:action:new:error:type'));
 }
 
 if (!in_array($type, ['profile', 'group'])) {
 	// wrong custom field type
-	register_error(elgg_echo('profile_manager:action:new:error:type'));
-	forward(REFERER);
+	return elgg_error_response(elgg_echo('profile_manager:action:new:error:type'));
 }
 
 if (empty($metadata_name)) {
 	// no name
-	register_error(elgg_echo('profile_manager:actions:new:error:metadata_name_missing'));
-	forward(REFERER);
+	return elgg_error_response(elgg_echo('profile_manager:actions:new:error:metadata_name_missing'));
 }
 
 if (in_array(strtolower($metadata_name), $reserved_metadata_names) || !preg_match('/^[a-zA-Z0-9_]{1,}$/', $metadata_name)) {
 	// invalid name
-	register_error(elgg_echo('profile_manager:actions:new:error:metadata_name_invalid'));
-	forward(REFERER);
+	return elgg_error_response(elgg_echo('profile_manager:actions:new:error:metadata_name_invalid'));
 }
 
 if (in_array($metadata_type, ['dropdown', 'radio', 'multiselect']) && empty($metadata_options)) {
-	register_error(elgg_echo('profile_manager:actions:new:error:metadata_options'));
-	forward(REFERER);
+	return elgg_error_response(elgg_echo('profile_manager:actions:new:error:metadata_options'));
 }
 
 if (empty($current_field) && array_key_exists($metadata_name, elgg_get_config('profile_fields'))) {
-	register_error(elgg_echo('profile_manager:actions:new:error:metadata_name_invalid'));
-	forward(REFERER);
+	return elgg_error_response(elgg_echo('profile_manager:actions:new:error:metadata_name_invalid'));
 }
 
 $new_options = [];
@@ -93,8 +88,7 @@ if (in_array($metadata_type, ['dropdown', 'radio', 'multiselect'])) {
 }
 
 if ($options_error) {
-	register_error(elgg_echo('profile_manager:actions:new:error:metadata_options'));
-	forward(REFERER);
+	return elgg_error_response(elgg_echo('profile_manager:actions:new:error:metadata_options'));
 }
 
 $subtype = "custom_{$type}_field";
@@ -125,6 +119,12 @@ if (!empty($metadata_label)) {
 	$field->metadata_label = $metadata_label;
 } elseif ($current_field) {
 	unset($field->metadata_label);
+}
+
+if (!empty($metadata_input_label)) {
+	$field->metadata_input_label = $metadata_input_label;
+} elseif ($current_field) {
+	unset($field->metadata_input_label);
 }
 
 if (!empty($metadata_hint)) {
@@ -160,13 +160,14 @@ if (empty($current_field)) {
 	$field->order = $max_fields;
 }
 
-if ($field->save()) {
-	system_message(elgg_echo('profile_manager:actions:new:success'));
-} else {
-	register_error(elgg_echo('profile_manager:actions:new:error:unknown'));
+if (!$field->save()) {
+	// update system cache
+	elgg_get_system_cache()->delete("profile_manager_{$type}_fields_{$site_guid}");
+
+	return elgg_error_response(elgg_echo('profile_manager:actions:new:error:unknown'));
 }
 
 // update system cache
 elgg_get_system_cache()->delete("profile_manager_{$type}_fields_{$site_guid}");
 
-forward(REFERER);
+return elgg_ok_response('', elgg_echo('profile_manager:actions:new:success'));

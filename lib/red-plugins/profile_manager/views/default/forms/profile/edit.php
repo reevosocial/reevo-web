@@ -48,8 +48,8 @@ if (!empty($cats)) {
 		if ($types) {
 			$types_description = '';
 			
-			$dropdown_options = [''  => elgg_echo('profile_manager:profile:edit:custom_profile_type:default')];
-			
+			$dropdown_options = ['' => elgg_echo('profile_manager:profile:edit:custom_profile_type:default')];
+
 			foreach ($types as $type) {
 				
 				$dropdown_options[$type->getGUID()] = $type->getTitle();
@@ -67,6 +67,14 @@ if (!empty($cats)) {
 					], $type_description);
 				}
 			}
+			
+			if (elgg_get_plugin_setting('hide_profile_type_default', 'profile_manager') == 'yes') {
+				// only unset if the current type exists in the options, otherwise keep default intact
+				if (array_key_exists($profile_type, $dropdown_options)) {
+					unset($dropdown_options['']);
+				}
+			}
+			
 			
 			$types_input = elgg_format_element('label', [], elgg_echo('profile_manager:profile:edit:custom_profile_type:label'));
 			$types_input .= elgg_view('input/dropdown', [
@@ -146,22 +154,20 @@ if (!empty($cats)) {
 		$list_content .= '<fieldset>';
 		
 		// display each field for currect category
-		$hide_non_editables = elgg_get_plugin_setting('hide_non_editables', 'profile_manager');
-		
 		$visible_fields = 0;
 		
 		foreach ($fields[$cat_guid] as $field) {
+			
+			if ($field->user_editable == 'no') {
+				// non editable fields should not be on the form
+				continue;
+			}
+			
+			$valtype = $field->metadata_type;
 			$metadata_name = $field->metadata_name;
 			
 			// get options
 			$options = $field->getOptions();
-			
-			// get type of field
-			if ($field->user_editable == 'no') {
-				$valtype = 'non_editable';
-			} else {
-				$valtype = $field->metadata_type;
-			}
 						
 			// get value
 			$metadata = elgg_get_metadata([
@@ -180,14 +186,10 @@ if (!empty($cats)) {
 				$access_id = get_default_access($user);
 			}
 
-			if ($hide_non_editables == 'yes' && ($valtype == 'non_editable')) {
-				$field_result = '<div class="hidden">';
-			} else {
-				$visible_fields++;
-				$field_result = '<div>';
-			}
+			$visible_fields++;
+			$field_result = '<div>';
 			
-			$field_result .= elgg_format_element('label', [], $field->getTitle());
+			$field_result .= elgg_format_element('label', [], $field->getTitle(true));
 			
 			$hint = $field->getHint();
 			if ($hint) {
@@ -278,7 +280,11 @@ if ($simple_access_control == 'yes') {
 	<?php
 }
 
-$foot = elgg_view('input/hidden', ['name' => 'guid', 'value' => $user->guid]);
-$foot .= elgg_view('input/submit', ['value' => elgg_echo('save')]);
+echo elgg_view_field([
+	'#type' => 'hidden',	
+	'name' => 'guid', 
+	'value' => $user->guid,
+]);
 
-echo elgg_format_element('div', ['class' => 'elgg-foot'], $foot);
+$footer = elgg_view('input/submit', ['value' => elgg_echo('save')]);
+elgg_set_form_footer($footer);
