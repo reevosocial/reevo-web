@@ -60,7 +60,7 @@ class ProfileFields {
 
 		// make new result
 		foreach ($ordered_entities as $entity) {
-			if ($entity->admin_only != 'yes' || elgg_is_admin_logged_in()) {
+			if ($entity->admin_only != 'yes' || (elgg_is_admin_logged_in() || elgg_get_ignore_access())) {
 
 				$result[$entity->metadata_name] = $entity->metadata_type;
 
@@ -83,7 +83,7 @@ class ProfileFields {
 		}
 
 		if (count($result) > 0) {
-			$result['custom_profile_type'] = 'non_editable';
+			$result['custom_profile_type'] = 'hidden';
 		}
 		
 		return $result;
@@ -136,7 +136,7 @@ class ProfileFields {
 	
 		// Order the group fields and filter some types out
 		foreach ($entities as $group_field) {
-			if ($group_field->admin_only != 'yes' || elgg_is_admin_logged_in()) {
+			if ($group_field->admin_only != 'yes' || (elgg_is_admin_logged_in() || elgg_get_ignore_access())) {
 				$ordered[$group_field->order] = $group_field;
 			}
 		}

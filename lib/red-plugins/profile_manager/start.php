@@ -23,19 +23,14 @@ define('CUSTOM_PROFILE_FIELDS_PROFILE_TYPE_CATEGORY_RELATIONSHIP', 'custom_profi
  * @return void
  */
 function profile_manager_init() {
-	// register libraries
-	elgg_register_js('jquery.ui.multiselect', 'mod/profile_manager/vendors/jquery_ui_multiselect/jquery.multiselect.js');
-	
+
 	// Extend CSS
 	elgg_extend_view('css/admin', 'css/profile_manager/global.css');
 	elgg_extend_view('css/admin', 'css/profile_manager/admin.css');
-	elgg_extend_view('css/admin', 'css/profile_manager/multiselect.css');
-	elgg_extend_view('css/elgg', 'css/profile_manager/multiselect.css');
 	elgg_extend_view('css/elgg', 'css/profile_manager/global.css');
 	elgg_extend_view('css/elgg', 'css/profile_manager/site.css');
-		
-	// Register Page handler
-	elgg_register_page_handler('profile_manager', 'profile_manager_page_handler');
+	
+	elgg_register_css('jquery/multiselect', elgg_get_simplecache_url('jquery/multiselect.css'));
 	
 	// admin user add, registered here to overrule default action
 	elgg_register_action('useradd', dirname(__FILE__) . '/actions/useradd.php', 'admin');
@@ -63,8 +58,6 @@ function profile_manager_init() {
 	// extend public pages
 	elgg_register_plugin_hook_handler('public_pages', 'walled_garden', '\ColdTrick\ProfileManager\Sites::publicPages');
 	
-	elgg_register_plugin_hook_handler('permissions_check:annotate', 'site', '\ColdTrick\ProfileManager\Sites::permissionsCheckAnnotate');
-	
 	// enable username change
 	elgg_extend_view('forms/account/settings', 'profile_manager/account/username', 50); // positioned at the beginning of the options
 
@@ -73,57 +66,18 @@ function profile_manager_init() {
 	
 	elgg_register_plugin_hook_handler('view_vars', 'input/form', '\ColdTrick\ProfileManager\Users::registerViewVars');
 	
+	// menu hooks
+	elgg_register_plugin_hook_handler('register', 'menu:page', '\ColdTrick\ProfileManager\Menus::registerAdmin');
+	
 	// site join event handler
-	elgg_register_event_handler('create', 'member_of_site', '\ColdTrick\ProfileManager\Sites::createMember');
-	elgg_register_event_handler('delete', 'member_of_site', '\ColdTrick\ProfileManager\Sites::deleteMember');
+	elgg_register_event_handler('create', 'relationship', '\ColdTrick\ProfileManager\Sites::createMember');
+	elgg_register_event_handler('delete', 'relationship', '\ColdTrick\ProfileManager\Sites::deleteMember');
 	
 	// register ajax views
 	elgg_register_ajax_view('forms/profile_manager/type');
 	elgg_register_ajax_view('forms/profile_manager/category');
 	elgg_register_ajax_view('forms/profile_manager/group_field');
 	elgg_register_ajax_view('forms/profile_manager/profile_field');
-}
-
-/**
- * Function to handle the nice urls for Profile Manager pages
- *
- * @param array $page pages
- *
- * @return void|boolean
- */
-function profile_manager_page_handler($page) {
-	switch ($page[0]) {
-		case 'validate_username':
-			if (elgg_is_logged_in()) {
-				$valid = profile_manager_validate_username(get_input('username'));
-
-				echo json_encode(['valid' => $valid]);
-				
-				return true;
-			}
-			break;
-	}
-}
-
-/**
- * Function to add menu items to the pages
- *
- * @return void
- */
-function profile_manager_pagesetup() {
-	if (!elgg_in_context('admin') || !elgg_is_admin_logged_in()) {
-		return;
-	}
-		
-	elgg_load_js('lightbox');
-	elgg_load_css('lightbox');
-	
-	elgg_register_admin_menu_item('administer', 'export', 'users');
-	elgg_register_admin_menu_item('administer', 'inactive', 'users');
-	
-	if (elgg_is_active_plugin('groups')) {
-		elgg_register_admin_menu_item('configure', 'group_fields', 'appearance');
-	}
 }
 
 /**
@@ -150,7 +104,6 @@ function profile_manager_plugins_boot() {
 // elgg initialization events
 elgg_register_event_handler('plugins_boot', 'system', 'profile_manager_plugins_boot');
 elgg_register_event_handler('init', 'system', 'profile_manager_init');
-elgg_register_event_handler('pagesetup', 'system', 'profile_manager_pagesetup');
 
 // users
 elgg_register_event_handler('create', 'user', '\ColdTrick\ProfileManager\Users::create');

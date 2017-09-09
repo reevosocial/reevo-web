@@ -68,9 +68,8 @@ li.custom_fields_edit_profile_category {
 
 .elgg-icon.profile_manager_validate_icon {
 	margin-left: -22px;
-	margin-top: 8px;
-	position: absolute;
-	padding-left: 28px;
+    margin-top: 8px;
+    position: absolute;
 }
 
 /* register form */
@@ -107,30 +106,5 @@ li.custom_fields_edit_profile_category {
 #profile_manager_username {
 	position: relative;
 }
-#profile_manager_username > .elgg-icon {
-	position: absolute;
-	right: 5px;
-	top: 8px;
-	display: none;
-}
 
 /* End Account Username Change */
-
-
-.fa-check-circle {
-	background-position: 0 -126px;
-	display: inline-block;
-}
-
-.fa-exclamation-circle  {
-	background-position: 0 -252px;
-	display: inline-block;
-}
-
-.elgg-icon-info-circle {
-	background-position: 0 -469px;
-}
-.button-disabled, .button-disabled:hover {
-	background: grey;
-	cursor: not-allowed;
-}

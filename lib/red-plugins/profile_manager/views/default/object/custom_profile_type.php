@@ -10,6 +10,9 @@
 * @link http://www.coldtrick.com/
 */
 
+elgg_load_js('lightbox');
+elgg_load_css('lightbox');
+
 $entity = $vars['entity'];
 
 // get title
@@ -20,7 +23,10 @@ $content .= elgg_view('output/url', [
 	'href' => 'ajax/view/forms/profile_manager/type?guid=' .  $entity->guid,
 	'class' => 'elgg-lightbox',
 	'title' => elgg_echo('edit'),
-	'text' => elgg_view_icon('settings-alt')
+	'text' => elgg_view_icon('settings-alt'),
+	'data-colorbox-opts' => json_encode([
+		'trapFocus' => false,
+	]),
 ]);
 
 // delete link
