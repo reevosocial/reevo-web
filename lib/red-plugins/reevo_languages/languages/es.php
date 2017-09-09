@@ -76,5 +76,7 @@ Ver y comentar en este enlace:
   'event_manager:event:relationship:event_attending:undo'  => 'Cancelar mi participación',
   'event_manager:river:event_relationship:create:event_attending' => '%s participará de %s',
   'event_manager:edit:form:fee' => 'Costo',
+  'event_manager:event:attendees' => 'Participantes',
+  'event_manager:event:relationship:event_attending:label' => 'Participantes',
 
 );
