@@ -7,7 +7,7 @@
  *
  * @package Elgg.Core
  * @subpackage Comments
- */ 
+ */
 
 $entity_guid = (int) get_input('entity_guid', 0, false);
 $comment_guid = (int) get_input('comment_guid', 0, false);
