@@ -33,6 +33,7 @@ switch ($subtype) {
 		if ($full_view) {
 			$anchor = "<a name=\"comment-{$comment->getGUID()}\"></a>";
 
+
 			$menu = elgg_view_menu('entity', array(
 				'entity' => $comment,
 				'handler' => 'comment',
@@ -70,8 +71,9 @@ switch ($subtype) {
 			$body = <<<HTML
 		$anchor
 		<div class="mbn">
+			$menu
 			<h4>
-				$time_link - $commenter->name 
+				$time_link - $commenter->name
 			</h4>
 			$comment_text
 		</div>
