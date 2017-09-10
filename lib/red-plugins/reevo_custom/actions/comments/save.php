@@ -154,12 +154,8 @@ if ($comment_guid) {
 
     		echo elgg_view_module('info', $rel_title, $rel_content, ['class' => 'event-manager-event-view-attendees']);
     	}
-
-
     }
-
-
-  }
+  }  // fin de else
 
 }
 
