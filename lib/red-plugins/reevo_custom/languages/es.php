@@ -18,6 +18,11 @@ Puedes ver esta información en la página web del evento:  %s
 Por favor no responda a este correo",
 
   'event_manager:comments:title' =>  'Actualizaciones y novedades sobre el evento',
+  'event_manager:edit:form:addgroups' =>  'Incluir a los inscriptos en los siguientes grupos',
+  'event_manager:edit:form:addgroups:help' =>  'Indica grupos por GUID o alias separados por coma',
+  'event_manager:edit:form:addgroups:help2' =>  'Se incluiran en los grupos a los inscriptos actuales y futuros',
+
+  'event_manager:edit:form:registration_ended:help' =>  'Al marcar esta casilla ninguna de las siguientes opciones tendrá efecto',
 
 
 );
