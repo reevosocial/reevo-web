@@ -25,9 +25,8 @@ function profile_manager_redirect_init() {
 
 
 function profile_manager_joingroups($event, $object_type, $object) {
-if (($object instanceof ElggUser) && ($event == 'create') && ($object_type == 'user')) {
-	$groups = get_input('groups');
-
+	if (($object instanceof ElggUser) && ($event == 'create') && ($object_type == 'user')) {
+		$groups = get_input('groups');
 		$groups = split(',', $groups);
 		//for each group ids
 		foreach($groups as $groupName) {
@@ -35,12 +34,10 @@ if (($object instanceof ElggUser) && ($event == 'create') && ($object_type == 'u
 			if (is_numeric($groupName)) {
 				$groupId = $groupName;
 				error_log('es numerico');
-
 			} else {
 				$group = get_group_from_group_alias($groupName);
 				$groupId = $group->guid;
 				error_log('no es numerico, es '.$groupName.' su id es '. $groupId);
-
 			};
 			$ia = elgg_set_ignore_access(true);
 			$groupEnt = get_entity($groupId);
@@ -75,7 +72,7 @@ function profile_manager_redirect($event, $object_type, $object) {
 			if ($link == $login || $link == elgg_get_site_url()) {
 				// Si el usuario ya existe y se loguea desde el form de login o desde la portada, va a su pagina de perfil
 				forward("/profile/{$user->username}");
-				
+
 			} else {
 				// Si el usuario ya existe y se loguea desde el form tipo popup, vuelve a la pagina donde estaba
 				forward($link);
