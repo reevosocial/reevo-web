@@ -18,7 +18,7 @@ return array(
         'item:object:group_tools_group_mail' => "Mail del Grupo",
 
         // menu
-        'group_tools:menu:mail' => "Miembros del Mail",
+        'group_tools:menu:mail' => "Correo masivo a los miembros",
         'group_tools:menu:invitations' => "Gestionar invitaciones",
         
 		'admin:groups:bulk_delete' => "Borrar varios grupos",
