@@ -24,5 +24,7 @@ Por favor no responda a este correo",
 
   'event_manager:edit:form:registration_ended:help' =>  'Al marcar esta casilla ninguna de las siguientes opciones tendrá efecto',
 
+  'event_manager:edit:form:fbicon' =>  'Imagen del evento obtenida de Facebook',
+
 
 );
