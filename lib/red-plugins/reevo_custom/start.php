@@ -46,18 +46,19 @@ function reevo_custom_init() {
 
 function event_manager_set_fbicon($hook, $type, $url) {
 	global $event;
-	if ($event->getSubtype() == 'event') {
-		$fbcover = get_input('fbcover');
-		$prefix = "event_image/".$event->guid;
-		$filehandler = new ElggFile();
-		$filehandler->owner_guid = $event->owner_guid;
-		$filehandler->setFilename($prefix . ".jpg");
-		$filehandler->open("write");
-		$filehandler->write(file_get_contents($fbcover));
-		$filehandler->close();
-		$event->saveIconFromElggFile($filehandler);
+	if (!empty($event)) {
+		if ($event->getSubtype() == 'event') {
+			$fbcover = get_input('fbcover');
+			$prefix = "event_image/".$event->guid;
+			$filehandler = new ElggFile();
+			$filehandler->owner_guid = $event->owner_guid;
+			$filehandler->setFilename($prefix . ".jpg");
+			$filehandler->open("write");
+			$filehandler->write(file_get_contents($fbcover));
+			$filehandler->close();
+			$event->saveIconFromElggFile($filehandler);
+		}
 	}
-
 }
 
 function event_manager_edit_addgroups($hook, $type, $url, $params) {
