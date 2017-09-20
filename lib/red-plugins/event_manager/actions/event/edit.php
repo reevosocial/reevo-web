@@ -2,7 +2,7 @@
 
 // start a new sticky form session in case of failure
 elgg_make_sticky_form('event');
-
+global $event;
 $title = get_input('title');
 
 $event_start = (int) get_input('event_start');
@@ -117,7 +117,7 @@ if (!empty($questions)) {
 		$questiontext = elgg_extract('questiontext', $question);
 		$required = elgg_extract('required', $question);
 		$required = !empty($required) ? 1 : 0;
-		
+
 		if ($question_guid) {
 			$question = get_entity($question_guid);
 			if (!($question instanceof \EventRegistrationQuestion)) {
@@ -129,19 +129,19 @@ if (!empty($questions)) {
 			$question->owner_guid = $event->guid;
 			$question->access_id = $event->access_id;
 		}
-		
+
 		$question->title = $questiontext;
-		
+
 		if ($question->save()) {
 			$question->fieldtype = $fieldtype;
 			$question->required = $required;
 			$question->fieldoptions = $fieldoptions;
 			$question->order = $order;
-		
+
 			$question->addRelationship($event->getGUID(), 'event_registrationquestion_relation');
-			
+
 			$order++;
-			
+
 			$saved_questions[] = $question->guid;
 		}
 	}
@@ -152,7 +152,7 @@ foreach ($current_questions as $current_question) {
 	if (in_array($current_question->guid, $saved_questions)) {
 		continue;
 	}
-	
+
 	$current_question->delete();
 }
 
