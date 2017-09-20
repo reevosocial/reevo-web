@@ -53,10 +53,9 @@ define(function (require) {
 			var value = textArea.val();
 			var result = textArea.val();
 			// this is a temporary work-around for #3971
-			if (content.indexOf('thumbnail.php') != -1) {
-				content = content.replace('size=small', 'size=medium');
+			if (content.indexOf('serve-icon') != -1) {
+				content = content.replace('small', 'large');
 			}
-
 			textArea.focus();
 			if (!elgg.isNullOrUndefined(textArea.prop('selectionStart'))) {
 				var cursorPos = textArea.prop('selectionStart');
