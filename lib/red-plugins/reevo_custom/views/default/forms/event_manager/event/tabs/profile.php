@@ -13,8 +13,12 @@ if (!empty($fbevent)) {
 	$entity = elgg_extract('entity', $vars);
 	$shortdescription = elgg_extract('shortdescription', $vars);
 	$description = elgg_extract('description', $vars);
-	$tags = elgg_extract('tags', $vars);
 }
+
+if (isset($_GET["tags"])) {
+	$tags = $_GET["tags"];
+}
+
 
 $output = '';
 
@@ -48,12 +52,18 @@ if (!empty($fbevent)) {
 		'src' => $fbevent['cover']['source'],
 		'id' => 'fb_icon',
 	]);
+	$fb_icon_url .= elgg_view_field([
+		'#type' => 'text',
+		'name' => 'fbcover',
+		'value' => $fbevent['cover']['source'],
+		'class' => 'hidden',
+	]);
 
 	$output .= elgg_view('elements/forms/field', [
 		'label' => elgg_view('elements/forms/label', [
 			'label' => elgg_echo('event_manager:edit:form:fbicon'),
 		]),
-		'input' => $fb_icon,
+		'input' => $fb_icon_url . $fb_icon,
 	]);
 
 } else {
