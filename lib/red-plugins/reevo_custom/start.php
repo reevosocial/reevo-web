@@ -10,12 +10,55 @@ require_once(dirname(__FILE__) . '/lib/functions.php');
  // register default elgg events
 elgg_register_event_handler('init', 'system', 'reevo_custom_init');
 elgg_register_plugin_hook_handler('action', 'event_manager/event/edit', 'event_manager_edit_addgroups');
+// elgg_register_plugin_hook_handler('action', 'event_manager/event/edit', 'event_manager_set_fbicon', 0);
+
+elgg_register_event_handler('create', 'object', 'event_manager_set_fbicon');
+
 elgg_register_plugin_hook_handler('action', 'event_manager/event/register', 'event_manager_register_addgroups');
+
+elgg_register_page_handler('tools','reevo_custom_pages');
+
+$action_path = dirname(__FILE__) . '/actions/reevo_custom';
+elgg_register_action('reevo_custom/fbevent', "$action_path/fbevent.php");
+
+
+function reevo_custom_pages($page) {
+	$pages = dirname(__FILE__) . '/pages/reevo_custom';
+
+	switch ($page[0]) {
+		case "fbevent":
+			set_input('container_guid', $page[1]);
+			include "$pages/fbevent.php";
+			break;
+
+		default:
+			return false;
+	}
+
+	elgg_pop_context();
+	return true;
+}
 
 function reevo_custom_init() {
 	elgg_extend_view('css/elgg', 'css/reevo_custom.css');
 }
 
+
+function event_manager_set_fbicon($hook, $type, $url) {
+	global $event;
+	if ($event->getSubtype() == 'event') {
+		$fbcover = get_input('fbcover');
+		$prefix = "event_image/".$event->guid;
+		$filehandler = new ElggFile();
+		$filehandler->owner_guid = $event->owner_guid;
+		$filehandler->setFilename($prefix . ".jpg");
+		$filehandler->open("write");
+		$filehandler->write(file_get_contents($fbcover));
+		$filehandler->close();
+		$event->saveIconFromElggFile($filehandler);
+	}
+
+}
 
 function event_manager_edit_addgroups($hook, $type, $url, $params) {
 // Suma a todos los inscriptos a los grupos asociados al evento, incluso cuando se actualiza el listado de grupos

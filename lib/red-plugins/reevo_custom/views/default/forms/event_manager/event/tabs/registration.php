@@ -3,7 +3,12 @@
  * Form fields for entering registration settings
  */
 
-$event = elgg_extract('entity', $vars);
+global $fbevent;
+if (!empty($fbevent)) {
+	$vars['fee_details'] = $fbevent['ticket_uri'];
+} else {
+	$event = elgg_extract('entity', $vars);
+}
 
 echo '<div class="clearfix"><div class="elgg-col elgg-col-1of4">';
 echo elgg_view_field([
@@ -16,9 +21,6 @@ echo elgg_view_field([
 echo '</div>';
 echo '<div class="elgg-col elgg-col-3of4">';
 $field_class = 'pll';
-if (empty($vars['fee'])) {
-	$field_class .= ' hidden';
-}
 echo elgg_view_field([
 	'#type' => 'text',
 	'#label' => elgg_echo('event_manager:edit:form:fee_details'),
@@ -91,6 +93,10 @@ $show_attendees = elgg_view('input/checkboxes', [
 		elgg_echo('event_manager:edit:form:show_attendees') => '1',
 	],
 ]);
+
+if (!isset($vars['registration_ended'])) {
+	$vars['registration_ended'] = '1';
+}
 
 echo elgg_view_field([
 	'#type' => 'checkboxes',

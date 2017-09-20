@@ -9,5 +9,11 @@
 
 #body-events .elgg-comments {
     margin-top: 0px;
-    padding-left: 10px; 
+    padding-left: 10px;
+}
+
+#fb_icon {
+  width: auto;
+  max-width: 300px;
+  display: block;
 }
