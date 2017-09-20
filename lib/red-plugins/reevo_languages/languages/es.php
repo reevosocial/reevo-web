@@ -79,4 +79,7 @@ Ver y comentar en este enlace:
   'event_manager:event:attendees' => 'Participantes',
   'event_manager:event:relationship:event_attending:label' => 'Participantes',
 
+  // Embed
+	'embed:media' => 'Insertar imagen',
+
 );
