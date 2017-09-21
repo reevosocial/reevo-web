@@ -1,0 +1,35 @@
+LIVE NOTIFICATIONS PLUGIN
+
+Fernando Vega Cervantes
+vega.floyd@gmail.com
+https://twitter.com/floydian
+http://community.elgg.org/profile/fvega
+https://github.com/fernandovega
+
+This plugin replaces internal elgg notifications for Elgg 1.9
+
+Features notifications:
+
+- New comments by other users in any publication (supporting new object comment).
+- New user comments in threads of publication where the user participates.
+- Tag user(@username) in some comment.
+- New "Likes".
+- New reply in thread wire
+- Notifications Group: Publication of new resources in the group.
+- Group Discussion Reply: News replies in discussion
+
+The topbar Live Notification icon is updated automatically every 10 seconds, updating the counter when a new notification.
+
+New bonus feature:
+The topbar Menssage icon is updated automatically every 15 seconds, updating the counter when a new messages.
+
+Languages​​: English / Spanish
+
+
+All corrections and suggestions are welcome. I hope it will be useful to the community. Greetings.
+
+To integrate a new event this plugin manually:
+
+It is only necessary to call the function add_new_notification() with appropriate parameters, this would be called into elgg action where running the desired event.
+
+	add_new_notification($to_user_guid, $from_user_guid, $action_type, $entity_guid, $description);
