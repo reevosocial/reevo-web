@@ -82,8 +82,19 @@ Ver y comentar en este enlace:
   // Embed
 	'embed:media' => 'Insertar imagen',
 
+  // ckeditor_extended
   'ckeditor:footnotes' => 'Notas al pie',
   'ckeditor:footnotes:new' => 'Nueva nota el pie',
   'ckeditor:footnotes:none' => 'No hay notas al pie creadas',
   'ckeditor:footnotes:choose' => 'Elige una existente',
+
+  // groups
+
+  'groups:enablefiles' => 'Activar módulo de Archivos',
+  'groups:enableforum' => 'Activar módulo de Discusiones',
+  'groups:enableactivity' => 'Activar módulo de Actividad',
+  'groups:enableevents' => 'Activar módulo de Eventos',
+  'groups:enablerecext' => 'Activar módulo de Enlaces',
+  'blog:enableblog' => 'Activar módulo de Blog',
+
 );
