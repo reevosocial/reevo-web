@@ -82,4 +82,6 @@ Ver y comentar en este enlace:
   // Embed
 	'embed:media' => 'Insertar imagen',
 
+  'ckeditor:footnotes' => 'Notas al pié',
+
 );
