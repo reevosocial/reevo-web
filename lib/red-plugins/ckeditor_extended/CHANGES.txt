@@ -1,0 +1,43 @@
+Version history
+===============
+
+3.0 (2017-05-11):
+
+- added: CKEditor 4.6
+- added: support for drag&drop images in editor
+- changed: increased minimal Elgg version to 2.3
+
+2.2 (2017-03-24):
+
+- added: editor field now is html5 validated
+
+2.1.1 (2017-01-26):
+
+- fixed: workaround for core Elgg 2.3 bug
+
+2.1 (2016-10-05):
+
+- added: inline editor view
+- added: retrieval of inline objects now preloads all based on prefix
+- added: support for asset_library plugin
+- changed: moved browse/upload page to resource view
+- fixed: default settings does not need to remove contextmenu
+
+2.0 (2016-01-05):
+
+- added: a plugin setting now controls if uploaded files will be overwritten
+- added: different notice when uploading a file (and it is missing)
+- added: you can now delete an uploaded image from the browse window
+- changed: updated for Elgg 2.0
+- chore: replaced custom css with helper classes
+- fixed: incorrect filename on duplicate image
+
+1.1 (2015-07-08):
+
+- added: composer support
+- changed: updated for 1.11
+- fixed: suppress PHP warning during browsing because the warning is handled
+
+1.0 (2014-11-17):
+
+- initial version
