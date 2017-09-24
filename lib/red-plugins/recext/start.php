@@ -81,7 +81,7 @@ function recext_init() {
 	elgg_register_entity_type('object', 'recext');
 
 	// Groups
-	add_group_tool_option('recext', elgg_echo('recext:enablerecext'), true);
+	add_group_tool_option('recext', elgg_echo('groups:enablerecext'), true);
 	elgg_extend_view('groups/tool_latest', 'recext/group_module');
 }
 
@@ -194,7 +194,7 @@ function recext_feature_link($hook, $entity_type, $returnvalue, $params) {
 
 	$entity = elgg_extract('entity', $params);
 
-	if (!($entity->getSubtype() == 'recext')) { 
+	if (!($entity->getSubtype() == 'recext')) {
 		return;
 	}
 

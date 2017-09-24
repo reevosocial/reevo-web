@@ -20,7 +20,7 @@ return array(
         // menu
         'group_tools:menu:mail' => "Correo masivo a los miembros",
         'group_tools:menu:invitations' => "Gestionar invitaciones",
-        
+
 		'admin:groups:bulk_delete' => "Borrar varios grupos",
         'admin:groups:admin_approval' => "Se necesita aprobación",
 		'admin:groups:tool_presets' => "Configuraciones predefinidas de herramientas de grupo",
@@ -191,8 +191,8 @@ Puedes encontrar el grupo aquí:
 
         // group admins
         'group_tools:multiple_admin:group_admins' => "Administradores de grupo",
-        'group_tools:multiple_admin:profile_actions:remove' => "Borrar administrador de grupo",
-        'group_tools:multiple_admin:profile_actions:add' => "Agregar administrador de grupo",
+        'group_tools:multiple_admin:profile_actions:remove' => "Quitar administrador de este grupo",
+        'group_tools:multiple_admin:profile_actions:add' => "Hacer administrador de este grupo",
 
         'group_tools:multiple_admin:group_tool_option' => "Permitir a los administradores de grupo asignar otros administradores",
 
@@ -215,6 +215,16 @@ Puedes encontrar el grupo aquí:
         'group_tools:cleanup:featured_sorting:time_created' => "Recientes primero",
         'group_tools:cleanup:my_status' => "Ocultar la barra lateral de Mi Estado",
         'group_tools:cleanup:my_status:explain' => "En la barra lateral de la página de perfil de grupo hay un item que muestra tu actual estado de membresía y otra información de estado. Puedes elegir ocultar esto.",
+
+        // tools options
+
+        'group_tools:cleanup:featured_sorting' => "Como ordenar grupos destacados",
+
+        'group_tools:tools_options:title' => 'Configuraciones de módulos',
+        'group_tools:tools_options:description' => 'Puede limitar el uso de los módulos y herramientas del grupo.',
+        'group_tools:tools_options:blog' => 'Blog solo para administradores y operadores del grupo ',
+        'group_tools:tools_options:blog:explain' => 'Únicamente los administradores y operadores del grupo podrán crear entradas en el blog.',
+        'group_tools:actions:tools_options:success' => 'Las configuraciones de herramientas y módulos fueron guardadas exitosamente',
 
         // group default access
         'group_tools:default_access:title' => "Nivel de acceso por defecto en el grupo",
@@ -552,5 +562,8 @@ Haz click debajo para ver las solicitudes de adhesión del grupo:
 %s",
         'group_tools:join_motivation:toggle' => "Mostrar motivación",
         'group_tools:join_motivation:listing' => "Razón para unirse:",
+        'group_tools:group:blogadmin:error' => "Solamente los administradores del grupo pueden publicar en el blog.",
+
+
 
 );
