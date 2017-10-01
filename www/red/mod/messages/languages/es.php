@@ -13,7 +13,7 @@ return array(
 	'messages:sent' => "Enviado",
 	'messages:message' => "Mensaje",
 	'messages:title' => "Asunto",
-	'messages:to:help' => "Write recipient's username here.",
+	'messages:to:help' => "Escribe el nombre del usuario destinatario aqui",
 	'messages:replying' => "Mensaje respondiendo a",
 	'messages:inbox' => "Bandeja de entrada",
 	'messages:sendmessage' => "Enviar un mensaje",
@@ -60,7 +60,7 @@ return array(
  %s
 
  Para enviar un mensaje a  %s, ház click aquí:
- 
+
 %s
 
  Por favor no respondas a este correo electrónico.",
