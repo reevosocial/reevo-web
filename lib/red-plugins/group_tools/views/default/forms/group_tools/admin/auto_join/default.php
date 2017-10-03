@@ -15,6 +15,14 @@ echo elgg_view_field([
 	'values' => $auto_joins,
 ]);
 
+echo elgg_view('input/checkbox', array(
+		'label' => elgg_echo('group_tools:form:admin:auto_join:addall'),
+		'name' => 'add_all_users',
+		'value' => '1',
+		'default' => false,
+));
+
+
 $footer = elgg_view_field([
 	'#type' => 'submit',
 	'value' => elgg_echo('save'),

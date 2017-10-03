@@ -99,6 +99,40 @@ return array(
         'group_tools:settings:admin_approve' => "Los administradores de usuario necesitan aprobar nuevos grupos",
         'group_tools:settings:admin_approve:description' => "Cualquier usuario puede crear un grupo, pero un administrador del sitio debe aprobarlo",
 
+        // auto join
+      	'group_tools:admin:auto_join:default' => "Auto join",
+      	'group_tools:admin:auto_join:default:description' => "New users will automaticly join the following groups.",
+      	'group_tools:admin:auto_join:default:none' => "No auto join groups configured yet.",
+
+      	'group_tools:form:admin:auto_join:group' => "Add a group to the auto join groups",
+      	'group_tools:form:admin:auto_join:group:help' => "Search for a group by name and select it from the list.",
+
+        'group_tools:form:admin:auto_join:addall' => "Add all existing members to these groups",
+
+
+      	'group_tools:form:admin:auto_join:additional:group' => "Select the group(s) to join",
+      	'group_tools:form:admin:auto_join:additional:group:help' => "Search for a group by name and select it from the list.",
+
+      	'group_tools:admin:auto_join:additional' => "Additional auto join groups",
+      	'group_tools:admin:auto_join:additional:description' => "Here you can configure additional groups a user should join, based on properties of the user.",
+      	'group_tools:admin:auto_join:additional:none' => "No additional groups configured yet",
+
+      	'group_tools:admin:auto_join:exclusive' => "Exclusive auto join groups",
+      	'group_tools:admin:auto_join:exclusive:description' => "Here you can configure exclusive groups a user should join, based on properties of the user. If a match is found for a user they will NOT be added to any of the groups defined above.",
+      	'group_tools:admin:auto_join:exclusive:none' => "No exclusive groups configured yet",
+
+      	'group_tools:form:admin:auto_join:additional:pattern' => "User property matching",
+      	'group_tools:form:admin:auto_join:additional:pattern:add' => "Add property",
+      	'group_tools:form:admin:auto_join:additional:pattern:help' => "Users will be matched on all configured properties. To remove a property leave the value empty.",
+      	'group_tools:auto_join:pattern:operand:equals' => "Equals",
+      	'group_tools:auto_join:pattern:operand:not_equals' => "Not equals",
+      	'group_tools:auto_join:pattern:operand:contains' => "Contains",
+      	'group_tools:auto_join:pattern:operand:not_contains' => "Doesn't contain",
+      	'group_tools:auto_join:pattern:operand:pregmatch' => "Preg match",
+      	'group_tools:auto_join:pattern:value:placeholder' => "Enter a matching value",
+
+      	'group_tools:action:admin:auto_join:additional:error:pregmatch' => "The provided preg match pattern was invalid",
+
         // group tool presets
         'group_tools:admin:group_tool_presets:description' => "Aquí puedes configurar las herramientas predefinidas del grupo.
 Cuando un usuario crea un grupo, puede elegir una de los configuraciones predefinidas para obtener rápidamente las herramientas correctas. Una opción en blanco es ofrecida al usuario para que ajuste sus propias configuraciones.",
