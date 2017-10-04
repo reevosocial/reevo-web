@@ -20,7 +20,7 @@ return array(
         // menu
         'group_tools:menu:mail' => "Correo masivo a los miembros",
         'group_tools:menu:invitations' => "Gestionar invitaciones",
-        
+
 		'admin:groups:bulk_delete' => "Borrar varios grupos",
         'admin:groups:admin_approval' => "Se necesita aprobación",
 		'admin:groups:tool_presets' => "Configuraciones predefinidas de herramientas de grupo",
@@ -98,6 +98,40 @@ return array(
 
         'group_tools:settings:admin_approve' => "Los administradores de usuario necesitan aprobar nuevos grupos",
         'group_tools:settings:admin_approve:description' => "Cualquier usuario puede crear un grupo, pero un administrador del sitio debe aprobarlo",
+
+        // auto join
+      	'group_tools:admin:auto_join:default' => "Auto join",
+      	'group_tools:admin:auto_join:default:description' => "New users will automaticly join the following groups.",
+      	'group_tools:admin:auto_join:default:none' => "No auto join groups configured yet.",
+
+      	'group_tools:form:admin:auto_join:group' => "Add a group to the auto join groups",
+      	'group_tools:form:admin:auto_join:group:help' => "Search for a group by name and select it from the list.",
+
+        'group_tools:form:admin:auto_join:addall' => "Add all existing members to these groups",
+
+
+      	'group_tools:form:admin:auto_join:additional:group' => "Select the group(s) to join",
+      	'group_tools:form:admin:auto_join:additional:group:help' => "Search for a group by name and select it from the list.",
+
+      	'group_tools:admin:auto_join:additional' => "Additional auto join groups",
+      	'group_tools:admin:auto_join:additional:description' => "Here you can configure additional groups a user should join, based on properties of the user.",
+      	'group_tools:admin:auto_join:additional:none' => "No additional groups configured yet",
+
+      	'group_tools:admin:auto_join:exclusive' => "Exclusive auto join groups",
+      	'group_tools:admin:auto_join:exclusive:description' => "Here you can configure exclusive groups a user should join, based on properties of the user. If a match is found for a user they will NOT be added to any of the groups defined above.",
+      	'group_tools:admin:auto_join:exclusive:none' => "No exclusive groups configured yet",
+
+      	'group_tools:form:admin:auto_join:additional:pattern' => "User property matching",
+      	'group_tools:form:admin:auto_join:additional:pattern:add' => "Add property",
+      	'group_tools:form:admin:auto_join:additional:pattern:help' => "Users will be matched on all configured properties. To remove a property leave the value empty.",
+      	'group_tools:auto_join:pattern:operand:equals' => "Equals",
+      	'group_tools:auto_join:pattern:operand:not_equals' => "Not equals",
+      	'group_tools:auto_join:pattern:operand:contains' => "Contains",
+      	'group_tools:auto_join:pattern:operand:not_contains' => "Doesn't contain",
+      	'group_tools:auto_join:pattern:operand:pregmatch' => "Preg match",
+      	'group_tools:auto_join:pattern:value:placeholder' => "Enter a matching value",
+
+      	'group_tools:action:admin:auto_join:additional:error:pregmatch' => "The provided preg match pattern was invalid",
 
         // group tool presets
         'group_tools:admin:group_tool_presets:description' => "Aquí puedes configurar las herramientas predefinidas del grupo.
@@ -191,8 +225,8 @@ Puedes encontrar el grupo aquí:
 
         // group admins
         'group_tools:multiple_admin:group_admins' => "Administradores de grupo",
-        'group_tools:multiple_admin:profile_actions:remove' => "Borrar administrador de grupo",
-        'group_tools:multiple_admin:profile_actions:add' => "Agregar administrador de grupo",
+        'group_tools:multiple_admin:profile_actions:remove' => "Quitar administrador de este grupo",
+        'group_tools:multiple_admin:profile_actions:add' => "Hacer administrador de este grupo",
 
         'group_tools:multiple_admin:group_tool_option' => "Permitir a los administradores de grupo asignar otros administradores",
 
@@ -215,6 +249,16 @@ Puedes encontrar el grupo aquí:
         'group_tools:cleanup:featured_sorting:time_created' => "Recientes primero",
         'group_tools:cleanup:my_status' => "Ocultar la barra lateral de Mi Estado",
         'group_tools:cleanup:my_status:explain' => "En la barra lateral de la página de perfil de grupo hay un item que muestra tu actual estado de membresía y otra información de estado. Puedes elegir ocultar esto.",
+
+        // tools options
+
+        'group_tools:cleanup:featured_sorting' => "Como ordenar grupos destacados",
+
+        'group_tools:tools_options:title' => 'Configuraciones de módulos',
+        'group_tools:tools_options:description' => 'Puede limitar el uso de los módulos y herramientas del grupo.',
+        'group_tools:tools_options:blog' => 'Blog solo para administradores y operadores del grupo ',
+        'group_tools:tools_options:blog:explain' => 'Únicamente los administradores y operadores del grupo podrán crear entradas en el blog.',
+        'group_tools:actions:tools_options:success' => 'Las configuraciones de herramientas y módulos fueron guardadas exitosamente',
 
         // group default access
         'group_tools:default_access:title' => "Nivel de acceso por defecto en el grupo",
@@ -552,5 +596,8 @@ Haz click debajo para ver las solicitudes de adhesión del grupo:
 %s",
         'group_tools:join_motivation:toggle' => "Mostrar motivación",
         'group_tools:join_motivation:listing' => "Razón para unirse:",
+        'group_tools:group:blogadmin:error' => "Solamente los administradores del grupo pueden publicar en el blog.",
+
+
 
 );
