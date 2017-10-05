@@ -3,6 +3,8 @@
 
 $guid = (int) get_input('guid');
 $rel = get_input('rel', EVENT_MANAGER_RELATION_ATTENDING);
+$del = get_input('del');
+
 
 // elgg_entity_gatekeeper($guid, 'object', Event::SUBTYPE);
 $event = get_entity($guid);
@@ -46,10 +48,10 @@ if (empty($rows)) {
 
 $fh = tmpfile();
 
-fputcsv($fh, array_keys($rows[0]), ';');
+fputcsv($fh, array_keys($rows[0]), $del);
 
 foreach ($rows as $row) {
-	fputcsv($fh, array_values($row), ';');
+	fputcsv($fh, array_values($row), $del);
 }
 
 $contents = '';
