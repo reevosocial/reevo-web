@@ -22,6 +22,12 @@ $action_path = dirname(__FILE__) . '/actions/reevo_custom';
 elgg_register_action('reevo_custom/fbevent', "$action_path/fbevent.php");
 
 
+// notificaciones personalizadas
+
+// elgg_unregister_plugin_hook_handler('prepare', 'notification:publish:object:blog', 'blog_prepare_notification');
+// elgg_register_plugin_hook_handler('prepare', 'notification:publish:object:blog', 'blog_prepare_notification_custom', 0);
+
+
 function reevo_custom_pages($page) {
 	$pages = dirname(__FILE__) . '/pages/reevo_custom';
 
@@ -29,6 +35,11 @@ function reevo_custom_pages($page) {
 		case "fbevent":
 			set_input('container_guid', $page[1]);
 			include "$pages/fbevent.php";
+			break;
+
+		case "export":
+			set_input('container_guid', $page[1]);
+			include "$pages/export.php";
 			break;
 
 		default:
@@ -160,4 +171,24 @@ function event_manager_register_addgroups($hook, $type, $url, $params) {
 			}
 		}
 	} // end foreach
+}
+
+
+function blog_prepare_notification_custom($hook, $type, $notification, $params) {
+	$entity = $params['event']->getObject();
+	$owner = $params['event']->getActor();
+	$recipient = $params['recipient'];
+	$language = $params['language'];
+	$method = $params['method'];
+
+	$notification->subject = elgg_echo('blog:notify:subject:custom', array($entity->title), $language);
+	$notification->body = elgg_echo('blog:notify:body', array(
+		$owner->name,
+		$entity->title,
+		$entity->getExcerpt(),
+		$entity->getURL()
+	), $language);
+	$notification->summary = elgg_echo('blog:notify:summary', array($entity->title), $language);
+
+	return $notification;
 }

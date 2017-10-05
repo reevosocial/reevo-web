@@ -265,6 +265,7 @@ function new_message_blog($action, $object, $entity){
             'relationship_guid' => $container->guid,
             'inverse_relationship' => true,
             'type' => 'user',
+            'limit' => false
             // 'limit' => (int) get_input('limit', max(20, elgg_get_config('default_limit')), false),
             // 'no_results' => elgg_format_element('div', ['class' => 'elgg-list'], elgg_echo('notfound')),
         ];
