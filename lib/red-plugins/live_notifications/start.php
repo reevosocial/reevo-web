@@ -255,6 +255,8 @@ function new_message_blog($action, $object, $entity){
   $subtype = $entity->getSubtype();
   if ($subtype == 'blog') {
     $guid = $entity->guid;
+    $url = $entity->getURL();
+
     $container = $entity->getContainerEntity();
     if ($container->type == 'group') {
       # la publicacion en el blog se hizo  en un grupo, enviar notificacion a miembros del grupo
@@ -286,7 +288,7 @@ function new_message_blog($action, $object, $entity){
             'text' => $from_entity->name,
             'class' => 'elgg-river-subject',
           ));
-          $description = '<b><a href="/messages/inbox/">'.$title.'</a></b><br/>';
+          $description = '<b><a href="'.$url.'">'.$title.'</a></b><br/>';
           $description .= '<p>'.$excerpt.'</p>';
 
           $description .=  '<i>'.elgg_echo('live_notifications:blogprivate:create', array($url_user)).'</i>';
