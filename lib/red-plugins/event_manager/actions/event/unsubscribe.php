@@ -12,7 +12,7 @@ if (!empty($email) && !is_email_address($email)) {
 	register_error(elgg_echo('registration:notemail'));
 	forward(REFERER);
 }
-			
+
 // try to find a registration
 $registrations = elgg_get_entities_from_metadata([
 	'type' => 'object',
@@ -53,6 +53,8 @@ if ($site->email) {
 } else {
 	$from = $site->name . " <noreply@{$site->getDomain()}>";
 }
+$from = $site->email;
+
 
 $to = $registration->name . " <{$registration->email}>";
 
