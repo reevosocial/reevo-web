@@ -579,7 +579,8 @@ class Event extends ElggObject {
 			$to_email = $to_entity->name . "<" . $to_entity->email . ">";
 
 			$site = elgg_get_site_entity($this->site_guid);
-			$site_from = $this->getSiteEmailAddress($site);
+//			$site_from = $this->getSiteEmailAddress($site);
+			$site_from = $site->email;
 
 			elgg_send_email($site_from, $to_email, $user_subject, $user_message);
 		}
