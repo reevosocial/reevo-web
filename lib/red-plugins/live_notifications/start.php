@@ -35,9 +35,12 @@ function live_notifications() {
     elgg_register_plugin_hook_handler("action", "comment/save", "comment_notification_action");
     elgg_register_plugin_hook_handler("action", "discussion/reply/save", "reply_notification_action");
     elgg_register_plugin_hook_handler("action", "messages/send", "new_message");
-    // elgg_register_plugin_hook_handler("action", "blog/save", "new_message_blog");
 
     elgg_register_event_handler('create', 'object', 'new_message_blog');
+    elgg_register_event_handler('update:after', 'object', 'new_message_blog');
+
+    // elgg_register_plugin_hook_handler("action", "blog/save", "edit_message_blog"); // solo usado si estamos editando un blog existente
+
 
     elgg_register_plugin_hook_handler('creating', 'river', 'catch_add_to_river_event');
     //Actions
@@ -250,15 +253,20 @@ function new_message($hook, $entity_type, $data){
   return $data;
 }
 
-function new_message_blog($action, $object, $entity){
 
+function new_message_blog($action, $object, $entity){
+  global $control;
   $subtype = $entity->getSubtype();
   if ($subtype == 'blog') {
+    error_log('###### el action es ' . $action);
     $guid = $entity->guid;
     $url = $entity->getURL();
+    $status = $entity->status;
 
+
+    error_log('el status es ' . $status);
     $container = $entity->getContainerEntity();
-    if ($container->type == 'group') {
+    if ($container->type == 'group' && $status == 'published') {
       # la publicacion en el blog se hizo  en un grupo, enviar notificacion a miembros del grupo
       $prefix = \ColdTrick\GroupTools\ToolsOptions::SETTING_PREFIX;
       if ($container->getPrivateSetting("{$prefix}blogprivate") == 'yes') { // Solo se envia notificacion con formato especial para grupos donde solo postean los admins
@@ -293,7 +301,12 @@ function new_message_blog($action, $object, $entity){
 
           $description .=  '<i>'.elgg_echo('live_notifications:blogprivate:create', array($url_user)).'</i>';
           // $description .= '<a href="'.$container->getUrl().'" title="">'.$container->title.'</a> <br/>';
-          add_new_notification($to_entity->guid, $from_entity->guid, 'comment', $container->guid, $description);
+          if ($control == '0') { // solucion fea para evitar notificacion duplicada cuando pasamos de draft a published
+            add_new_notification($to_entity->guid, $from_entity->guid, 'comment', $container->guid, $description);
+            $control = '1';
+          } else {
+            $control = '0';
+          }
         }
       }
     } elseif ($container->type == 'user') {
