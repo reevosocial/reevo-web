@@ -32,10 +32,11 @@
 
 ?>
 
+<span class="icon-bar"></span>
 <a class="elgg-button-nav" rel="toggle" href=".elgg-nav-collapse">
 	<span class="icon-bar"></span>
 	<span class="icon-bar"></span>
-	<span class="icon-bar"></span>
+  <span class="icon-bar"></span>
 </a>
 
 <!-- <div class="elgg-nav-collapse">
@@ -51,5 +52,11 @@
 </div> -->
 
 <div class="elgg-nav-collapse">
-	<?php echo elgg_view_menu('site'); ?>
+  <?php
+  echo '<ul class="elgg-menu elgg-menu-site elgg-menu-site-default elgg-menu-site-static clearfix">';
+    display_static_menu();
+    echo '<hr>';
+  echo '</ul>';
+  echo elgg_view_menu('site');
+  ?>
 </div>

@@ -362,8 +362,11 @@ html {
 }
 
 @media (min-width: 767px) {
-	.elgg-nav-collapse {
+	.elgg-nav-collapse, #topbar-menu-text {
 		display: block !important;
+	}
+	.elgg-menu-site-static {
+		display: none !important;
 	}
 
 }
@@ -387,6 +390,14 @@ html {
 		display: none;
 		width: 100%;
 	}
+	#topbar-menu-text {
+		display: none;
+	}
+	.elgg-menu-site-static {
+		display: block;
+	}
+
+
 	#login-dropdown a {
 		padding: 10px 18px;
 	}
