@@ -9,8 +9,10 @@ elgg_register_event_handler('init','system','reevo_theme_init');
 
 
 elgg_unregister_menu_item('footer', 'powered');
+require_once(dirname(__FILE__) . "/lib/functions.php");
 
 function reevo_theme_init() {
+
 
 	// theme specific CSS
 	elgg_extend_view('css/elgg', 'reevo_theme/css');
