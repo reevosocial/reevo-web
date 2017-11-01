@@ -207,7 +207,8 @@ function group_tools_invite_email(ElggGroup $group, $email, $text = "", $resend 
 	$site = elgg_get_site_entity();
 	if (!empty($site->email)) {
 		if (!empty($site->name)) {
-			$site_from = "{$site->name} <{$site->email}>";
+			$site_from = $site->email;
+			// $site_from = "{$site->name} <{$site->email}>";
 		} else {
 			$site_from = $site->email;
 		}
