@@ -50,8 +50,7 @@ foreach ($recipient_array as $recipient) {
     }
 }
 
-// cambia la extension de dominio para que funcione la redireccion al CRM tanto en Alfa, Beta o Master
-$site = explode('.',elgg_get_site_url());
+// Carga los datos en el CRM
+shell_exec("php /srv/reevo-web/www/crm/tools/external/index.php email='{$email}' first_name='{$first_name}' last_name='{$last_name}' city='{$city}' country_id='{$country}' agregar='6' nota='Se suscribió el boletin'");
 
-// forward('contact/received');
-forward("http://reevo.{$site[2]}crm/external/?email={$email}&first_name={$first_name}&last_name={$last_name}&city={$city}&state_id=&country_id={$country}&agregar=6&nota=Se suscribió el boletin&url=http://red.reevo.{$site[2]}contact/received");
+forward('contact/received');

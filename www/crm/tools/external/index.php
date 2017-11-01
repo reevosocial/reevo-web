@@ -2,12 +2,20 @@
 // error_reporting(E_ALL);
 // ini_set('display_errors', True);
 
-require_once '/srv/reevo-web/www/blog/wp-load.php'; 
+require_once '/srv/reevo-web/www/blog/wp-load.php';
 require_once "/srv/reevo-web/www/crm/civicrm.settings.php";
 require_once 'CRM/Core/Config.php';
 $config = CRM_Core_Config::singleton( );
 require_once 'api/api.php';
 
+// Permite cargar las variables como parametros al ejecutar este script por la línea de comandos
+if (PHP_SAPI === 'cli')
+{
+	 foreach($argv as $i){
+		 list($k, $v) = explode('=', $i, 2);
+		 $_GET[$k] = $v;
+	 }
+}
 
 	if ($_GET['email']) { $email 										= $_GET['email'];}
 	if ($_GET['first_name']) { $first_name 					= ucwords(strtolower($_GET['first_name']));}
@@ -90,7 +98,7 @@ if ($email_exists['count'] == 0) {
 			);
 
 			$new_grupos_agregar = civicrm_api3('group_contact', 'create', $data);
-		}	
+		}
 	}
 //	Tag the contact with certain tags
 	if (!empty($tags_agregar)) {
@@ -101,26 +109,26 @@ if ($email_exists['count'] == 0) {
 			);
 
 			$new_tags_agregar = civicrm_api3('entity_tag', 'create', $data);
-		}	
+		}
 	}
 
 //	Add a note to the contact
 	if (!empty($add_note)) {
 		$note = civicrm_api('Note','Create',array('entity_id' => $contact['id'], 'note' => $add_note, 'subject' => $add_note_title, 'contact_id' => $yo, 'version' =>3, 'json' => '1'));
-	}	
+	}
 
 	error_log('CRM EXTERNAL: Se ha creado el usuario con ID: '.$contact['id']);
 
 } else {
-	
+
 	// THE EMAIL EXISTS IN DATABASE ****************
 	error_log('CRM EXTERNAL: Intento actualizar el usuario con ID: '.$contact['id']);
 
 	// Get the id of existing user
-	
+
 	$contact_id = array_values($email_exists['values'])[0]['contact_id'];
-	
-	
+
+
 	// Obtiene los datos anteriores
 	$data = array(
 		 'contact_type' 	=> 'Individual',
@@ -129,9 +137,9 @@ if ($email_exists['count'] == 0) {
 
 	$old = civicrm_api3('Contact','Get',$data);
 
- 	if (empty($first_name)) {$first_name = $old['values'][$old[id]]['first_name'];}	
- 	if (empty($last_name)) {$last_name = $old['values'][$old[id]]['last_name'];}	
- 	if (empty($image_URL)) {$image_URL = $old['values'][$old[id]]['image_URL'];}	
+ 	if (empty($first_name)) {$first_name = $old['values'][$old[id]]['first_name'];}
+ 	if (empty($last_name)) {$last_name = $old['values'][$old[id]]['last_name'];}
+ 	if (empty($image_URL)) {$image_URL = $old['values'][$old[id]]['image_URL'];}
 
 
 	$data = array(
@@ -149,12 +157,12 @@ if ($email_exists['count'] == 0) {
 // 		$params = array(
 // 		  'contact_id' => $contact_id,
 // 		);
-// 
+//
 // 		$result = civicrm_api3('address', 'get', $params);
 // 		$prior_address_id = array_keys($result['values'])[0];
 // 		$result = civicrm_api3('address', 'delete', array('id' => $prior_address_id));
 // 	}
-	
+
 // 	Attach the adrress information to the contact
 	$data = array(
 	  'contact_id' 			=> $contact_id,
@@ -180,12 +188,12 @@ if ($email_exists['count'] == 0) {
 			);
 
 			$new_grupos_agregar = civicrm_api3('group_contact', 'create', $data);
-		}	
+		}
 	}
 
-			
+
 //	Remove the contact to certain groups
-	if (!empty($grupos_sacar)) {	
+	if (!empty($grupos_sacar)) {
 		foreach($grupos_sacar as $value) {
 			$data = array(
 			  'contact_id' 		=> $contact_id,
@@ -205,21 +213,21 @@ if ($email_exists['count'] == 0) {
 			);
 
 			$new_tags_agregar = civicrm_api3('entity_tag', 'create', $data);
-		}	
+		}
 	}
 
 //	Add a note to the contact
 	if (!empty($add_note)) {
 		$note = civicrm_api('Note','Create',array('entity_id' => $contact_id, 'note' => $add_note, 'subject' => $add_note_title, 'contact_id' => $yo, 'version' =>3, 'json' => '1'));
-	}	
+	}
 
 	error_log('CRM EXTERNAL: Actualicé con exito el usuario con ID: '.$contact_id);
-	
+
 }
 
 //	Redirect to ther page at the end
 	if (!empty($url)) {
 		header( 'Location: '.$url );
-	}	
+	}
 
 ?>
