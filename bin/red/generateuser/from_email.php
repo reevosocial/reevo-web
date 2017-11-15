@@ -58,7 +58,7 @@ if ($groups) {
 
 // Quita al usuario de ciertos grupos
 if ($groupsout) {
-  $userguid = $user[0]->getGUID();
+  $userguid = $user->getGUID();
   $groups_array = explode(',',$groupsout);
   foreach ($groups_array as $key => $value) {
     removeUserToGroups($userguid,$value);
