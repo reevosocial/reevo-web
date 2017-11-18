@@ -1,0 +1,44 @@
+Version history
+===============
+
+5.0.1 (2017-09-06):
+
+- several small chores/fixes
+
+5.0 (2017-08-09):
+
+- changed: increased minimal Elgg version requirement to 2.3
+- fix: no longer use deprecated function
+
+4.0 (2016-01-21):
+
+- changed: discussion subtype to correct subtype for Elgg 2.0
+- changed: Elgg requirement increased to 2.0
+
+3.1 (2016-01-21):
+
+- added: group discussion owners get notified about replies
+- changed: moved inline JS for personal notification settings to AMD
+- fixed: using wrong namespace for ElggBatch
+
+3.0 (2015-07-08):
+
+- changes for Elgg 1.10
+- added: block subscription cache for optimization
+- added: composer support
+- added: plugin setting to auto subscribe on Like
+- changed: optimized check user notification setting
+- fixed: incorrect fallback check
+
+2.0 (2014-11-17):
+
+- changes for Elgg 1.9
+- rewrote the entire plugin to use the new Elgg subscriptions system
+- added: support for more entity types
+- fix(php): php warning is some cases is
+- fix(js): change the correct toggle values
+- changed(ui): ajaxified the content subscription sidebar
+
+1.0:
+
+- initial release
