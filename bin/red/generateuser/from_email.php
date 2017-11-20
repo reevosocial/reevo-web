@@ -224,11 +224,11 @@ function print_r_reverse($in) {
 
 function sendEmail($user, $pass, $group, $message_file) {
   $site = elgg_get_site_entity();
-	$site_url 	= elgg_get_site_url();
-	$username 	= $user->username;
-	$name 		= $user->name;
-	$from    	= $site->email;
-	$to      	= $user->name .'<'.$user->email.'>';
+  $site_url 	= elgg_get_site_url();
+  $username 	= $user->username;
+  $name 		= $user->name;
+  $from    	= $site->email;
+  $to      	= $user->name .'<'.$user->email.'>';
 
   // usamos la primera linea del template del mensaje como asunto
   $subject = file('./tpl/'.$message_file)[0];
@@ -238,15 +238,15 @@ function sendEmail($user, $pass, $group, $message_file) {
   unset($lines[1]);
 
   $body = implode('', $lines);
-	// $body 		= file_get_contents('./tpl/'.$message_file);
-	$body 		= str_replace("@NAME@",$name,$body);
-	$body 		= str_replace("@USERNAME@",$username,$body);
-	$body 		= str_replace("@PASSWORD@",$pass,$body);
-	$body 		= str_replace("@URL@",$site_url,$body);
+  // $body 		= file_get_contents('./tpl/'.$message_file);
+  $body 		= str_replace("@NAME@",$name,$body);
+  $body 		= str_replace("@USERNAME@",$username,$body);
+  $body 		= str_replace("@PASSWORD@",$pass,$body);
+  $body 		= str_replace("@URL@",$site_url,$body);
 
-	$params   	= null;
+  $params   	= null;
 
-	return elgg_send_email($from, $to, $subject, $body, $params);
+  return elgg_send_email($from, $to, $subject, $body, $params);
 }
 
 ?>

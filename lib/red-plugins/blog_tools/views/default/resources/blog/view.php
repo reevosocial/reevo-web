@@ -1,7 +1,5 @@
 <?php
 
-
-
 elgg_register_plugin_hook_handler('header', 'opengraph', function ($hook, $handler, $return, $params){
 	$guid = get_input('guid');
 	elgg_entity_gatekeeper($guid, 'object', 'blog');
@@ -9,8 +7,11 @@ elgg_register_plugin_hook_handler('header', 'opengraph', function ($hook, $handl
   $owner = $blog->getOwnerEntity();
 	$baseurl = rtrim(elgg_get_site_url(), "/");
   $sitename = elgg_get_config('sitename');
+	// <meta property="og:image" content="http://red.reevo.dev/serve-file/e0/l1504615308/di/c1/8JbGZILcXbpFWUFm4ON8FVrCb3VJz_92V4dNJ7CSYgM/25000/26460/icons/icon/master.jpg" />
+
 	if ($blog->hasIcon('master')) {
-		$icon = $blog->getIconURL('master');
+		$icon = $blog->getIcon('master');
+		$iconfinal = elgg_get_inline_url($icon, false);
 	} else {
 		$icon = 'https://donar.reevo.org/img/banner-fb-es.png'; // cualquiera! cambiar!!!
 	}
@@ -18,7 +19,7 @@ elgg_register_plugin_hook_handler('header', 'opengraph', function ($hook, $handl
 	if (preg_match('/'.str_replace('/','\\/',elgg_get_site_url()).'blog/', $params['url'])) {
     $return['og:title'] = $blog->title . ' - ' .$owner->name . ' | ' . $sitename;
     $return['og:description'] = strip_tags($blog->excerpt);
-		$return['og:image'] = $icon;
+		$return['og:image'] = $iconfinal;
 		return $return;
 	}
 });
