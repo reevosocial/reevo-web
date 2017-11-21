@@ -231,9 +231,9 @@ function sendEmail($user, $pass, $group, $message_file) {
   $to      	= $user->name .'<'.$user->email.'>';
 
   // usamos la primera linea del template del mensaje como asunto
-  $subject = file('./tpl/'.$message_file)[0];
+  $subject = file('/srv/reevo-web/bin/red/generateuser/tpl/'.$message_file)[0];
 
-  $lines = file('./tpl/'.$message_file);
+  $lines = file('/srv/reevo-web/bin/red/generateuser/tpl/'.$message_file);
   unset($lines[0]);
   unset($lines[1]);
 
