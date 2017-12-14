@@ -58,11 +58,15 @@ if (elgg_in_context('widgets')) {
 	$metadata = '';
 }
 
+// Cambia el formato de los titulos si ya se programaron para FB
+if ($recext->phpsfp && elgg_is_admin_logged_in()) {
+	$yapublicado = 'style = "font-style: italic; font-weight: 300;"';
+}
 
 	echo <<<HTML
 	<a class="recext-gallery-item" style="background-image: url('$image')" href="{$recext->getURL()}">
 		<header>
-			<h3>$recext->title</h3>
+			<h3 $yapublicado>$recext->title</h3>
 			<span class='subtitle'>$recext->source</span>
 		</header>
 	</a>
