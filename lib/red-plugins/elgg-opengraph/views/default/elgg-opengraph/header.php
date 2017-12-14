@@ -11,7 +11,9 @@
         'og:url' => current_page_url(),
         'og:site_name' => elgg_get_config('sitename'),
         'og:description' => elgg_get_config('sitedescription'),
-        'fb:app_id' => '1724849754416904' // App id de red.reevo
+        'fb:app_id' => '1724849754416904', // App id de red.reevo
+        'og:image' => 'https://assets.reevo.org/banners/reevo_ogimage_default.es.png' // Imagen por defecto
+
     ), elgg_get_config('site_opengraph')));
 
 
