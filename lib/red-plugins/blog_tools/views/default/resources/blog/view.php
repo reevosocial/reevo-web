@@ -12,14 +12,12 @@ elgg_register_plugin_hook_handler('header', 'opengraph', function ($hook, $handl
 	if ($blog->hasIcon('master')) {
 		$icon = $blog->getIcon('master');
 		$iconfinal = elgg_get_inline_url($icon, false);
-	} else {
-		$icon = 'https://donar.reevo.org/img/banner-fb-es.png'; // cualquiera! cambiar!!!
+		$return['og:image'] = $iconfinal;
 	}
 
 	if (preg_match('/'.str_replace('/','\\/',elgg_get_site_url()).'blog/', $params['url'])) {
     $return['og:title'] = $blog->title . ' - ' .$owner->name . ' | ' . $sitename;
     $return['og:description'] = strip_tags($blog->excerpt);
-		$return['og:image'] = $iconfinal;
 		return $return;
 	}
 });

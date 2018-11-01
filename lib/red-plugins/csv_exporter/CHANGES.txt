@@ -1,0 +1,62 @@
+Version history
+===============
+
+4.1.1 (2017-09-06):
+
+- several small chores/fixes
+
+4.1 (2017-02-27):
+
+- added: access can be exported
+- added: banned attribute of user
+
+4.0 (2017-01-26):
+
+- changed: increased Elgg version requirement to 2.3
+- fixed: incompatible function declaration
+
+3.1.1 (2016-09-15):
+
+- fixed: small dutch typo
+- fixed: wrong parameter type in notification
+
+3.1 (2016-05-26):
+
+- added: group visibility and membership
+- added: option to export groups owned for users
+- added: plugin setting to cleaup older finished exports
+- added: time constraints to the export settings
+- changed: csv processing is now offloaded to the minute cron
+- changed: get export value moved to class callbacks
+- changed: moved exportable values hook to class callback
+- fixed: disallow commenting on exports
+- fixed: generic handling of array export values
+- fixed: possible error if seperator > 1 char
+- fixed: possible invalid return for group last activity
+- fixed: undefined class in upgrade script
+- fixed: wrong display of array values in preview
+
+3.0.2 (2016-02-16):
+
+- fixed: timeout while exporting large datasets
+
+3.0.1 (2016-01-19):
+
+- changed: admin js to amd module
+
+3.0:
+
+- changes for Elgg 1.11
+- added: composer support
+- added: plugin setting to control the csv separator #4
+- fixed: deprecated notice
+- fixed: jquery live registrations replaced by on
+- fixed: problems with exporting HTML #6
+
+2.0 (2014-11-17):
+
+- changes for Elgg 1.9
+
+1.0 (2014-05-20):
+
+- initial version
