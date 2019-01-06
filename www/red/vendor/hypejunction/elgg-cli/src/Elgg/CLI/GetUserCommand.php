@@ -64,7 +64,7 @@ class GetUserCommand extends Command {
 		$export['icon'] = $user->getIconURL('master');
 		// echo $user->description;
 
-		print_r($export);
+		print_r(json_encode($export));
 		// print_r($login);
 
 		// $guid = register_user($username, $password, $name, $email);
