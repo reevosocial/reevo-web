@@ -4,6 +4,7 @@ namespace Elgg;
 
 use Elgg\CLI\ActionCommand;
 use Elgg\CLI\AddUserCommand;
+use Elgg\CLI\GetUserCommand;
 use Elgg\CLI\ConfigDatarootCommand;
 use Elgg\CLI\ConfigPathCommand;
 use Elgg\CLI\InstallCommand;
@@ -49,6 +50,7 @@ class CLI {
 			ConfigDatarootCommand::class,
 			ConfigPathCommand::class,
 			AddUserCommand::class,
+			GetUserCommand::class,
 			ConfigSettingCommand::class,
 			PluginsActivateCommand::class,
 			PluginsDeactivateCommand::class,
